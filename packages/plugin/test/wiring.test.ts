@@ -112,6 +112,41 @@ describe("collectStatus", () => {
     expect(text).toContain("demote suggestions: a/hot, a/old")
     expect(text).toContain("over budget")
   })
+
+  it("suggests a better-ranked same-cluster candidate for an active install", () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-wire-"))
+    mkdirSync(join(root, "catalog"), { recursive: true })
+    const record = (id: string, total: number) => ({
+      id,
+      name: id,
+      description: "d",
+      category: "c",
+      tags: [],
+      clusterId: "c/x",
+      clusterLabel: "X",
+      source: { kind: "local", path: "p", licenseFlags: [] },
+      files: [],
+      contentHash: "h",
+      requires: { runtime: [], scripts: [], mcp: [], env: [], services: [] },
+      risk: { level: "low", findings: [] },
+      signals: {},
+      scores: { total, quality: total, trust: total, freshness: total, compatibility: total, adoption: total, reasons: [], rubricVersion: "heuristic-v0", evaluatedAt: "" },
+      provenanceTier: "local",
+      status: "candidate",
+      relations: { supersedes: [], duplicates: [], alternatives: [] },
+    })
+    writeFileSync(
+      join(root, "catalog", "index.json"),
+      JSON.stringify({ version: 1, generatedAt: "", counts: { total: 2, byStatus: {}, byCategory: {} }, skills: [record("a/old", 50), record("a/new", 70)] }),
+    )
+    writeFileSync(
+      join(root, "lockfile.json"),
+      JSON.stringify({ version: 1, skills: { "a/old": { id: "a/old", active: true, contentHash: "h", total: 50, files: [] } } }),
+    )
+    const status = collectStatus(root, "C:/proj")
+    expect(status.upgrades).toHaveLength(1)
+    expect(status.upgrades[0]).toMatchObject({ from: "a/old", to: "a/new", fromTotal: 50, toTotal: 70 })
+  })
 })
 
 describe("SkillHubPlugin", () => {

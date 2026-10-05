@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import type { Dirent } from "node:fs"
 import { join, relative, resolve, sep } from "node:path"
 import matter from "gray-matter"
+import { computeUpgradeSuggestions } from "../../catalog/src/upgrades.ts"
 import { readCatalogIndex, readLock } from "./catalog-read.ts"
 import { enforceBudget, estimateAdvertisedTokens, promotionCandidates, readUsage, usageFileFor, type ActiveAdvert } from "./manage-core.ts"
 import { estimateTokens, ROUTER_DESCRIPTION } from "./search-core.ts"
@@ -103,10 +104,15 @@ export function collectStatus(root: string, projectDir: string, _now?: Date): St
   const adverts = listManagedAdverts(root)
   const l0Tokens = estimateTokens(ROUTER_DESCRIPTION)
   const uses = Object.fromEntries(Object.entries(usage.loads).map(([id, v]) => [id, v.count]))
+  const upgrades = computeUpgradeSuggestions(
+    index?.skills ?? [],
+    Object.entries(lock.skills).map(([id, e]) => ({ id, total: e.total, active: e.active })),
+  )
   return {
     active,
     installed: Object.keys(lock.skills).length,
     updates,
+    upgrades,
     proposals: promotionCandidates({ lock, usage }),
     demote: enforceBudget({ adverts, uses, cap: 1000 - l0Tokens }).demote,
     l1Tokens: estimateAdvertisedTokens(adverts),

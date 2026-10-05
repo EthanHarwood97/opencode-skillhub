@@ -1,3 +1,5 @@
+import type { UpgradeSuggestion } from "../../catalog/src/upgrades.ts"
+
 export type StatusInput = {
   active: string[]
   installed: number
@@ -6,6 +8,7 @@ export type StatusInput = {
   demote: string[]
   l1Tokens: number
   l0Tokens: number
+  upgrades: UpgradeSuggestion[]
 }
 
 export function renderStatus(input: StatusInput): string {
@@ -17,6 +20,7 @@ export function renderStatus(input: StatusInput): string {
     input.proposals.length ? `  promotion proposals: ${input.proposals.map((p) => `${p.id} (${p.uses} uses)`).join(", ")}` : "  promotion proposals: none",
     `  context budget: ${total}/1000 est. tokens (L0 ${input.l0Tokens} + L1 ${input.l1Tokens})${total > 1000 ? " ⚠ over budget" : ""}`,
     `  demote suggestions: ${input.demote.length ? input.demote.join(", ") : "none"}`,
+    `  upgrade suggestions: ${input.upgrades.length ? input.upgrades.map((u) => `${u.from} → ${u.to} (+${Math.round(u.toTotal - u.fromTotal)})`).join(", ") : "none"}`,
   ]
   return lines.join("\n")
 }
@@ -37,6 +41,8 @@ export function makeStartupNotifier(deps: {
       if (status.updates > 0) await deps.toast(`SkillHub: ${status.updates} updates available — run \`skillhub review\``, "warning")
       if (status.proposals.length > 0)
         await deps.toast(`SkillHub: ${status.proposals.length} skill(s) ready to promote — run /skills`, "info")
+      if (status.upgrades.length > 0)
+        await deps.toast(`SkillHub: ${status.upgrades.length} of your active skills have a better-ranked alternative — run /skills`, "info")
     },
   }
 }
