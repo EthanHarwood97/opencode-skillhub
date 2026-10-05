@@ -1,12 +1,59 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useState } from "react"
 import { Link } from "react-router"
-import { Chip, ErrorState, Skeleton, StatTile } from "../components/primitives.tsx"
-import { getStatus } from "../lib/api.ts"
+import { Modal } from "../components/Modal.tsx"
+import { Button, Chip, ErrorState, Skeleton, StatTile } from "../components/primitives.tsx"
+import { useToast } from "../components/toast.tsx"
+import { getStatus, installSkillAction, isLive } from "../lib/api.ts"
+import type { CoverageGapDto } from "../lib/contract.ts"
 import { formatNumber, relativeTime } from "../lib/format.ts"
 import styles from "./OverviewPage.module.css"
 
 export default function OverviewPage() {
   const { data, isPending, isError, error, refetch } = useQuery({ queryKey: ["status"], queryFn: getStatus })
+  const toast = useToast()
+  const queryClient = useQueryClient()
+  const [installGap, setInstallGap] = useState<CoverageGapDto | null>(null)
+  const [checked, setChecked] = useState<Set<string>>(new Set())
+  const [installing, setInstalling] = useState(false)
+
+  const openInstall = (gap: CoverageGapDto) => {
+    setInstallGap(gap)
+    setChecked(new Set(gap.top.map((skill) => skill.id)))
+    setInstalling(false)
+  }
+
+  const toggleSkill = (id: string) => {
+    setChecked((current) => {
+      const next = new Set(current)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  const installSelected = async () => {
+    if (!installGap || installing || checked.size === 0) return
+    setInstalling(true)
+    let successes = 0
+    for (const id of checked) {
+      try {
+        await installSkillAction(id, false)
+        successes += 1
+      } catch (failure) {
+        toast(failure instanceof Error ? failure.message : `Couldn't install ${id}.`, "error")
+      }
+    }
+    setInstalling(false)
+    if (successes > 0) {
+      toast(`Installed ${successes} skill${successes === 1 ? "" : "s"}. Activate them from the gallery when you're ready.`, "success")
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["status"] }),
+        queryClient.invalidateQueries({ queryKey: ["skills"] }),
+      ])
+      setInstallGap(null)
+    }
+  }
 
   if (isPending) {
     return (
@@ -86,9 +133,12 @@ export default function OverviewPage() {
                 </span>
                 <span className={styles.coverageGaps}>
                   {profile.gaps.map((gap) => (
-                    <Link key={gap.category} to={`/gallery?category=${encodeURIComponent(gap.category)}`} className={styles.gapLink}>
-                      <Chip tone="muted">{gap.category} {gap.supply}/{gap.min}</Chip>
-                    </Link>
+                    <span key={gap.category} className={styles.gapItem}>
+                      <Link to={`/gallery?category=${encodeURIComponent(gap.category)}`} className={styles.gapLink}>
+                        <Chip tone="muted">{gap.category} {gap.supply}/{gap.min}</Chip>
+                      </Link>
+                      {isLive() ? <Button onClick={() => openInstall(gap)}>Review for install</Button> : null}
+                    </span>
                   ))}
                 </span>
               </li>
@@ -109,6 +159,33 @@ export default function OverviewPage() {
       </section>
 
       <p><Link to="/review">Open the review queue</Link></p>
+
+      <Modal
+        open={installGap !== null}
+        title={installGap ? `Install skills for ${installGap.category}` : "Install skills"}
+        onClose={() => { if (!installing) setInstallGap(null) }}
+        footer={
+          <>
+            <Button onClick={() => setInstallGap(null)} disabled={installing}>Cancel</Button>
+            <Button tone="primary" disabled={checked.size === 0 || installing} onClick={() => void installSelected()}>
+              Install selected
+            </Button>
+          </>
+        }
+      >
+        {installGap ? (
+          <ul className={styles.installList}>
+            {installGap.top.map((skill) => (
+              <li key={skill.id}>
+                <label className={styles.installItem}>
+                  <input type="checkbox" checked={checked.has(skill.id)} onChange={() => toggleSkill(skill.id)} />
+                  <span>{skill.name} ({skill.id}, score {skill.total})</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </Modal>
     </section>
   )
 }

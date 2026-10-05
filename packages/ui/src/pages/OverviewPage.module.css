@@ -11,4 +11,7 @@
 .coverageTrack { height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
 .coverageFill { display: block; height: 100%; background: var(--accent); }
 .coverageGaps { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.gapItem { display: inline-flex; align-items: center; gap: var(--space-1); }
 .gapLink { text-decoration: none; }
+.installList { list-style: none; display: flex; flex-direction: column; gap: var(--space-2); }
+.installItem { display: flex; align-items: center; gap: var(--space-2); cursor: pointer; }
