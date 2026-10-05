@@ -50,4 +50,10 @@ describe("exportStaticSite", () => {
     expect(() => exportStaticSite({ l, outDir: out, uiDist: dist })).toThrow(/not empty/)
     expect(() => exportStaticSite({ l, outDir: out, uiDist: dist, force: true })).not.toThrow()
   })
+
+  it("rejects an invalid max-records cap", () => {
+    const { l, dist } = makeStore()
+    expect(() => exportStaticSite({ l, outDir: join(l.root, "bad"), uiDist: dist, maxRecords: Number.NaN })).toThrow(/positive integer/)
+    expect(() => exportStaticSite({ l, outDir: join(l.root, "bad"), uiDist: dist, maxRecords: -1 })).toThrow(/positive integer/)
+  })
 })

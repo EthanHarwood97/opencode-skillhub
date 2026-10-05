@@ -32,6 +32,10 @@ const dirSize = (dir: string): number =>
   }, 0)
 
 export function exportStaticSite(opts: ExportOptions): ExportResult {
+  const maxRecords = opts.maxRecords ?? 5000
+  if (typeof maxRecords !== "number" || !Number.isInteger(maxRecords) || maxRecords < 1) {
+    throw new Error("--max-records must be a positive integer")
+  }
   const warnings: string[] = []
   const snapshot = loadSnapshot(opts.l, opts.catalogDir)
   if ("error" in snapshot) throw new Error(snapshot.error)
@@ -44,7 +48,6 @@ export function exportStaticSite(opts: ExportOptions): ExportResult {
 
   copyDir(opts.uiDist, opts.outDir)
 
-  const maxRecords = opts.maxRecords ?? 5000
   const records = snapshot.index.skills.slice(0, maxRecords)
   if (snapshot.index.skills.length > maxRecords) {
     warnings.push(`exported ${maxRecords} of ${snapshot.index.skills.length} records — raise --max-records or use the local server for the full catalog`)
