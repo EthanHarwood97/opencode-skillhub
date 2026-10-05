@@ -25,6 +25,17 @@ Copied from the spec and prior phase plans; every task's requirements implicitly
 - **Commit style:** conventional commits, one commit per task step that says "Commit"; all work happens in the `phase3-ranking` worktree.
 - **Acceptance targets:** SC4 — calibration must beat the default weights on the golden set (provisional target ρ ≥ 0.7 on the bootstrap set; the real target is fixed after the user labeling session, which remains an operational step — see Task 10). SC7 — steady-state eval stays delta-only and capped; CI remains $0.
 
+## Rulings applied during execution
+
+These controller rulings supersede the code blocks in the tasks where they apply.
+
+- Skill-relative requirements (Task 1): body-referenced scripts are compared against bundled files in skill-relative POSIX space (`candidate.dir/` stripped from both sides; backslashes normalized).
+- Inclusive-linspace sampler + tier-union predicate (Task 4): `sampleForLabeling` uses inclusive linspace indices, and `rankAgreement` accepts only tiers `1|2|3|4`.
+- Unsigned 1024-dim embeddings + multi-restart kmeans (Task 5): embedding accumulation is unsigned hashing at 1024 dims, and `kmeans` runs a deterministic multi-restart (lowest inertia, first-seen tie-break).
+- Re-dated `selectBaseline` fixtures (Task 6): fixture snapshot dates were re-dated so the documented "newest snapshot at least N days old" semantics hold with the original expectations.
+- Sync-test `repo:` frontmatter + explicit error fields for strip-only mode (Task 9): byte-identical fixture bodies gained a `repo:` frontmatter line, and classes were rewritten with explicit `readonly` fields (no parameter properties).
+- Signals propagation + marketplace maintenance exemption (Task 10): per-repo signals flow from topic search into candidates, and repo-less marketplace entries are exempt from the maintenance clock.
+
 ## File Structure
 
 ```

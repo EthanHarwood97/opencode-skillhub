@@ -219,7 +219,7 @@ Candidate → gates (§6.3) → composite score (§6.4) → rank within cluster.
 ### 7.3 Ranker evaluation (is the ranking any good?)
 
 - Golden set: 30–50 hand-labeled skills across clusters in quality tiers; measure rank agreement (Spearman correlation); tune weights/rubric against measurements.
-  - Bootstrap golden set + `skillhub label export/import` + `skillhub calibrate --apply` shipped in Phase 3; the user labeling session (30–50 real skills) sets the final calibration target and applies the calibrated weights.
+  - Calibration tooling shipped in Phase 3 (`skillhub label export/import` + `skillhub calibrate --apply`, validated on constructed fixtures); the user labeling session (30–50 real skills) produces the golden set, sets the final calibration target, and applies the calibrated weights.
 - `skillhub why <id>` exposes component scores + evaluator reasoning text.
 
 ### 7.4 Calibration
@@ -389,7 +389,7 @@ CI matrix: `ubuntu-latest` (main) + `windows-latest` (junction/path logic).
 | **0 — Probes** (½ day, sandbox) | §11.3 list resolved | **Done 2026-10-05** — no unknown platform behavior remains |
 | **1 — Catalog + CLI MVP** | Sources 1–3 ingest, gates, static scan, static catalog, `search/info/why/install/update/review/list`, lockfile | A real skill is installed pinned from the catalog and opencode loads it |
 | **2 — Plugin + router** | Toast, `/skills`, router + load tools, permissions, tier management, promotion loop | Mid-session discover→load in ≤2 tool calls; advertised overhead ≤ ~1k tokens measured |
-| **3 — Ranking depth** | LLM rubric + calibration, clusters/taxonomy, requirements extraction, trending, reconciliation, live sources | **Done 2026-10-05** — `catalog:sync` ingests live sources; rubric is delta-only + hard-capped; calibration improves on the bootstrap golden set (provisional target ρ ≥ 0.7; final target set by the user labeling session, see §7.3) |
+| **3 — Ranking depth** | LLM rubric + calibration, clusters/taxonomy, requirements extraction, trending, reconciliation, live sources | **Done 2026-10-05** — `catalog:sync` ingests live sources; rubric is delta-only + hard-capped; calibration tooling + labeling flow shipped and validated on constructed fixtures; the provisional target (ρ ≥ 0.7) applies to the user's 30–50-skill golden set, labeled in the pending session (see §7.3) |
 | **4 — Dashboard + productize** | `skillhub ui` (gallery/clusters/trending/review/detail), then hosted catalog; fork decision only if justified | Others can use it; public gallery deployable |
 | **5 — v2 alignment** | Emit v2-compatible native catalog channel; v2 permissions/autoinvoke support | Works on opencode v2 |
 
