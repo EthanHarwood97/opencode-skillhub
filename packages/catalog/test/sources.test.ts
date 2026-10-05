@@ -25,10 +25,12 @@ const fetchImpl = (async (url: string | URL) => {
 
 describe("github adapter", () => {
   it("turns a repo tree into candidates with fetched contents", async () => {
-    const candidates = await fetchRepoSkills({ repo: "acme/skills", ref: "main", fetchImpl })
+    const signals = { stars: 5, pushedAt: "2026-09-01T00:00:00Z" }
+    const candidates = await fetchRepoSkills({ repo: "acme/skills", ref: "main", fetchImpl, signals })
     expect(candidates).toHaveLength(1)
     expect(candidates[0]?.source.ref).toBe("abc123")
     expect(candidates[0]?.files).toHaveLength(2)
+    expect(candidates[0]?.signals).toEqual(signals)
   })
 })
 

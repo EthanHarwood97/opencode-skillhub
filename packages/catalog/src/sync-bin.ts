@@ -73,7 +73,7 @@ if (values.topics) {
         for (const hit of hits) {
           if (hit.archived) continue
           try {
-            out.push(...(await fetchRepoSkills({ repo: hit.repo, ref: hit.defaultBranch, token, fetchImpl, license: hit.license, maxSkills: Number(values["max-skills"]) })))
+            out.push(...(await fetchRepoSkills({ repo: hit.repo, ref: hit.defaultBranch, token, fetchImpl, license: hit.license, signals: hit.signals, maxSkills: Number(values["max-skills"]) })))
           } catch (error) {
             if (error instanceof RateLimitError) throw error
           }

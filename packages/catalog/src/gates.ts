@@ -36,6 +36,8 @@ export function runGates(input: GateInput): GateResult[] {
         ? { gate: "maintenance", passed: true, reason: `last push ${ageMonths.toFixed(1)} months ago` }
         : { gate: "maintenance", passed: false, reason: `idle ${ageMonths.toFixed(1)} months > ${maxIdleMonths}` },
     )
+  } else if (source.kind === "marketplace") {
+    results.push({ gate: "maintenance", passed: true, reason: "marketplace entry has no repository to age" })
   } else {
     results.push({ gate: "maintenance", passed: false, reason: "no push timestamp available" })
   }

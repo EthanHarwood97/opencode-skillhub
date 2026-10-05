@@ -1,3 +1,4 @@
+import type { Signals } from "../types.ts"
 import type { Candidate, CandidateFile, FetchLike } from "./types.ts"
 import { mapLimit, RateLimitError } from "./util.ts"
 
@@ -17,7 +18,7 @@ const checkRateLimit = (res: { status: number; headers?: { get(name: string): st
 export type RepoSearchHit = {
   repo: string
   defaultBranch: string
-  signals: Record<string, number | string | boolean | null>
+  signals: Partial<Signals>
   license?: string
   archived: boolean
 }
@@ -57,6 +58,7 @@ export async function fetchRepoSkills(opts: {
   token?: string
   fetchImpl: FetchLike
   license?: string
+  signals?: Partial<Signals>
   maxSkills?: number
   maxFileBytes?: number
   concurrency?: number
@@ -97,7 +99,7 @@ export async function fetchRepoSkills(opts: {
       name: dir.split("/").at(-1) ?? dir,
       dir,
       tags: dir.split("/").slice(0, -1).slice(-2),
-      signals: {},
+      signals: opts.signals ?? {},
       files,
     }
   })

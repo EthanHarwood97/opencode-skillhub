@@ -52,4 +52,24 @@ describe("runGates", () => {
     })
     expect(results.find((r) => r.gate === "maintenance")?.passed).toBe(true)
   })
+
+  it("exempts marketplace entries without a push timestamp", () => {
+    const results = runGates({
+      ...base,
+      signals: SignalsSchema.parse({}),
+      source: SourceSchema.parse({ kind: "marketplace", repo: "acme", path: "SKILL.md", licenseFlags: ["unknown-license"] }),
+    })
+    const maintenance = results.find((r) => r.gate === "maintenance")
+    expect(maintenance?.passed).toBe(true)
+    expect(maintenance?.reason).toBe("marketplace entry has no repository to age")
+  })
+
+  it("still fails github sources without a push timestamp", () => {
+    const results = runGates({
+      ...base,
+      signals: SignalsSchema.parse({}),
+      source: SourceSchema.parse({ kind: "github", repo: "a/b", path: "s/SKILL.md", license: "MIT" }),
+    })
+    expect(results.find((r) => r.gate === "maintenance")?.passed).toBe(false)
+  })
 })
