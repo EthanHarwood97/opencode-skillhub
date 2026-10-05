@@ -25,6 +25,9 @@ describe("overview", () => {
           reviewQueue: 7,
           gaps: ["source agentskills: rate limited"],
           sources: [{ source: "github:claude-skills", candidates: 40, fetchedAt: "2026-10-05T00:00:00.000Z", warnings: ["repo x/y: boom"] }],
+          coverage: [
+            { profile: "coding", coverage: 33, gaps: [{ category: "testing", supply: 0, min: 3, top: [] }] },
+          ],
         }),
       ),
     )
@@ -33,6 +36,40 @@ describe("overview", () => {
     expect(screen.getByText("github:claude-skills")).toBeInTheDocument()
     expect(screen.getByText("source agentskills: rate limited")).toBeInTheDocument()
     expect(screen.getByText(/repo x\/y: boom/)).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: "Coverage" })).toBeInTheDocument()
+    expect(screen.getByText("What each goal profile needs, measured against the catalog.")).toBeInTheDocument()
+    expect(screen.getByText("coding")).toBeInTheDocument()
+    expect(screen.getByText("33%")).toBeInTheDocument()
+    const gapChip = screen.getByRole("link", { name: "testing 0/3" })
+    expect(gapChip).toHaveAttribute("href", "/gallery?category=testing")
+  })
+
+  it("explains an empty catalog in the coverage panel", async () => {
+    ;(globalThis as { __SKILLHUB__?: unknown }).__SKILLHUB__ = { mode: "live", token: "t" }
+    server.use(
+      http.get("/api/status", () =>
+        HttpResponse.json({
+          generatedAt: "2026-10-05T00:00:00.000Z",
+          counts: { total: 0, byStatus: {}, byCategory: {} },
+          installed: 0,
+          active: 0,
+          updates: 0,
+          reviewQueue: 0,
+          gaps: [],
+          sources: [],
+          coverage: [
+            { profile: "coding", coverage: 0, gaps: [] },
+            { profile: "content", coverage: 0, gaps: [] },
+            { profile: "research", coverage: 0, gaps: [] },
+            { profile: "business-ops", coverage: 0, gaps: [] },
+            { profile: "design-creative", coverage: 0, gaps: [] },
+          ],
+        }),
+      ),
+    )
+    renderPage(<OverviewPage />)
+    expect(await screen.findByText("No skills yet — run a sync to populate the catalog.")).toBeInTheDocument()
+    expect(screen.queryByText("coding")).not.toBeInTheDocument()
   })
 
   it("explains an empty catalog", async () => {

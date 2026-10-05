@@ -53,6 +53,29 @@ describe("builders", () => {
     expect(status.gaps).toEqual(["source y: boom"])
   })
 
+  it("includes per-profile coverage in the status summary", () => {
+    const status = buildStatus(snapshot())
+    expect(status.coverage.map((profile) => profile.profile)).toEqual(["coding", "content", "research", "business-ops", "design-creative"])
+    const coding = status.coverage.find((profile) => profile.profile === "coding")!
+    expect(coding.coverage).toBe(10)
+    const engineering = coding.gaps.find((gap) => gap.category === "engineering")!
+    expect(engineering).toMatchObject({ supply: 1, min: 3 })
+    expect(engineering.top).toEqual([{ id: "a/three", name: "three", total: 60 }])
+    const testing = coding.gaps.find((gap) => gap.category === "testing")!
+    expect(testing).toMatchObject({ supply: 0, min: 3, top: [] })
+  })
+
+  it("reports zero coverage for every profile when the index is empty", () => {
+    const empty: UiSnapshot = {
+      index: { version: 1, generatedAt: "", counts: { total: 0, byStatus: {}, byCategory: {} }, skills: [] },
+      lock: { version: 1, skills: {} },
+      warnings: [],
+    }
+    const status = buildStatus(empty)
+    expect(status.coverage).toHaveLength(5)
+    expect(status.coverage.every((profile) => profile.coverage === 0)).toBe(true)
+  })
+
   it("filters and paginates cards", () => {
     const page = buildSkills(snapshot(), { q: "pdf" })
     expect(page.items.map((c) => c.id)).toEqual(["a/one"])

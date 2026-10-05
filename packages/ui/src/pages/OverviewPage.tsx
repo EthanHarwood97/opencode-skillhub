@@ -71,6 +71,33 @@ export default function OverviewPage() {
       </section>
 
       <section className={styles.panel}>
+        <h2>Coverage</h2>
+        <p className="pageHint">What each goal profile needs, measured against the catalog.</p>
+        {data.counts.total === 0 && data.coverage.every((profile) => profile.coverage === 0) ? (
+          <p className="pageHint">No skills yet — run a sync to populate the catalog.</p>
+        ) : (
+          <ul className={styles.coverage}>
+            {data.coverage.map((profile) => (
+              <li key={profile.profile} className={styles.coverageRow}>
+                <span className={styles.coverageProfile}>{profile.profile}</span>
+                <span className={`mono ${styles.coveragePct}`}>{profile.coverage}%</span>
+                <span className={styles.coverageTrack} aria-hidden="true">
+                  <span className={styles.coverageFill} style={{ width: `${profile.coverage}%` }} />
+                </span>
+                <span className={styles.coverageGaps}>
+                  {profile.gaps.map((gap) => (
+                    <Link key={gap.category} to={`/gallery?category=${encodeURIComponent(gap.category)}`} className={styles.gapLink}>
+                      <Chip tone="muted">{gap.category} {gap.supply}/{gap.min}</Chip>
+                    </Link>
+                  ))}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section className={styles.panel}>
         <h2>Gaps</h2>
         {data.gaps.length === 0 ? (
           <p className="pageHint">No gaps reported by the last reconciliation.</p>

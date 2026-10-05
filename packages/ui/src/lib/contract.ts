@@ -62,6 +62,9 @@ export type SkillDetail = SkillCard & {
 
 export type SourceStatDto = { source: string; candidates: number; fetchedAt: string; error?: string; warnings?: string[] }
 
+export type CoverageGapDto = { category: string; supply: number; min: number; top: { id: string; name: string; total: number }[] }
+export type ProfileCoverageDto = { profile: string; coverage: number; gaps: CoverageGapDto[] }
+
 export type StatusDto = {
   generatedAt: string
   counts: { total: number; byStatus: Record<string, number>; byCategory: Record<string, number> }
@@ -71,6 +74,7 @@ export type StatusDto = {
   reviewQueue: number
   gaps: string[]
   sources: SourceStatDto[]
+  coverage: ProfileCoverageDto[]
 }
 
 export type ReviewUpdateDto = { id: string; from: number; to: number; riskFrom: string; riskTo: string }

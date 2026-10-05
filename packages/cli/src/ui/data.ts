@@ -5,6 +5,7 @@ import type { CatalogIndex } from "../../../catalog/src/publish.ts"
 import type { ReconciliationFile } from "../../../catalog/src/reconcile.ts"
 import type { TrendingFile } from "../../../catalog/src/trending.ts"
 import type { SkillRecord } from "../../../catalog/src/types.ts"
+import { computeCoverage, GOAL_PROFILES } from "../../../catalog/src/coverage.ts"
 import { computeUpgradeSuggestions } from "../../../catalog/src/upgrades.ts"
 import { filterSkills } from "../../../ui/src/lib/filter.ts"
 import type {
@@ -115,6 +116,14 @@ export function buildStatus(snapshot: UiSnapshot): StatusDto {
     reviewQueue: snapshot.reconciliation?.reviewQueue.length ?? 0,
     gaps: snapshot.reconciliation?.gaps ?? [],
     sources: snapshot.reconciliation?.sources ?? [],
+    coverage: GOAL_PROFILES.map((profile) => {
+      const result = computeCoverage(snapshot.index.skills, profile.id)
+      return {
+        profile: result.profile,
+        coverage: result.coverage,
+        gaps: result.gaps.map((gap) => ({ category: gap.category, supply: gap.supply, min: gap.min, top: gap.top })),
+      }
+    }),
   }
 }
 
