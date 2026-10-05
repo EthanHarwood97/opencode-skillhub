@@ -5,6 +5,7 @@ import type { CatalogIndex } from "../../../catalog/src/publish.ts"
 import type { ReconciliationFile } from "../../../catalog/src/reconcile.ts"
 import type { TrendingFile } from "../../../catalog/src/trending.ts"
 import type { SkillRecord } from "../../../catalog/src/types.ts"
+import { computeUpgradeSuggestions } from "../../../catalog/src/upgrades.ts"
 import { filterSkills } from "../../../ui/src/lib/filter.ts"
 import type {
   ClustersDto,
@@ -140,10 +141,15 @@ export function buildReview(snapshot: UiSnapshot): ReviewDto {
     })
     .sort((a, b) => b.to - a.to || a.id.localeCompare(b.id))
   const queue = new Set(snapshot.reconciliation?.reviewQueue ?? [])
+  const upgrades = computeUpgradeSuggestions(
+    snapshot.index.skills,
+    Object.entries(snapshot.lock.skills).map(([id, entry]) => ({ id, total: entry.total, active: entry.active })),
+  ).map(({ from, to, fromTotal, toTotal }) => ({ from, to, fromTotal, toTotal }))
   return {
     newCandidates: cards
       .filter((card) => queue.has(card.id) && card.status === "candidate")
       .sort((a, b) => b.total - a.total || a.id.localeCompare(b.id)),
+    upgrades,
     updates,
     quarantined: cards.filter((card) => card.status === "quarantined").sort((a, b) => b.total - a.total || a.id.localeCompare(b.id)),
     gaps: snapshot.reconciliation?.gaps ?? [],

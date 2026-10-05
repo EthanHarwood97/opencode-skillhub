@@ -41,6 +41,7 @@ describe("review queue", () => {
       http.get("/api/review", () =>
         HttpResponse.json({
           newCandidates: [card("acme/new")],
+          upgrades: [{ from: "acme/old", to: "acme/new", fromTotal: 55, toTotal: 78 }],
           updates: [{ id: "acme/old", from: 50, to: 80, riskFrom: "medium", riskTo: "low" }],
           quarantined: [card("acme/bad", { status: "quarantined", risk: "critical" })],
           gaps: ["source x: boom"],
@@ -56,6 +57,10 @@ describe("review queue", () => {
 
     expect(await screen.findByText("New this week")).toBeInTheDocument()
     expect(screen.getByText("acme/new")).toBeInTheDocument()
+    expect(screen.getByText("Upgrade suggestions")).toBeInTheDocument()
+    expect(screen.getByText("acme/old → acme/new")).toBeInTheDocument()
+    expect(screen.getByText("+23")).toBeInTheDocument()
+    expect(screen.getByText("Review the alternative in the gallery before switching.")).toBeInTheDocument()
     expect(screen.getByText("Updates available")).toBeInTheDocument()
     expect(screen.getByText("50 → 80")).toBeInTheDocument()
     expect(screen.getByText("Quarantined")).toBeInTheDocument()
@@ -68,9 +73,17 @@ describe("review queue", () => {
 
   it("shows the calm empty state", async () => {
     ;(globalThis as { __SKILLHUB__?: unknown }).__SKILLHUB__ = { mode: "live", token: "t" }
-    server.use(http.get("/api/review", () => HttpResponse.json({ newCandidates: [], updates: [], quarantined: [], gaps: [], sources: [] })))
+    server.use(http.get("/api/review", () => HttpResponse.json({ newCandidates: [], upgrades: [], updates: [], quarantined: [], gaps: [], sources: [] })))
     renderPage(<ReviewPage />)
     expect(await screen.findByText("Nothing needs your attention. The next sync will surface new candidates here.")).toBeInTheDocument()
+  })
+
+  it("shows the upgrade suggestions empty hint when every active skill is the best in its group", async () => {
+    ;(globalThis as { __SKILLHUB__?: unknown }).__SKILLHUB__ = { mode: "live", token: "t" }
+    server.use(http.get("/api/review", () => HttpResponse.json({ newCandidates: [card("acme/new")], upgrades: [], updates: [], quarantined: [], gaps: [], sources: [] })))
+    renderPage(<ReviewPage />)
+    expect(await screen.findByText("Upgrade suggestions")).toBeInTheDocument()
+    expect(screen.getByText("Every active skill is the best in its group.")).toBeInTheDocument()
   })
 
   it("replaces the update action with a note in static mode", async () => {
@@ -79,6 +92,7 @@ describe("review queue", () => {
       http.get("data/review.json", () =>
         HttpResponse.json({
           newCandidates: [card("acme/new")],
+          upgrades: [],
           updates: [{ id: "acme/old", from: 50, to: 80, riskFrom: "medium", riskTo: "low" }],
           quarantined: [card("acme/bad", { status: "quarantined", risk: "critical" })],
           gaps: ["source x: boom"],

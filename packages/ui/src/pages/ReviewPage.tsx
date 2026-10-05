@@ -23,7 +23,7 @@ export default function ReviewPage() {
     return <ErrorState title="Couldn't load the review queue." retry={() => void refetch()}><p>{error instanceof Error ? error.message : String(error)}</p></ErrorState>
   }
 
-  const empty = data.newCandidates.length === 0 && data.updates.length === 0 && data.quarantined.length === 0 && data.gaps.length === 0
+  const empty = data.newCandidates.length === 0 && data.upgrades.length === 0 && data.updates.length === 0 && data.quarantined.length === 0 && data.gaps.length === 0
   if (empty) {
     return <EmptyState title="Nothing needs your attention. The next sync will surface new candidates here." />
   }
@@ -42,6 +42,25 @@ export default function ReviewPage() {
               <li key={card.id}>
                 <Link to={`/skills/${card.id}`} className="mono">{card.id}</Link>
                 <span className={styles.meta}>score {card.total} · {card.risk} risk</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section className={styles.section}>
+        <h2>Upgrade suggestions</h2>
+        {data.upgrades.length === 0 ? (
+          <p className="pageHint">Every active skill is the best in its group.</p>
+        ) : (
+          <ul className={styles.list}>
+            {data.upgrades.map((upgrade) => (
+              <li key={upgrade.from}>
+                <Link to={`/skills/${upgrade.to}`} className="mono">{upgrade.from} → {upgrade.to}</Link>
+                <span className={styles.meta}>
+                  <Chip tone="low">+{Math.round(upgrade.toTotal - upgrade.fromTotal)}</Chip>
+                  <span className="pageHint">Review the alternative in the gallery before switching.</span>
+                </span>
               </li>
             ))}
           </ul>

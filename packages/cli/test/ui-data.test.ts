@@ -68,6 +68,14 @@ describe("builders", () => {
     expect(review.newCandidates.map((c) => c.id)).toEqual(["a/three"])
     expect(review.updates).toEqual([{ id: "a/one", from: 80, to: 90, riskFrom: "low", riskTo: "low" }])
     expect(review.quarantined.map((c) => c.id)).toEqual(["a/two"])
+    expect(review.upgrades).toEqual([])
+  })
+
+  it("suggests a better-ranked same-cluster alternative for an active skill", () => {
+    const snap = snapshot()
+    snap.index.skills.push(makeRecord({ id: "a/better", category: "writing", tags: ["pdf"], scores: scores(90) }))
+    expect(buildReview(snap).upgrades).toEqual([{ from: "a/one", to: "a/better", fromTotal: 80, toTotal: 90 }])
+    expect(buildReview(snapshot()).upgrades).toEqual([])
   })
 
   it("degrades gracefully when optional artifacts are missing", () => {

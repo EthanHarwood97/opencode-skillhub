@@ -74,8 +74,10 @@ export type StatusDto = {
 }
 
 export type ReviewUpdateDto = { id: string; from: number; to: number; riskFrom: string; riskTo: string }
+export type ReviewUpgradeDto = { from: string; to: string; fromTotal: number; toTotal: number }
 export type ReviewDto = {
   newCandidates: SkillCard[]
+  upgrades: ReviewUpgradeDto[]
   updates: ReviewUpdateDto[]
   quarantined: SkillCard[]
   gaps: string[]
