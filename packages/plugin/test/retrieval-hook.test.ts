@@ -24,17 +24,41 @@ const stateWith = (sessionID: string, prompt: string): RetrievalState => {
 }
 
 describe("makeRetrievalTransform", () => {
-  it("appends a retrieval block for a matching prompt and consumes the prompt", async () => {
+  it("appends a retrieval block for a matching prompt and keeps it pending for the turn", async () => {
     const state = stateWith("s1", "I need deep web research for a report")
     const output = { system: ["base"] as string[] }
     const suggestions: string[][] = []
-    await makeRetrievalTransform(deps({ onSuggestion: (ids) => void suggestions.push(ids) }), state)({ sessionID: "s1" }, output)
-    expect(state.prompts.size).toBe(0)
-    expect(state.last).toBeUndefined()
+    const transform = makeRetrievalTransform(deps({ onSuggestion: (ids) => void suggestions.push(ids) }), state)
+    await transform({ sessionID: "s1" }, output)
+    expect(state.prompts.get("s1")).toBeTruthy()
     expect(output.system).toHaveLength(2)
     expect(output.system[1]).toContain("<skillhub-retrieval>")
     expect(output.system[1]).toContain("weizhena-deep-research-skills/research")
-    expect(suggestions).toEqual([["weizhena-deep-research-skills/research"]])
+    await transform({ sessionID: "s1" }, output)
+    expect(output.system).toHaveLength(3)
+    expect(output.system[1]).toContain("<skillhub-retrieval>")
+    expect(output.system[1]).toContain("weizhena-deep-research-skills/research")
+    expect(output.system[2]).toContain("<skillhub-retrieval>")
+    expect(output.system[2]).toContain("weizhena-deep-research-skills/research")
+    expect(suggestions).toEqual([["weizhena-deep-research-skills/research"], ["weizhena-deep-research-skills/research"]])
+  })
+
+  it("replaces the pending prompt when a new message is remembered for the same session", async () => {
+    const queries: string[] = []
+    const state = stateWith("s1", "deep research alpha")
+    rememberPrompt(state, "s1", "deep research beta")
+    const transform = makeRetrievalTransform(
+      deps({
+        search: async (query) => {
+          queries.push(query)
+          return [{ id: "weizhena-deep-research-skills/research", name: "research", description: "deep web research", category: "research", risk: "low", total: 78, rank: 2 }]
+        },
+      }),
+      state,
+    )
+    await transform({ sessionID: "s1" }, { system: ["base"] })
+    expect(queries).toEqual(["deep research beta"])
+    expect(state.prompts.get("s1")).toBe("deep research beta")
   })
 
   it("keeps session prompts isolated when two sessions interleave", async () => {
@@ -54,8 +78,9 @@ describe("makeRetrievalTransform", () => {
     await transform({ sessionID: "s2" }, second)
     expect(second.system[1]).toContain("acme/beta")
     expect(first.system[1]).not.toContain("acme/beta")
-    expect(state.prompts.size).toBe(0)
-    expect(state.last).toBeUndefined()
+    expect(state.prompts.get("s1")).toBe("deep research alpha")
+    expect(state.prompts.get("s2")).toBe("deep research beta")
+    expect(state.prompts.size).toBe(2)
   })
 
   it("does nothing when the mode is off, the prompt is empty, or nothing matches", async () => {

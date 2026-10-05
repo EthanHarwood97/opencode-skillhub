@@ -25,7 +25,7 @@ export type RetrievalState = { prompts: Map<string, string>; last?: string }
 
 export const PROMPT_STATE_LIMIT = 20
 
-/** Remember the latest prompt per session, evicting the oldest entry beyond the cap. */
+/** Remember the latest prompt per session, replacing the previous one and evicting the oldest entry beyond the cap. */
 export function rememberPrompt(state: RetrievalState, sessionID: string, prompt: string): void {
   state.prompts.set(sessionID, prompt)
   state.last = prompt
@@ -36,13 +36,16 @@ export function rememberPrompt(state: RetrievalState, sessionID: string, prompt:
   }
 }
 
+/**
+ * Append the retrieval block to each request of the current turn. The prompt is
+ * not consumed: it stays pending for the whole turn (title, main, tool-loop
+ * requests) and is replaced when the next user message reaches rememberPrompt.
+ */
 export function makeRetrievalTransform(deps: RetrievalDeps, state: RetrievalState) {
   return async (input: { sessionID?: string }, output: { system: string[] }): Promise<void> => {
     const sessionID = input.sessionID
     const sessionPrompt = sessionID ? state.prompts.get(sessionID) : undefined
     const prompt = sessionPrompt ?? state.last
-    if (sessionID && sessionPrompt !== undefined) state.prompts.delete(sessionID)
-    if (prompt !== undefined && state.last === prompt) state.last = undefined
     if (!prompt || prompt.trim() === "") return
     try {
       const settings = deps.settings()
