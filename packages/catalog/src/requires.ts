@@ -12,7 +12,7 @@ const SCRIPT_EXTENSIONS = new Set([
   ".sh", ".bash", ".ps1", ".py", ".js", ".mjs", ".cjs", ".ts", ".tsx", ".bat", ".cmd", ".rb", ".go", ".rs", ".pl",
 ])
 
-const SCRIPT_REF_RE = /[`"'\s]([\w./-]+\.(?:sh|bash|ps1|py|js|mjs|cjs|ts|tsx|bat|cmd|rb|go|rs|pl))\b/g
+const SCRIPT_REF_RE = /[`"'\s]([\w./\\-]+\.(?:sh|bash|ps1|py|js|mjs|cjs|ts|tsx|bat|cmd|rb|go|rs|pl))\b/g
 const ENV_RE = /\b([A-Z][A-Z0-9_]*_(?:KEY|TOKEN|SECRET|URL|ID|PATH|ENDPOINT))\b/g
 const MCP_RE = /mcp__([a-z0-9_-]+)|\bMCP server[s]?\s+["'`]?([a-z0-9_-]+)/gi
 

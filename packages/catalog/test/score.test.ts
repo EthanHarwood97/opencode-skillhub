@@ -73,5 +73,6 @@ describe("scoreRecord", () => {
   it("penalizes required scripts that are not bundled", () => {
     const missing = scoreRecord({ ...healthy, missingScripts: 2 })
     expect(missing.compatibility).toBeLessThan(scoreRecord(healthy).compatibility)
+    expect(missing.compatibility).toBe(80)
   })
 })

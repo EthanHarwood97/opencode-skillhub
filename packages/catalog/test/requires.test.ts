@@ -27,6 +27,13 @@ describe("extractRequires", () => {
     expect(r.scripts).toEqual(["run.ps1"])
   })
 
+  it("extracts and normalizes a Windows-style body reference", () => {
+    const bundled = extractRequires({ body: "Then run `.\\run.ps1`.", files: ["SKILL.md", "run.ps1"] })
+    expect(bundled.scripts).toEqual(["run.ps1"])
+    const unbundled = extractRequires({ body: "Then run `.\\run.ps1`.", files: ["SKILL.md"] })
+    expect(unbundled.scripts).toEqual(["run.ps1"])
+  })
+
   it("returns empty arrays for a plain doc", () => {
     const r = extractRequires({ body: "# T\n\nJust prose about writing.\n", files: ["SKILL.md"] })
     expect(r).toEqual({ runtime: [], scripts: [], mcp: [], env: [], services: [] })

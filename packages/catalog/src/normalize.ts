@@ -9,6 +9,11 @@ import type { Candidate } from "./sources/types.ts"
 
 export type NormalizeResult = { record?: SkillRecord; rejected?: { reason: string }; body?: string }
 
+const skillRelative = (dir: string, path: string): string => {
+  const prefix = dir.endsWith("/") ? dir : `${dir}/`
+  return path.startsWith(prefix) ? path.slice(prefix.length) : path
+}
+
 export function normalizeCandidate(candidate: Candidate, opts: { now: Date; maxIdleMonths?: number }): NormalizeResult {
   const skillFile = candidate.files.find((f) => f.path.endsWith("SKILL.md") && f.content !== undefined)
   if (!skillFile?.content) {
@@ -61,8 +66,9 @@ export function normalizeCandidate(candidate: Candidate, opts: { now: Date; maxI
     return { rejected: { reason: "candidate has files without fetched content (cannot hash)" } }
   }
 
-  const requires = extractRequires({ body: parsed.body, files: candidate.files.map((f) => f.path) })
-  const presentPaths = new Set(candidate.files.map((f) => f.path))
+  const relativePaths = candidate.files.map((f) => skillRelative(candidate.dir, f.path))
+  const requires = extractRequires({ body: parsed.body, files: relativePaths })
+  const presentPaths = new Set(relativePaths)
   const missingScripts = requires.scripts.filter((s) => !presentPaths.has(s)).length
 
   const scores = scoreRecord({ parsed, risk, signals, filesPresent: [true], source: candidate.source, now: opts.now, missingScripts })
