@@ -21,6 +21,16 @@ export function buildFtsQuery(input: string): string {
     .join(" ")
 }
 
+const RETRIEVAL_STOPWORDS = new Set([
+  "the","a","an","and","or","to","of","in","for","on","with","is","are","be","this","that","it","as","at","by","from","how","what","when","why","i","we","you","my","your","can","could","should","would","do","does","did","please",
+])
+
+/** Build an OR-based FTS5 query from a natural-language prompt (retrieval path only). */
+export function buildRetrievalFtsQuery(prompt: string): string {
+  const tokens = [...new Set(prompt.toLowerCase().split(/[^a-z0-9]+/).filter((token) => token.length > 2 && !RETRIEVAL_STOPWORDS.has(token)))]
+  return tokens.slice(0, 16).map((token) => `"${token}"`).join(" OR ")
+}
+
 export function formatHits(rows: SearchRow[], limit = 5): string {
   if (rows.length === 0) return "No matching skills."
   return rows

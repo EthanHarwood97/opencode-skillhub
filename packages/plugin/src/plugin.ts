@@ -9,6 +9,7 @@ import { makeQueryEmbedder } from "./query-embedder.ts"
 import { makeRetrievalTransform, promptFromChatMessage, rememberPrompt, type RetrievalState } from "./retrieval-hook.ts"
 import { readRetrievalSettings } from "./settings.ts"
 import { resolveRoot } from "./root.ts"
+import { buildRetrievalFtsQuery } from "./search-core.ts"
 import { searchRuntime } from "./search-runtime.ts"
 import { makeStartupNotifier, renderStatus } from "./status-core.ts"
 import { makeRouterTool } from "./tools.ts"
@@ -55,7 +56,7 @@ export const SkillHubPlugin: Plugin = async ({ client, directory }) => {
 
   const retrievalTransform = makeRetrievalTransform(
     {
-      search: (query, limit) => searchRuntime(root, query, limit),
+      search: (query, limit) => searchRuntime(root, query, limit, { ftsQuery: buildRetrievalFtsQuery(query) }),
       embed,
       loadVectors,
       readBody: (id) => readSkillBodyFromDisk(root, id),

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { buildFtsQuery, CAPABILITY_MAP, estimateTokens, formatHits, ROUTER_DESCRIPTION } from "../src/search-core.ts"
+import { buildFtsQuery, buildRetrievalFtsQuery, CAPABILITY_MAP, estimateTokens, formatHits, ROUTER_DESCRIPTION } from "../src/search-core.ts"
 
 describe("buildFtsQuery", () => {
   it("quotes tokens and strips quotes", () => {
@@ -7,6 +7,37 @@ describe("buildFtsQuery", () => {
   })
   it("drops empty tokens", () => {
     expect(buildFtsQuery("  a   b ")).toBe('"a" "b"')
+  })
+})
+
+describe("buildRetrievalFtsQuery", () => {
+  it("OR-joins meaningful tokens, dropping stopwords and short tokens", () => {
+    const query = buildRetrievalFtsQuery("I need to plan a deep research report on a niche topic")
+    expect(query).toContain('"plan"')
+    expect(query).toContain('"research"')
+    expect(query).not.toContain('"the"')
+    expect(query).not.toContain('"to"')
+    expect(query).not.toContain('"on"')
+    expect(query).toContain(" OR ")
+  })
+
+  it("dedupes repeated tokens", () => {
+    expect(buildRetrievalFtsQuery("research research RESEARCH")).toBe('"research"')
+  })
+
+  it("returns an empty string for empty or punctuation-only input", () => {
+    expect(buildRetrievalFtsQuery("")).toBe("")
+    expect(buildRetrievalFtsQuery(" ... ")).toBe("")
+    expect(buildRetrievalFtsQuery("a to of in")).toBe("")
+  })
+
+  it("caps the query at 16 quoted terms", () => {
+    const words = Array.from({ length: 20 }, (_, i) => `keyword${i}`)
+    const query = buildRetrievalFtsQuery(words.join(" "))
+    expect(query.split(" OR ")).toHaveLength(16)
+    expect(query).toContain('"keyword0"')
+    expect(query).toContain('"keyword15"')
+    expect(query).not.toContain('"keyword16"')
   })
 })
 
