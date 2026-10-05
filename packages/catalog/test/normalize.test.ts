@@ -129,4 +129,31 @@ describe("normalizeCandidate", () => {
     expect(record?.requires.scripts).toEqual(["scripts/run.py"])
     expect(record?.scores.compatibility).toBe(100)
   })
+
+  it("penalizes a backslash script reference that is not bundled", () => {
+    const body = [
+      "---",
+      "name: demo",
+      "description: Demo skill. Use when testing skill-relative script matching.",
+      "---",
+      "",
+      "# Demo",
+      "",
+      "Run `python scripts\\run.py`.",
+      "",
+    ].join("\n")
+    const { record } = normalizeCandidate(
+      {
+        ...candidate("good-skill"),
+        name: "demo",
+        dir: "skills/demo",
+        source: { kind: "github", repo: "acme/skills", path: "skills/demo/SKILL.md", ref: "abc123", license: "MIT", licenseFlags: [] },
+        files: [{ path: "skills/demo/SKILL.md", content: body }],
+      },
+      { now },
+    )
+    expect(record?.requires.scripts).toEqual(["scripts/run.py"])
+    expect(record?.scores.compatibility).toBe(90)
+    expect(record?.scores.reasons.join(" ")).toMatch(/1 required script\(s\) not bundled/)
+  })
 })

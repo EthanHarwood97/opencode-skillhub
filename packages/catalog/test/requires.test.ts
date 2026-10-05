@@ -34,6 +34,16 @@ describe("extractRequires", () => {
     expect(unbundled.scripts).toEqual(["run.ps1"])
   })
 
+  it("normalizes internal backslashes in body-referenced scripts so bundled files match", () => {
+    const bundled = extractRequires({ body: "Then run `python scripts\\run.py`.", files: ["SKILL.md", "scripts/run.py"] })
+    expect(bundled.scripts).toEqual(["scripts/run.py"])
+  })
+
+  it("records unbundled backslash references in POSIX form for the penalty check", () => {
+    const unbundled = extractRequires({ body: "Then run `python scripts\\missing.py`.", files: ["SKILL.md"] })
+    expect(unbundled.scripts).toEqual(["scripts/missing.py"])
+  })
+
   it("returns empty arrays for a plain doc", () => {
     const r = extractRequires({ body: "# T\n\nJust prose about writing.\n", files: ["SKILL.md"] })
     expect(r).toEqual({ runtime: [], scripts: [], mcp: [], env: [], services: [] })

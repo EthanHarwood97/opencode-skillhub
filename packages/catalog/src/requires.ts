@@ -34,7 +34,7 @@ export function extractRequires(input: { body: string; files: string[] }): Requi
     if (dot !== -1 && SCRIPT_EXTENSIONS.has(path.slice(dot).toLowerCase())) scripts.add(path)
   }
   for (const match of input.body.matchAll(SCRIPT_REF_RE)) {
-    const ref = match[1]?.replace(/^\.[\\/]/, "")
+    const ref = match[1]?.replace(/^\.[\\/]/, "").replaceAll("\\", "/")
     if (ref) scripts.add(ref)
   }
 
