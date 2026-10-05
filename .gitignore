@@ -2,3 +2,8 @@ node_modules/
 *.log
 .worktrees/
 catalog/search.db
+packages/ui/dist/
+packages/ui/playwright-report/
+packages/ui/test-results/
+packages/ui/.e2e-store/
+packages/ui/.e2e-out/

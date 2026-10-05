@@ -9,5 +9,6 @@
     "types": ["node"],
     "skipLibCheck": true
   },
-  "include": ["packages/**/src/**/*.ts", "packages/**/test/**/*.ts", "vitest.config.ts"]
+  "include": ["packages/**/src/**/*.ts", "packages/**/test/**/*.ts", "vitest.config.ts"],
+  "exclude": ["packages/ui/src/**/*.tsx", "packages/ui/test/**/*.tsx", "packages/ui/e2e/**/*.tsx"]
 }

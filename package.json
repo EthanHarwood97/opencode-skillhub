@@ -6,10 +6,13 @@
   "engines": { "node": ">=22.23" },
   "scripts": {
     "test": "vitest run",
-    "typecheck": "tsc --noEmit",
+    "test:e2e": "npm run e2e --workspace @skillhub/ui",
+    "typecheck": "tsc --noEmit && tsc -p packages/ui/tsconfig.json",
     "catalog:build": "node packages/catalog/src/bin.ts",
     "catalog:sync": "node packages/catalog/src/sync-bin.ts",
-    "skillhub": "node packages/cli/src/bin.ts"
+    "skillhub": "node packages/cli/src/bin.ts",
+    "ui:build": "npm run build --workspace @skillhub/ui",
+    "ui:dev": "npm run dev --workspace @skillhub/ui"
   },
   "devDependencies": {
     "@types/node": "^22.15.0",
