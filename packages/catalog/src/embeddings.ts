@@ -33,7 +33,7 @@ export function makeGeminiEmbedder(opts: {
   const model = opts.model ?? "gemini-embedding-001"
   const dim = opts.dim ?? 768
   const fetchImpl = opts.fetchImpl ?? fetch
-  const batchSize = Math.min(opts.batchSize ?? 50, 50)
+  const batchSize = Math.min(Math.max(1, opts.batchSize ?? 50), 50)
   const base = "https://generativelanguage.googleapis.com/v1beta"
 
   const embedBatch = async (texts: string[]): Promise<Float32Array[]> => {

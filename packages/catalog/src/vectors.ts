@@ -26,6 +26,9 @@ export function readVectors(outDir: string): VectorsFile | undefined {
   try {
     const meta = JSON.parse(readFileSync(metaPath, "utf8")) as VectorsMeta
     const buf = readFileSync(binPath)
+    if (meta.version !== VECTORS_VERSION || !Number.isInteger(meta.dim) || meta.dim <= 0 || !Array.isArray(meta.ids) || buf.length !== meta.ids.length * meta.dim * 4) {
+      return undefined
+    }
     const stride = meta.dim * 4
     const vectors = new Map<string, Float32Array>()
     meta.ids.forEach((entry, index) => {
@@ -45,7 +48,11 @@ export async function writeVectors(
 ): Promise<{ embedded: number; reused: number }> {
   const previous = readVectors(outDir)
   const reusable =
-    previous && previous.meta.provider === opts.embedder.name && previous.meta.model === opts.embedder.model && previous.meta.dim === opts.embedder.dim
+    previous &&
+    previous.meta.version === VECTORS_VERSION &&
+    previous.meta.provider === opts.embedder.name &&
+    previous.meta.model === opts.embedder.model &&
+    previous.meta.dim === opts.embedder.dim
       ? previous
       : undefined
   const byHash = new Map<string, Float32Array>()
@@ -72,7 +79,9 @@ export async function writeVectors(
   const bin = Buffer.alloc(records.length * dim * 4)
   records.forEach((record, index) => {
     const vector = byHash.get(record.contentHash)
-    if (vector) Buffer.from(vector.buffer, vector.byteOffset, vector.byteLength).copy(bin, index * dim * 4)
+    if (!vector) return
+    if (vector.length !== dim) throw new Error("embedding dimension mismatch")
+    Buffer.from(vector.buffer, vector.byteOffset, vector.byteLength).copy(bin, index * dim * 4)
   })
   writeFileSync(join(outDir, "vectors.bin"), bin)
   const meta: VectorsMeta = {

@@ -1,4 +1,4 @@
-import { mkdtempSync } from "node:fs"
+import { mkdtempSync, readFileSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
@@ -25,6 +25,11 @@ const fakeEmbedder = (): EmbeddingProvider & { calls: number } => ({
 
 describe("writeVectors/readVectors", () => {
   const records = [makeRecord({ id: "a/one", contentHash: "h1", name: "One", description: "first", tags: ["x"] }), makeRecord({ id: "a/two", contentHash: "h2", name: "Two", description: "second", tags: ["y"] })]
+
+  const patchMeta = (dir: string, patch: Record<string, unknown>): void => {
+    const metaPath = join(dir, "vectors.json")
+    writeFileSync(metaPath, JSON.stringify({ ...(JSON.parse(readFileSync(metaPath, "utf8")) as Record<string, unknown>), ...patch }))
+  }
 
   it("writes bin+meta and reads vectors back in order", async () => {
     const dir = mkdtempSync(join(tmpdir(), "skillhub-vec-"))
@@ -69,5 +74,37 @@ describe("writeVectors/readVectors", () => {
     expect(result.embedded).toBe(1)
     expect(embedder.calls).toBe(1)
     expect(vectorText({ name: "One", description: "first", tags: ["x", "y"] })).toContain("One")
+  })
+
+  it("returns undefined for a truncated bin", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "skillhub-vec5-"))
+    await writeVectors(records, dir, { embedder: fakeEmbedder(), now: new Date("2026-10-05T00:00:00Z") })
+    const binPath = join(dir, "vectors.bin")
+    const bin = readFileSync(binPath)
+    writeFileSync(binPath, bin.subarray(0, bin.length - 4))
+    expect(readVectors(dir)).toBeUndefined()
+  })
+
+  it("returns undefined for a corrupt dim", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "skillhub-vec6-"))
+    await writeVectors(records, dir, { embedder: fakeEmbedder(), now: new Date("2026-10-05T00:00:00Z") })
+    patchMeta(dir, { dim: 0 })
+    expect(readVectors(dir)).toBeUndefined()
+  })
+
+  it("does not reuse artifacts whose version does not match", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "skillhub-vec7-"))
+    await writeVectors(records, dir, { embedder: fakeEmbedder(), now: new Date("2026-10-05T00:00:00Z") })
+    patchMeta(dir, { version: 999 })
+    const second = fakeEmbedder()
+    const result = await writeVectors(records, dir, { embedder: second, now: new Date("2026-10-06T00:00:00Z") })
+    expect(result).toEqual({ embedded: records.length, reused: 0 })
+    expect(second.calls).toBe(records.length)
+  })
+
+  it("throws when a provider returns vectors of the wrong dimension", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "skillhub-vec8-"))
+    const bad: EmbeddingProvider = { name: "bad", model: "bad-1", dim: 3, embed: async (texts) => texts.map(() => Float32Array.from([1, 0, 0, 0])) }
+    await expect(writeVectors(records, dir, { embedder: bad, now: new Date("2026-10-05T00:00:00Z") })).rejects.toThrow("embedding dimension mismatch")
   })
 })
