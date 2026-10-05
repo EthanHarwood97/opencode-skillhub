@@ -46,6 +46,29 @@ describe("readSkillBodyFromDisk", () => {
     writeFileSync(join(decoy, "SKILL.md"), "# Decoy\n")
     expect(readSkillBodyFromDisk(root, "acme-skills/good-skill")).toBe(body)
   })
+
+  it("resolves the lock-pointed SKILL.md ahead of an earlier-sorting decoy", () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-load-"))
+    const id = "acme-skills/good-skill"
+    const realDir = join(root, "managed", "acme-skills", "good-skill", "good-skill")
+    const decoyDir = join(root, "managed", "acme-skills", "good-skill", "aaa-ref")
+    mkdirSync(realDir, { recursive: true })
+    mkdirSync(decoyDir, { recursive: true })
+    writeFileSync(join(realDir, "SKILL.md"), body)
+    writeFileSync(join(decoyDir, "SKILL.md"), "# Decoy\n")
+    writeFileSync(
+      join(root, "lockfile.json"),
+      JSON.stringify({ version: 1, skills: { [id]: { id, active: true, contentHash: "x", files: [{ path: "good-skill/SKILL.md", sha256: "0", size: 1 }] } } }),
+    )
+    expect(readSkillBodyFromDisk(root, id)).toBe(body)
+  })
+
+  it("rejects traversal-shaped ids", () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-load-"))
+    expect(readSkillBodyFromDisk(root, "../../etc")).toBeUndefined()
+    expect(readSkillBodyFromDisk(root, "a/../b")).toBeUndefined()
+    expect(readSkillBodyFromDisk(root, "a/b/c")).toBeUndefined()
+  })
 })
 
 describe("makeSpill", () => {
@@ -70,6 +93,15 @@ describe("makeLoadTool", () => {
     const t = makeLoadTool({ read: async () => undefined })
     const out = await t.execute({ id: "a/nope" }, { ask: async () => {} } as any)
     expect(typeof out === "string" ? out : out.output).toMatch(/not installed|not found/i)
+  })
+  it("rejects invalid ids without asking or reading", async () => {
+    const ask = vi.fn(async () => {})
+    const read = vi.fn(async () => "# Body\n")
+    const t = makeLoadTool({ read })
+    const out = await t.execute({ id: "../../etc" }, { ask } as any)
+    expect(typeof out === "string" ? out : out.output).toBe('SkillHub: invalid skill id "../../etc"')
+    expect(ask).not.toHaveBeenCalled()
+    expect(read).not.toHaveBeenCalled()
   })
   it("records a load for hits but not for misses", async () => {
     const onLoad = vi.fn()

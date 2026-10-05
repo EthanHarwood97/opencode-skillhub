@@ -36,6 +36,22 @@ describe("listManagedAdverts", () => {
     expect(adverts).toEqual([{ id: "acme-skills/good-skill", name: "good-skill", description: "installed skill body" }])
   })
 
+  it("prefers the lock-pointed SKILL.md over an earlier-sorting decoy", () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-wire-"))
+    const idDir = join(root, "managed", "acme-skills", "good-skill")
+    const realDir = join(idDir, "good-skill")
+    const decoyDir = join(idDir, "aaa-ref")
+    mkdirSync(realDir, { recursive: true })
+    mkdirSync(decoyDir, { recursive: true })
+    writeFileSync(join(realDir, "SKILL.md"), "---\nname: good-skill\ndescription: installed skill body\n---\n\n# Good Skill\n")
+    writeFileSync(join(decoyDir, "SKILL.md"), "---\nname: ref-example\ndescription: bundled reference decoy\n---\n\n# Ref\n")
+    writeFileSync(
+      join(root, "lockfile.json"),
+      JSON.stringify({ version: 1, skills: { "acme-skills/good-skill": { id: "acme-skills/good-skill", active: true, contentHash: "x", files: [{ path: "good-skill/SKILL.md", sha256: "0", size: 1 }] } } }),
+    )
+    expect(listManagedAdverts(root)).toEqual([{ id: "acme-skills/good-skill", name: "good-skill", description: "installed skill body" }])
+  })
+
   it("ignores SKILL.md paths shallower than <org>/<name>/", () => {
     const root = mkdtempSync(join(tmpdir(), "skillhub-wire-"))
     mkdirSync(join(root, "managed", "stray"), { recursive: true })

@@ -1,16 +1,56 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs"
 import type { Dirent } from "node:fs"
-import { join, relative } from "node:path"
+import { join, relative, resolve, sep } from "node:path"
 import matter from "gray-matter"
 import { readCatalogIndex, readLock } from "./catalog-read.ts"
 import { estimateAdvertisedTokens, promotionCandidates, readUsage, usageFileFor, type ActiveAdvert } from "./manage-core.ts"
 import { estimateTokens, ROUTER_DESCRIPTION } from "./search-core.ts"
 import type { StatusInput } from "./status-core.ts"
 
+function withinDir(baseDir: string, target: string): boolean {
+  const base = resolve(baseDir)
+  const resolved = resolve(target)
+  return resolved === base || resolved.startsWith(base + sep)
+}
+
+function lockSkillMdRel(entry: { files: readonly { path: string }[] }): string | undefined {
+  if (!Array.isArray(entry.files)) return undefined
+  return entry.files.find((f) => f.path === "SKILL.md" || f.path.endsWith("/SKILL.md"))?.path
+}
+
+function advertFromFile(id: string, file: string, fallbackName: string): ActiveAdvert {
+  try {
+    const parsed = matter(readFileSync(file, "utf8"))
+    const fmName = typeof parsed.data.name === "string" ? parsed.data.name : fallbackName
+    const description = typeof parsed.data.description === "string" ? parsed.data.description : ""
+    return { id, name: fmName, description }
+  } catch {
+    return { id, name: fallbackName, description: "" }
+  }
+}
+
 export function listManagedAdverts(root: string): ActiveAdvert[] {
   const base = join(root, "managed")
   const out: ActiveAdvert[] = []
   if (!existsSync(base)) return out
+
+  const lock = readLock(root)
+  const resolved = new Set<string>()
+  const inactive = new Set<string>()
+
+  for (const [id, entry] of Object.entries(lock.skills)) {
+    if (!entry.active) {
+      inactive.add(id)
+      continue
+    }
+    const rel = lockSkillMdRel(entry)
+    if (rel === undefined) continue
+    const dir = join(base, id)
+    const file = join(dir, rel)
+    if (!withinDir(dir, file) || !existsSync(file)) continue
+    resolved.add(id)
+    out.push(advertFromFile(id, file, rel.split("/").at(-2) ?? ""))
+  }
 
   const walk = (dir: string): string[] => {
     let entries: Dirent[]
@@ -35,6 +75,7 @@ export function listManagedAdverts(root: string): ActiveAdvert[] {
     const segments = rel.split("/")
     if (segments.length < 3) continue
     const id = `${segments[0]}/${segments[1]}`
+    if (resolved.has(id) || inactive.has(id)) continue
     const depth = segments.length
     const current = best.get(id)
     if (!current || depth < current.depth || (depth === current.depth && rel < current.rel)) {
@@ -43,15 +84,7 @@ export function listManagedAdverts(root: string): ActiveAdvert[] {
   }
 
   for (const [id, { rel, file }] of best) {
-    const fallbackName = rel.split("/").at(-2) ?? ""
-    try {
-      const parsed = matter(readFileSync(file, "utf8"))
-      const fmName = typeof parsed.data.name === "string" ? parsed.data.name : fallbackName
-      const description = typeof parsed.data.description === "string" ? parsed.data.description : ""
-      out.push({ id, name: fmName, description })
-    } catch {
-      out.push({ id, name: fallbackName, description: "" })
-    }
+    out.push(advertFromFile(id, file, rel.split("/").at(-2) ?? ""))
   }
   return out.sort((a, b) => a.id.localeCompare(b.id))
 }
