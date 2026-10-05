@@ -1,7 +1,7 @@
 import { unzipSync } from "fflate"
 import type { Candidate, CandidateFile, FetchLike } from "./types.ts"
 
-type ApiSkill = { id: number | string; slug?: string; name: string; description?: string; category?: string; installs?: number; views?: number }
+type ApiSkill = { id: number | string; slug?: string; name: string; description?: string; category?: string; installs?: number; views?: number; author?: string }
 
 export async function fetchAgentskills(opts: { baseUrl: string; fetchImpl: FetchLike; limit?: number }): Promise<Candidate[]> {
   const limit = opts.limit ?? 50
@@ -21,8 +21,9 @@ export async function fetchAgentskills(opts: { baseUrl: string; fetchImpl: Fetch
       .slice(0, 50)
       .map(([path, bytes]) => ({ path, bytes, content: new TextDecoder().decode(bytes), size: bytes.byteLength }))
     if (!files.some((f) => f.path.endsWith("SKILL.md") && f.content)) continue
+    const repo = typeof item.author === "string" && item.author.trim().length > 0 ? item.author.trim() : "marketplace"
     candidates.push({
-      source: { kind: "marketplace", path: "SKILL.md", url: `${base}/api/skills/download/${item.id}`, licenseFlags: ["unknown-license"] },
+      source: { kind: "marketplace", repo, path: "SKILL.md", url: `${base}/api/skills/download/${item.id}`, licenseFlags: ["unknown-license"] },
       name: item.slug ?? item.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
       dir: item.slug ?? String(item.id),
       description: item.description,

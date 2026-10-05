@@ -36,12 +36,22 @@ describe("agentskills adapter", () => {
     const zip = zipSync({ "SKILL.md": new TextEncoder().encode("---\nname: from-api\ndescription: d\n---\n") })
     const fetchThing = (async (url: string | URL) => {
       const href = String(url)
-      if (href.includes("/api/v1/skills")) return json({ data: [{ id: 7, name: "From API", slug: "from-api", category: "writing", installs: 3 }] })
-      if (href.includes("/download/7")) return new Response(zip, { status: 200 })
+      if (href.includes("/api/v1/skills")) {
+        return json({
+          data: [
+            { id: 7, name: "From API", slug: "from-api", category: "writing", installs: 3, author: "acme" },
+            { id: 8, name: "No Author", slug: "no-author" },
+          ],
+        })
+      }
+      if (href.includes("/download/7") || href.includes("/download/8")) return new Response(zip, { status: 200 })
       throw new Error(`unexpected ${href}`)
     }) as unknown as Parameters<typeof fetchAgentskills>[0]["fetchImpl"]
     const candidates = await fetchAgentskills({ baseUrl: "https://example.test", fetchImpl: fetchThing })
     expect(candidates[0]?.source.kind).toBe("marketplace")
+    expect(candidates[0]?.source.repo).toBe("acme")
+    expect(candidates[1]?.source.repo).toBe("marketplace")
     expect(candidates[0]?.files[0]?.path).toBe("SKILL.md")
+    expect(candidates[0]?.files[0]?.bytes).toBeInstanceOf(Uint8Array)
   })
 })

@@ -17,11 +17,18 @@ export function buildCatalog(opts: { candidates: Candidate[]; outDir: string; no
   const now = opts.now ?? new Date()
   const records: SkillRecord[] = []
   const rejected: BuildSummary["rejected"] = []
+  const seen = new Set<string>()
 
   for (const candidate of opts.candidates) {
     const result = normalizeCandidate(candidate, { now })
-    if (result.record) records.push(result.record)
-    else if (result.rejected) rejected.push({ name: candidate.name, reason: result.rejected.reason })
+    if (result.record) {
+      if (seen.has(result.record.id)) {
+        rejected.push({ name: candidate.name, reason: `duplicate id ${result.record.id}` })
+        continue
+      }
+      seen.add(result.record.id)
+      records.push(result.record)
+    } else if (result.rejected) rejected.push({ name: candidate.name, reason: result.rejected.reason })
   }
 
   const index = writeCatalog(records, opts.outDir, now).index
