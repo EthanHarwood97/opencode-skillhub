@@ -7,7 +7,7 @@ import { searchSkills } from "./search.ts"
 import { installSkill } from "./installer.ts"
 import { readLockfile, upsertEntry, writeLockfile } from "./lockfile.ts"
 import { activateSkill, deactivateSkill, planUpdate, applyUpdate, reviewSkill, findingRules } from "./write-helpers.ts"
-import { applyCalibration, runCalibrate, runLabelExport, runLabelImport } from "./commands/depth.ts"
+import { applyCalibration, formatTrending, readTrending, runCalibrate, runLabelExport, runLabelImport } from "./commands/depth.ts"
 import { join } from "node:path"
 
 const program = new Command("skillhub").option("--root <dir>", "SkillHub home (defaults to SKILLHUB_HOME)")
@@ -217,6 +217,15 @@ labelCommand
   .action((tsv: string, opts: { out: string }) => {
     const count = runLabelImport(tsv, opts.out)
     console.log(`imported ${count} label(s) -> ${opts.out}`)
+  })
+
+program
+  .command("trending")
+  .option("--json", "machine-readable output")
+  .action((opts: { json?: boolean }) => {
+    const file = readTrending(store())
+    if (!file) throw new Error("no trending.json in the store catalog — run `npm run catalog:sync` first")
+    console.log(opts.json ? JSON.stringify(file, null, 2) : formatTrending(file))
   })
 
 await program.parseAsync()

@@ -3,7 +3,7 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 import { makeRecord } from "../../catalog/test/helpers.ts"
-import { applyCalibration, runCalibrate, runLabelExport, runLabelImport } from "../src/commands/depth.ts"
+import { applyCalibration, formatTrending, readTrending, runCalibrate, runLabelExport, runLabelImport } from "../src/commands/depth.ts"
 import { layout } from "../src/paths.ts"
 
 const withParts = (id: string, parts: { quality: number; trust: number; freshness: number; compatibility: number; adoption: number }) =>
@@ -44,5 +44,20 @@ describe("label command", () => {
     const golden = JSON.parse(readFileSync(outPath, "utf8"))
     expect(golden.labels[0].tier).toBe(1)
     expect(golden.version).toBe(1)
+  })
+})
+
+describe("trending command helpers", () => {
+  it("formats velocity entries and reads the artifact", () => {
+    const l = layout(mkdtempSync(join(tmpdir(), "skillhub-cli-trend-")))
+    mkdirSync(l.catalogDir, { recursive: true })
+    writeFileSync(
+      join(l.catalogDir, "trending.json"),
+      JSON.stringify({ version: 1, generatedAt: "2026-10-05T00:00:00Z", topVelocity: [{ id: "a/x", repo: "acme/skills", stars: 100, delta7d: 20, delta30d: 50 }], newThisMonth: [] }),
+    )
+    const file = readTrending(l)
+    expect(file?.topVelocity).toHaveLength(1)
+    expect(formatTrending(file!)).toContain("+20/7d")
+    expect(formatTrending(file!)).toContain("acme/skills")
   })
 })

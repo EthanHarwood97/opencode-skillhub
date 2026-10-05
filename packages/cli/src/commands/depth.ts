@@ -1,7 +1,8 @@
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs"
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { dirname, join } from "node:path"
 import { calibrateWeights, GoldenSetSchema, writeCalibration, type CalibrationResult } from "../../../catalog/src/calibrate.ts"
 import { labelTemplateTsv, parseLabelTsv, sampleForLabeling } from "../../../catalog/src/label.ts"
+import type { TrendingFile } from "../../../catalog/src/trending.ts"
 import type { StoreLayout } from "../paths.ts"
 import { readCatalog } from "./read.ts"
 
@@ -37,4 +38,23 @@ export function runLabelImport(tsvPath: string, outPath: string): number {
   mkdirSync(dirname(outPath), { recursive: true })
   writeFileSync(outPath, JSON.stringify(golden, null, 2) + "\n")
   return golden.labels.length
+}
+
+export function readTrending(l: StoreLayout): TrendingFile | undefined {
+  const path = join(l.catalogDir, "trending.json")
+  if (!existsSync(path)) return undefined
+  return JSON.parse(readFileSync(path, "utf8")) as TrendingFile
+}
+
+export function formatTrending(file: TrendingFile): string {
+  const lines = [`SkillHub trending — ${file.generatedAt}`]
+  if (file.topVelocity.length === 0) lines.push("  (no velocity data yet — trends build from daily snapshots)")
+  for (const entry of file.topVelocity) {
+    lines.push(`  ${entry.repo} [${entry.stars}] +${entry.delta7d}/7d +${entry.delta30d}/30d — ${entry.id}`)
+  }
+  if (file.newThisMonth.length > 0) {
+    lines.push("  new this month:")
+    for (const entry of file.newThisMonth) lines.push(`    ${entry.id} (${entry.repo}, ${entry.stars} stars)`)
+  }
+  return lines.join("\n")
 }
