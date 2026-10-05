@@ -44,6 +44,10 @@ describe("selectCandidates", () => {
     expect(selectCandidates(candidates, { ...DEFAULT_RETRIEVAL, minScore: 0.5 })).toHaveLength(1)
     expect(selectCandidates(candidates, { ...DEFAULT_RETRIEVAL, minScore: 0, maxPointers: 1 })).toHaveLength(1)
   })
+
+  it("ships a three-pointer default that meets the context budget", () => {
+    expect(DEFAULT_RETRIEVAL.maxPointers).toBe(3)
+  })
 })
 
 describe("formatRetrievalBlock", () => {

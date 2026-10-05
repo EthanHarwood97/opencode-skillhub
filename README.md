@@ -55,9 +55,9 @@ Six views: Status, Gallery, Clusters, Trending, Review, and skill detail. Detail
 
 Every prompt is matched against the catalog before the model answers. The plugin embeds your message (noise-free: one embedding call per prompt, cached in memory), blends that with the local full-text search, and appends the best matches to the context as a small block — name, id, score, risk, one line each. The model can load any of them with `skillhub_load`.
 
-- Default mode is `suggest`: up to five pointers, never a body.
+- Default mode is `suggest`: up to three pointers (configurable), never a body.
 - `auto` (opt-in) additionally inlines one matching skill body above a high confidence bar, and counts as a load in the usage ledger.
-- Retrieval always fails open: if embeddings or search are unavailable, the turn proceeds without the block.
+- Retrieval always fails open: if embeddings are unavailable it falls back to keyword matching, and if everything fails the turn proceeds without the block.
 - When retrieval is on, **your prompt text is sent to Google's embeddings endpoint** (Gemini). Prefer not? Set `retrieval.embed` to `off` in `<skillhub home>/settings.json` for keyword-only matching, or `retrieval.mode` to `off` for no retrieval. Cost is pennies: roughly $0.15 per million tokens, about 9 cents a month at 100 prompts a day.
 
 ## Calibration

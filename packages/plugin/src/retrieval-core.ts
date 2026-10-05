@@ -8,7 +8,7 @@ export type RetrievalSettings = {
   maxPointers: number
 }
 
-export const DEFAULT_RETRIEVAL: RetrievalSettings = { mode: "suggest", embed: "gemini", minScore: 0.35, autoScore: 0.55, maxPointers: 5 }
+export const DEFAULT_RETRIEVAL: RetrievalSettings = { mode: "suggest", embed: "gemini", minScore: 0.35, autoScore: 0.55, maxPointers: 3 }
 
 export type CandidateInput = {
   id: string
