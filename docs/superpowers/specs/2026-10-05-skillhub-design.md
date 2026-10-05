@@ -1,7 +1,7 @@
 # SkillHub — Dynamic Skill Layer for opencode
 
 - **Date:** 2026-10-05
-- **Status:** Reviewed (internal pass, 2026-10-05); Phase 0 probes pending
+- **Status:** Phase 0 complete (2026-10-05). Probe report: `docs/superpowers/probes/2026-10-05-phase0-probes.md`. Implementation plan: `docs/superpowers/plans/`
 - **Working name:** SkillHub (provisional — collides conceptually with skills-hub.ai; rename before any public release; renaming a local folder/package now is cheap)
 - **Target:** opencode 1.18.18 (v1 config semantics) today; v2-ready by design
 
@@ -69,6 +69,8 @@ These were verified against docs, live APIs, and the opencode source on 2026-10-
 | Tool output truncation | Default 2,000 lines / 51,200 bytes; oversized output is written to disk and a preview + path returned; configurable via `tool_output` | `packages/opencode/src/tool/truncate.ts`, `packages/core/src/tool-output-store.ts` |
 | Test isolation recipe | `OPENCODE_TEST_HOME` pins `os.homedir()`; `HOME`, `XDG_CONFIG_HOME`, `XDG_DATA_HOME`, `XDG_STATE_HOME`, `XDG_CACHE_HOME`; `OPENCODE_CONFIG_CONTENT`; `OPENCODE_DISABLE_PROJECT_CONFIG`; `OPENCODE_PURE`; `OPENCODE_TEST_MANAGED_CONFIG_DIR`. `opencode db path` exists for DB assertions | opencode's own test helpers (`test/lib/cli-process.ts`, `test/preload.ts`), `packages/core/src/global.ts` |
 | Config is not hot-reloaded | Config-time files need a restart to take effect; **tool-injected content does not** ⇒ mid-session skill loading goes through the plugin tool, not config changes | customize-opencode skill |
+| External skill ancestor walk | Besides `global.home` scans, `.claude`/`.agents` dirs under cwd ancestors are scanned from cwd **up to the git worktree root** (filesystem root when outside a repo). `.agents` is always scanned unless `OPENCODE_DISABLE_EXTERNAL_SKILLS=1`; `.._CLAUDE_CODE_SKILLS=1` removes `.claude` only | `skill/index.ts` @ dev + Phase 0 matrix (probe report §7) |
+| Plugin config-hook injection | A plugin's `config` hook can append `skills.paths` and discovery honors it; `OPENCODE_PURE=1` skips all file + npm plugins | Phase 0 probes 1A–1D |
 | opencode v2 | `skills` array with HTTP catalogs (same `index.json` format), permissions array form, `metadata.opencode/autoinvoke` | opencode v2 docs |
 
 ---
@@ -109,7 +111,7 @@ SkillHub\
 │  ├─ cli\          # `skillhub` binary (Node/Bun, cross-platform)
 │  └─ plugin\       # opencode plugin (npm: opencode-skillhub, provisional name)
 ├─ catalog\         # generated artifacts (JSON snapshots committed; search.db = release asset)
-├─ docs\superpowers\specs\   # this spec; implementation plan lands here
+├─ docs\superpowers\         # specs\, plans\, probes\ (this spec; plans + probe reports land here)
 └─ .github\workflows\        # catalog-sync.yml, ci.yml
 ```
 
@@ -274,7 +276,7 @@ Source of truth: YAML frontmatter `description`. Fallback chain: frontmatter →
 | **L2 — Library** | Everything (~tens of thousands) | 0 until used | SQLite FTS5 + vector search; top-5 one-liners on query; body only via `load` |
 | **L3 — Quarantine** | Failed gates / suspicious skills | 0 | Dashboard/CLI view only |
 
-Budget check: today's session advertises ~80 skills (~4–6k tokens, growing with each addition). SkillHub bounds the advertised surface at ~1k tokens regardless of library size: if the L1 set would exceed the L0+L1 budget, the least-used skills are demoted to L2 (the router still reaches them). L1 size therefore floats (target ~10–15 skills) inside a fixed budget, re-measured in Phase 0 and hard-enforced in tests (SC2).
+Budget check: Phase 0 measured a 70-skill verbose block at ~35.7k chars ≈ **~8.9k tokens** (~510 chars/skill incl. location; ~358 chars without). SkillHub bounds the advertised surface at ~1k tokens regardless of library size: if the L1 set would exceed the L0+L1 budget, the least-used skills are demoted to L2 (the router still reaches them). At measured averages a 1k budget fits **~8–10 verbose skills** — budget first, count second; hard-enforced in tests (SC2).
 
 ### 9.2 Loading mechanics
 
@@ -352,6 +354,7 @@ OPENCODE_DISABLE_CLAUDE_CODE_SKILLS=1
 ```
 
 - Harness **guard**: abort if resolved home is not under the sandbox path (hard backstop against touching the real profile).
+- **External-scan containment (Phase 0 finding):** `OPENCODE_TEST_HOME`/`HOME`/XDG do **not** bound the cwd-ancestor walk (cwd → git worktree root). Negative-isolation tests must set `OPENCODE_DISABLE_EXTERNAL_SKILLS=1`, or materialize the sandbox fixture root as a git repo (walk stops there); `OPENCODE_DISABLE_CLAUDE_CODE_SKILLS=1` removes `.claude` only. `USERPROFILE` overrides do nothing.
 - Dev plugin loads from the test project (`plugin: ["./skillhub-dev.ts"]` / `.opencode/plugins/`) — never installed globally during development.
 - CLI takes `--root` / `SKILLHUB_HOME` + dry-run mode; tests always pass the sandbox root.
 
@@ -367,7 +370,7 @@ OPENCODE_DISABLE_CLAUDE_CODE_SKILLS=1
 
 CI matrix: `ubuntu-latest` (main) + `windows-latest` (junction/path logic).
 
-### 11.3 Phase 0 probes (before implementation)
+### 11.3 Phase 0 probes (completed 2026-10-05; results: `docs/superpowers/probes/2026-10-05-phase0-probes.md`)
 
 1. Project-local plugin loading under the sandbox env (`plugin: ["./dev.ts"]`, `.opencode/plugins/`, `OPENCODE_PURE` interaction).
 2. Headless `opencode run` invocation + session/log locations; confirm `opencode db path`; identify a no-LLM assertion path for E2E tests (e.g. `opencode serve` config/skills endpoint or config-hook marker file).
@@ -382,7 +385,7 @@ CI matrix: `ubuntu-latest` (main) + `windows-latest` (junction/path logic).
 
 | Phase | Deliverable | Done when |
 |-------|-------------|-----------|
-| **0 — Probes** (½ day, sandbox) | §11.3 list resolved | No unknown platform behavior remains |
+| **0 — Probes** (½ day, sandbox) | §11.3 list resolved | **Done 2026-10-05** — no unknown platform behavior remains |
 | **1 — Catalog + CLI MVP** | Sources 1–3 ingest, gates, static scan, static catalog, `search/info/why/install/update/review/list`, lockfile | A real skill is installed pinned from the catalog and opencode loads it |
 | **2 — Plugin + router** | Toast, `/skills`, router + load tools, permissions, tier management, promotion loop | Mid-session discover→load in ≤2 tool calls; advertised overhead ≤ ~1k tokens measured |
 | **3 — Ranking depth** | LLM rubric + calibration, clusters/taxonomy, requirements extraction, trending, reconciliation | Ranker passes golden-set calibration; trending surfaces genuinely new good skills |
