@@ -44,15 +44,15 @@ export default function OverviewPage() {
         toast(failure instanceof Error ? failure.message : `Couldn't install ${id}.`, "error")
       }
     }
-    setInstalling(false)
     if (successes > 0) {
       toast(`Installed ${successes} skill${successes === 1 ? "" : "s"}. Activate them from the gallery when you're ready.`, "success")
+      setInstallGap(null)
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["status"] }),
         queryClient.invalidateQueries({ queryKey: ["skills"] }),
       ])
-      setInstallGap(null)
     }
+    setInstalling(false)
   }
 
   if (isPending) {
@@ -163,6 +163,7 @@ export default function OverviewPage() {
       <Modal
         open={installGap !== null}
         title={installGap ? `Install skills for ${installGap.category}` : "Install skills"}
+        dismissible={!installing}
         onClose={() => { if (!installing) setInstallGap(null) }}
         footer={
           <>
