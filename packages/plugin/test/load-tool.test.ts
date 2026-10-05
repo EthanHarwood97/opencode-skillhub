@@ -1,5 +1,8 @@
+import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
 import { describe, expect, it, vi } from "vitest"
-import { makeLoadTool, renderLoadResult } from "../src/load-core.ts"
+import { makeLoadTool, readSkillBodyFromDisk, renderLoadResult } from "../src/load-core.ts"
 
 describe("renderLoadResult", () => {
   it("returns the body with a risk line when small", async () => {
@@ -12,6 +15,26 @@ describe("renderLoadResult", () => {
     const out = await renderLoadResult({ id: "a/x", body: big, spill: async () => "C:/tmp/skill.md" })
     expect(out).toContain("C:/tmp/skill.md")
     expect(out).not.toContain(big)
+  })
+})
+
+describe("readSkillBodyFromDisk", () => {
+  const body = "---\nname: good-skill\n---\n\n# Good Skill\n"
+
+  it("finds a nested SKILL.md under managed/<id>/<skill-dir>/", () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-load-"))
+    const dir = join(root, "managed", "acme-skills", "good-skill", "good-skill")
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(join(dir, "SKILL.md"), body)
+    expect(readSkillBodyFromDisk(root, "acme-skills/good-skill")).toBe(body)
+  })
+
+  it("falls back to the same nested layout under store/", () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-load-"))
+    const dir = join(root, "store", "acme-skills", "good-skill", "good-skill")
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(join(dir, "SKILL.md"), body)
+    expect(readSkillBodyFromDisk(root, "acme-skills/good-skill")).toBe(body)
   })
 })
 

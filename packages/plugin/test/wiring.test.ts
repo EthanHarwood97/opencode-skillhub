@@ -14,6 +14,15 @@ describe("listManagedAdverts", () => {
     const adverts = listManagedAdverts(root)
     expect(adverts).toEqual([{ id: "a/one", name: "one", description: "does one thing" }])
   })
+
+  it("walks nested install layouts (store file path under the id dir)", () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-wire-"))
+    const dir = join(root, "managed", "acme-skills", "good-skill", "good-skill")
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(join(dir, "SKILL.md"), "---\nname: good-skill\ndescription: Demonstrates a well-formed skill.\n---\n\n# Good Skill\n")
+    const adverts = listManagedAdverts(root)
+    expect(adverts).toEqual([{ id: "acme-skills/good-skill", name: "good-skill", description: "Demonstrates a well-formed skill." }])
+  })
 })
 
 describe("collectStatus", () => {

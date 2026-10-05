@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs"
-import { join } from "node:path"
+import type { Dirent } from "node:fs"
+import { join, relative } from "node:path"
 import matter from "gray-matter"
 import { readCatalogIndex, readLock } from "./catalog-read.ts"
 import { estimateAdvertisedTokens, promotionCandidates, readUsage, usageFileFor, type ActiveAdvert } from "./manage-core.ts"
@@ -10,19 +11,36 @@ export function listManagedAdverts(root: string): ActiveAdvert[] {
   const base = join(root, "managed")
   const out: ActiveAdvert[] = []
   if (!existsSync(base)) return out
-  for (const org of readdirSync(base)) {
-    const orgDir = join(base, org)
-    for (const name of readdirSync(orgDir)) {
-      const file = join(orgDir, name, "SKILL.md")
-      if (!existsSync(file)) continue
-      try {
-        const parsed = matter(readFileSync(file, "utf8"))
-        const fmName = typeof parsed.data.name === "string" ? parsed.data.name : name
-        const description = typeof parsed.data.description === "string" ? parsed.data.description : ""
-        out.push({ id: `${org}/${name}`, name: fmName, description })
-      } catch {
-        out.push({ id: `${org}/${name}`, name, description: "" })
-      }
+
+  const walk = (dir: string): string[] => {
+    let entries: Dirent[]
+    try {
+      entries = readdirSync(dir, { withFileTypes: true })
+    } catch {
+      return []
+    }
+    entries.sort((a, b) => a.name.localeCompare(b.name))
+    const files: string[] = []
+    for (const entry of entries) {
+      const full = join(dir, entry.name)
+      if (entry.isDirectory()) files.push(...walk(full))
+      else if (entry.isFile() && entry.name === "SKILL.md") files.push(full)
+    }
+    return files
+  }
+
+  for (const file of walk(base)) {
+    const segments = relative(base, file).replace(/\\/g, "/").split("/")
+    if (segments.length < 2) continue
+    const id = `${segments[0]}/${segments[1]}`
+    const fallbackName = segments[segments.length - 2]
+    try {
+      const parsed = matter(readFileSync(file, "utf8"))
+      const fmName = typeof parsed.data.name === "string" ? parsed.data.name : fallbackName
+      const description = typeof parsed.data.description === "string" ? parsed.data.description : ""
+      out.push({ id, name: fmName, description })
+    } catch {
+      out.push({ id, name: fallbackName, description: "" })
     }
   }
   return out.sort((a, b) => a.id.localeCompare(b.id))

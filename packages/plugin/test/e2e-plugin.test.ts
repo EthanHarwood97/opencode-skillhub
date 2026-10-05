@@ -92,11 +92,12 @@ describe("E2E: plugin loads in opencode (sandboxed)", () => {
     const capture = join(sb.root, "capture")
     const result = runOpencode(
       sb,
-      ["run", "-m", "deepseek/deepseek-flash", "Call skillhub_search exactly once with the query \"well-formed skill\". Then call skillhub_load once with the exact id returned by that search. Do not call skillhub_search again. After skillhub_load returns, reply with the skill id only."],
+      ["run", "-m", "deepseek/deepseek-flash", "Call skillhub_search exactly once with the query \"well-formed skill\". Then call skillhub_load once with the exact id returned by that search. Do not call skillhub_search again. After skillhub_load returns, reply with the skill id on the first line and the first heading of the loaded body on the second line."],
       { SKILLHUB_CAPTURE_DIR: capture },
     )
     expect(result.status).toBe(0)
     expect(result.stdout).toContain("acme-skills/good-skill")
+    expect(result.stdout).toContain("Good Skill")
     const callsFile = join(capture, "tool-calls.jsonl")
     const calls = existsSync(callsFile)
       ? readFileSync(callsFile, "utf8").trim().split("\n").map((l) => JSON.parse(l).tool as string).filter((t) => t.startsWith("skillhub_"))

@@ -1,13 +1,37 @@
-import { existsSync, readFileSync } from "node:fs"
+import { existsSync, readdirSync, readFileSync } from "node:fs"
 import { join } from "node:path"
+import type { Dirent } from "node:fs"
 import { tool } from "@opencode-ai/plugin"
 
 const DEFAULT_MAX_BYTES = 50 * 1024
 
+function findSkillMd(dir: string): string | undefined {
+  let entries: Dirent[]
+  try {
+    entries = readdirSync(dir, { withFileTypes: true })
+  } catch {
+    return undefined
+  }
+  entries.sort((a, b) => a.name.localeCompare(b.name))
+  for (const entry of entries) {
+    if (entry.isFile() && entry.name === "SKILL.md") return join(dir, entry.name)
+  }
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue
+    const nested = findSkillMd(join(dir, entry.name))
+    if (nested) return nested
+  }
+  return undefined
+}
+
 export function readSkillBodyFromDisk(root: string, id: string): string | undefined {
   for (const base of ["managed", "store"]) {
-    const p = join(root, base, id, "SKILL.md")
-    if (existsSync(p)) return readFileSync(p, "utf8")
+    const dir = join(root, base, id)
+    if (!existsSync(dir)) continue
+    const direct = join(dir, "SKILL.md")
+    if (existsSync(direct)) return readFileSync(direct, "utf8")
+    const nested = findSkillMd(dir)
+    if (nested) return readFileSync(nested, "utf8")
   }
   return undefined
 }
