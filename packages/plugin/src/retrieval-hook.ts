@@ -21,10 +21,28 @@ export type RetrievalDeps = {
   onAutoLoad: (id: string) => void
 }
 
-export function makeRetrievalTransform(deps: RetrievalDeps, state: { prompt?: string }) {
-  return async (_input: unknown, output: { system: string[] }): Promise<void> => {
-    const prompt = state.prompt
-    state.prompt = undefined
+export type RetrievalState = { prompts: Map<string, string>; last?: string }
+
+export const PROMPT_STATE_LIMIT = 20
+
+/** Remember the latest prompt per session, evicting the oldest entry beyond the cap. */
+export function rememberPrompt(state: RetrievalState, sessionID: string, prompt: string): void {
+  state.prompts.set(sessionID, prompt)
+  state.last = prompt
+  while (state.prompts.size > PROMPT_STATE_LIMIT) {
+    const oldest = state.prompts.keys().next().value
+    if (oldest === undefined) break
+    state.prompts.delete(oldest)
+  }
+}
+
+export function makeRetrievalTransform(deps: RetrievalDeps, state: RetrievalState) {
+  return async (input: { sessionID?: string }, output: { system: string[] }): Promise<void> => {
+    const sessionID = input.sessionID
+    const sessionPrompt = sessionID ? state.prompts.get(sessionID) : undefined
+    const prompt = sessionPrompt ?? state.last
+    if (sessionID && sessionPrompt !== undefined) state.prompts.delete(sessionID)
+    if (prompt !== undefined && state.last === prompt) state.last = undefined
     if (!prompt || prompt.trim() === "") return
     try {
       const settings = deps.settings()
@@ -45,18 +63,20 @@ export function makeRetrievalTransform(deps: RetrievalDeps, state: { prompt?: st
       const block = formatRetrievalBlock(candidates)
       if (!block) return
       let text = block
+      let autoLoaded: string | undefined
       const auto = pickAutoBody(candidates, settings)
       if (auto) {
         const body = deps.readBody(auto.id)
         if (body) {
           text += `\n\n[auto-loaded ${auto.id}]\n${body.slice(0, 8000)}`
           deps.onAutoLoad(auto.id)
+          autoLoaded = auto.id
         }
       }
       output.system.push(text)
       deps.onSuggestion(
         candidates.map((candidate) => candidate.id),
-        auto?.id,
+        autoLoaded,
       )
     } catch {
       // fail-open: retrieval must never block a turn

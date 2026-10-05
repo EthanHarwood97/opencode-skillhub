@@ -25,4 +25,15 @@ describe("makeQueryEmbedder", () => {
     expect(second).toBe(first)
     expect(calls).toBe(1)
   })
+
+  it("forwards an AbortSignal timeout to the provider fetch", async () => {
+    const signals: (AbortSignal | null | undefined)[] = []
+    const fetchImpl = (async (_url: string | URL, init?: RequestInit) => {
+      signals.push(init?.signal)
+      return new Response(JSON.stringify({ embeddings: [{ values: [3, 4] }] }), { status: 200 })
+    }) as unknown as typeof fetch
+    await makeQueryEmbedder({ apiKey: "k", dim: 2, fetchImpl })("hello")
+    expect(signals).toHaveLength(1)
+    expect(signals[0]).toBeInstanceOf(AbortSignal)
+  })
 })

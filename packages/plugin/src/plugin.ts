@@ -6,7 +6,7 @@ import { readCatalogIndex } from "./catalog-read.ts"
 import { makeLoadTool, makeSpill, readSkillBodyFromDisk } from "./load-core.ts"
 import { recordLoad, recordSearch, recordSuggestion, usageFileFor } from "./manage-core.ts"
 import { makeQueryEmbedder } from "./query-embedder.ts"
-import { makeRetrievalTransform, promptFromChatMessage } from "./retrieval-hook.ts"
+import { makeRetrievalTransform, promptFromChatMessage, rememberPrompt, type RetrievalState } from "./retrieval-hook.ts"
 import { readRetrievalSettings } from "./settings.ts"
 import { resolveRoot } from "./root.ts"
 import { searchRuntime } from "./search-runtime.ts"
@@ -19,7 +19,7 @@ import { resolveUiDist } from "../../cli/src/ui/paths.ts"
 import { startUiServer } from "../../cli/src/ui/server.ts"
 import { ensureDashboard, makeDashboardCommand, makeLazyEnsure } from "./dashboard-core.ts"
 
-const retrievalState: { prompt?: string } = {}
+const retrievalState: RetrievalState = { prompts: new Map() }
 
 export const SkillHubPlugin: Plugin = async ({ client, directory }) => {
   const root = resolveRoot()
@@ -116,7 +116,7 @@ export const SkillHubPlugin: Plugin = async ({ client, directory }) => {
     },
     "chat.message": async (input, output) => {
       const prompt = promptFromChatMessage(input, output)
-      if (prompt) retrievalState.prompt = prompt
+      if (prompt) rememberPrompt(retrievalState, input.sessionID, prompt)
     },
     "experimental.chat.system.transform": async (input, output) => {
       await retrievalTransform(input, output)

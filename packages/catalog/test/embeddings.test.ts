@@ -48,4 +48,15 @@ describe("makeGeminiEmbedder", () => {
     const bad = (async () => new Response("nope", { status: 400 })) as unknown as typeof fetch
     await expect(makeGeminiEmbedder({ apiKey: "k", dim: 4, fetchImpl: bad }).embed(["x"])).rejects.toBeInstanceOf(EmbeddingError)
   })
+
+  it("passes an AbortSignal timeout to fetch", async () => {
+    const signals: (AbortSignal | null | undefined)[] = []
+    const fetchImpl = (async (_url: string | URL, init?: RequestInit) => {
+      signals.push(init?.signal)
+      return reply(1)
+    }) as unknown as typeof fetch
+    await makeGeminiEmbedder({ apiKey: "k", dim: 4, fetchImpl }).embed(["x"])
+    expect(signals).toHaveLength(1)
+    expect(signals[0]).toBeInstanceOf(AbortSignal)
+  })
 })

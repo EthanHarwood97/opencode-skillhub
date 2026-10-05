@@ -29,11 +29,13 @@ export function makeGeminiEmbedder(opts: {
   dim?: number
   fetchImpl?: typeof fetch
   batchSize?: number
+  timeoutMs?: number
 }): EmbeddingProvider {
   const model = opts.model ?? "gemini-embedding-001"
   const dim = opts.dim ?? 768
   const fetchImpl = opts.fetchImpl ?? fetch
   const batchSize = Math.min(Math.max(1, opts.batchSize ?? 50), 50)
+  const timeoutMs = opts.timeoutMs ?? 10_000
   const base = "https://generativelanguage.googleapis.com/v1beta"
 
   const embedBatch = async (texts: string[]): Promise<Float32Array[]> => {
@@ -50,6 +52,7 @@ export function makeGeminiEmbedder(opts: {
         method: "POST",
         headers: { "content-type": "application/json" },
         body,
+        signal: AbortSignal.timeout(timeoutMs),
       })
       if (res.ok) {
         const json = (await res.json()) as { embeddings?: { values?: number[] }[] }

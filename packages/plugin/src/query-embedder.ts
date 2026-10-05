@@ -8,8 +8,11 @@ export function makeQueryEmbedder(opts: {
   dim?: number
   fetchImpl?: typeof fetch
   cacheSize?: number
+  timeoutMs?: number
 }): QueryEmbedder {
-  const provider = opts.apiKey ? makeGeminiEmbedder({ apiKey: opts.apiKey, model: opts.model, dim: opts.dim, fetchImpl: opts.fetchImpl }) : undefined
+  const provider = opts.apiKey
+    ? makeGeminiEmbedder({ apiKey: opts.apiKey, model: opts.model, dim: opts.dim, fetchImpl: opts.fetchImpl, timeoutMs: opts.timeoutMs ?? 4_000 })
+    : undefined
   const cache = new Map<string, Float32Array>()
   const cacheSize = opts.cacheSize ?? 50
   return async (text) => {
