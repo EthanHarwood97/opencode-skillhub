@@ -72,4 +72,24 @@ describe("review queue", () => {
     renderPage(<ReviewPage />)
     expect(await screen.findByText("Nothing needs your attention. The next sync will surface new candidates here.")).toBeInTheDocument()
   })
+
+  it("replaces the update action with a note in static mode", async () => {
+    ;(globalThis as { __SKILLHUB__?: unknown }).__SKILLHUB__ = { mode: "static" }
+    server.use(
+      http.get("data/review.json", () =>
+        HttpResponse.json({
+          newCandidates: [card("acme/new")],
+          updates: [{ id: "acme/old", from: 50, to: 80, riskFrom: "medium", riskTo: "low" }],
+          quarantined: [card("acme/bad", { status: "quarantined", risk: "critical" })],
+          gaps: ["source x: boom"],
+          sources: [],
+        }),
+      ),
+    )
+    renderPage(<ReviewPage />)
+
+    expect(await screen.findByText("Exported gallery: actions run in the local dashboard.")).toBeInTheDocument()
+    expect(screen.getByText("50 → 80")).toBeInTheDocument()
+    expect(screen.queryByRole("button", { name: "Review update" })).not.toBeInTheDocument()
+  })
 })

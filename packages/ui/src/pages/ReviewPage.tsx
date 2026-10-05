@@ -3,10 +3,11 @@ import { useState } from "react"
 import { Link } from "react-router"
 import { UpdateReviewModal } from "../components/UpdateReviewModal.tsx"
 import { Button, Chip, EmptyState, ErrorState, Skeleton } from "../components/primitives.tsx"
-import { getReview } from "../lib/api.ts"
+import { getReview, isLive } from "../lib/api.ts"
 import styles from "./ReviewPage.module.css"
 
 export default function ReviewPage() {
+  const live = isLive()
   const { data, isPending, isError, error, refetch } = useQuery({ queryKey: ["review"], queryFn: getReview })
   const [reviewing, setReviewing] = useState<{ id: string; name: string } | undefined>(undefined)
 
@@ -59,7 +60,11 @@ export default function ReviewPage() {
                 <span className={styles.meta}>
                   <span className="mono">{update.from} → {update.to}</span>
                   <Chip tone={update.riskTo === "critical" ? "critical" : update.riskTo === "high" ? "high" : update.riskTo === "medium" ? "medium" : "low"}>{update.riskFrom} → {update.riskTo}</Chip>
-                  <Button onClick={() => setReviewing({ id: update.id, name: update.id.split("/").at(-1) ?? update.id })}>Review update</Button>
+                  {live ? (
+                    <Button onClick={() => setReviewing({ id: update.id, name: update.id.split("/").at(-1) ?? update.id })}>Review update</Button>
+                  ) : (
+                    <span className="pageHint">Exported gallery: actions run in the local dashboard.</span>
+                  )}
                 </span>
               </li>
             ))}
