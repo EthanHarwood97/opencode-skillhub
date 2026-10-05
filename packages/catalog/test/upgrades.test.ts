@@ -47,4 +47,46 @@ describe("computeUpgradeSuggestions", () => {
     expect(out).toHaveLength(3)
     for (const suggestion of out) expect(suggestion.to).toBe("a/a")
   })
+
+  it("orders suggestions by toTotal descending", () => {
+    const records = [
+      rec("a/old1", { scores: { ...rec("a/old1").scores, total: 40 } }),
+      rec("t1", { scores: { ...rec("t1").scores, total: 70 } }),
+      rec("a/old2", { clusterId: "c-2", scores: { ...rec("a/old2").scores, total: 40 } }),
+      rec("t2", { clusterId: "c-2", scores: { ...rec("t2").scores, total: 85 } }),
+    ]
+    const installed = [
+      { id: "a/old1", total: 50, active: true },
+      { id: "a/old2", total: 50, active: true },
+    ]
+    expect(computeUpgradeSuggestions(records, installed).map((s) => s.to)).toEqual(["t2", "t1"])
+  })
+
+  it("breaks equal toTotal ties by from id ascending", () => {
+    const records = [
+      rec("a/old1", { scores: { ...rec("a/old1").scores, total: 40 } }),
+      rec("t1", { scores: { ...rec("t1").scores, total: 90 } }),
+      rec("a/old2", { clusterId: "c-2", scores: { ...rec("a/old2").scores, total: 40 } }),
+      rec("t2", { clusterId: "c-2", scores: { ...rec("t2").scores, total: 90 } }),
+    ]
+    const installed = [
+      { id: "a/old2", total: 50, active: true },
+      { id: "a/old1", total: 50, active: true },
+    ]
+    const out = computeUpgradeSuggestions(records, installed)
+    expect(out.map((s) => s.from)).toEqual(["a/old1", "a/old2"])
+    expect(out.map((s) => s.toTotal)).toEqual([90, 90])
+  })
+
+  it("qualifies a candidate at exactly total + margin and rejects one below", () => {
+    const installed = [{ id: "a/old", total: 50, active: true }]
+    const at = [rec("a/old"), rec("a/up", { scores: { ...rec("a/up").scores, total: 55 } })]
+    const expected = [{ from: "a/old", to: "a/up", fromTotal: 50, toTotal: 55, clusterId: "c-1" }]
+    expect(computeUpgradeSuggestions(at, installed, { margin: 5 })).toEqual(expected)
+    expect(computeUpgradeSuggestions(at, installed)).toEqual(expected)
+
+    const below = [rec("a/old"), rec("a/up", { scores: { ...rec("a/up").scores, total: 54 } })]
+    expect(computeUpgradeSuggestions(below, installed, { margin: 5 })).toEqual([])
+    expect(computeUpgradeSuggestions(below, installed)).toEqual([])
+  })
 })
