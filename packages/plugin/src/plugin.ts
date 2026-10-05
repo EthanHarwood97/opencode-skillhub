@@ -1,18 +1,25 @@
 import type { Plugin } from "@opencode-ai/plugin"
+import { join } from "node:path"
 import { applyConfigToSkillHub } from "./config-hook.ts"
 import { isSessionBoundary } from "./events.ts"
 import { readCatalogIndex } from "./catalog-read.ts"
 import { makeLoadTool, makeSpill, readSkillBodyFromDisk } from "./load-core.ts"
-import { recordLoad, recordSearch, usageFileFor } from "./manage-core.ts"
+import { recordLoad, recordSearch, recordSuggestion, usageFileFor } from "./manage-core.ts"
+import { makeQueryEmbedder } from "./query-embedder.ts"
+import { makeRetrievalTransform, promptFromChatMessage } from "./retrieval-hook.ts"
+import { readRetrievalSettings } from "./settings.ts"
 import { resolveRoot } from "./root.ts"
 import { searchRuntime } from "./search-runtime.ts"
 import { makeStartupNotifier, renderStatus } from "./status-core.ts"
 import { makeRouterTool } from "./tools.ts"
 import { collectStatus, makeCapture } from "./wiring.ts"
+import { readVectors } from "../../catalog/src/vectors.ts"
 import { openBrowser } from "../../cli/src/ui/open.ts"
 import { resolveUiDist } from "../../cli/src/ui/paths.ts"
 import { startUiServer } from "../../cli/src/ui/server.ts"
 import { ensureDashboard, makeDashboardCommand, makeLazyEnsure } from "./dashboard-core.ts"
+
+const retrievalState: { prompt?: string } = {}
 
 export const SkillHubPlugin: Plugin = async ({ client, directory }) => {
   const root = resolveRoot()
@@ -25,6 +32,48 @@ export const SkillHubPlugin: Plugin = async ({ client, directory }) => {
     },
     compute: () => collectStatus(root, directory, new Date()),
   })
+
+  let vectorsCache: Map<string, Float32Array> | undefined
+  const loadVectors = (): Map<string, Float32Array> | undefined => {
+    if (vectorsCache) return vectorsCache
+    const loaded = readVectors(join(root, "catalog"))
+    if (!loaded) return undefined
+    vectorsCache = loaded.vectors
+    return vectorsCache
+  }
+
+  let tagsCache: Map<string, string[]> | undefined
+  const retrievalTags = (): Map<string, string[]> => {
+    if (tagsCache) return tagsCache
+    const index = readCatalogIndex(root)
+    if (!index) return new Map()
+    tagsCache = new Map(index.skills.map((skill) => [skill.id, skill.tags]))
+    return tagsCache
+  }
+
+  const embed = makeQueryEmbedder({ apiKey: process.env.GOOGLE_API_KEY ?? process.env.GEMINI_API_KEY })
+
+  const retrievalTransform = makeRetrievalTransform(
+    {
+      search: (query, limit) => searchRuntime(root, query, limit),
+      embed,
+      loadVectors,
+      readBody: (id) => readSkillBodyFromDisk(root, id),
+      tagsFor: (id) => retrievalTags().get(id) ?? [],
+      settings: () => readRetrievalSettings(root),
+      onSuggestion: (ids) => {
+        try {
+          recordSuggestion(usageFileFor(root, directory), ids, new Date())
+        } catch {}
+      },
+      onAutoLoad: (id) => {
+        try {
+          recordLoad(usageFileFor(root, directory), id, new Date())
+        } catch {}
+      },
+    },
+    retrievalState,
+  )
 
   return {
     config: async (cfg) => {
@@ -65,7 +114,12 @@ export const SkillHubPlugin: Plugin = async ({ client, directory }) => {
     "tool.execute.before": async (input) => {
       capture.toolCall?.(input.tool)
     },
-    "experimental.chat.system.transform": async (_input, output) => {
+    "chat.message": async (input, output) => {
+      const prompt = promptFromChatMessage(input, output)
+      if (prompt) retrievalState.prompt = prompt
+    },
+    "experimental.chat.system.transform": async (input, output) => {
+      await retrievalTransform(input, output)
       capture.system?.(output.system)
     },
   }

@@ -18,7 +18,7 @@ export async function searchRuntime(root: string, query: string, limit = 5): Pro
   try {
     const rows = db
       .prepare(
-        `SELECT s.id, s.name, s.description, s.category, s.total, s.risk, s.provenance, s.status
+        `SELECT s.id, s.name, s.description, s.category, s.total, s.risk, s.provenance, s.status, -bm25(skills_fts) AS rank
          FROM skills_fts f JOIN skills s ON s.id = f.id
          WHERE skills_fts MATCH ? ORDER BY bm25(skills_fts), s.total DESC LIMIT ?`,
       )

@@ -2,14 +2,20 @@ import { createHash } from "node:crypto"
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs"
 import { dirname, join } from "node:path"
 
-export type Usage = { version: 1; loads: Record<string, { count: number; lastAt: string }>; searches: number }
+export type Usage = {
+  version: 1
+  loads: Record<string, { count: number; lastAt: string }>
+  searches: number
+  suggestions: number
+  lastSuggestedIds: string[]
+}
 
 export function usageFileFor(root: string, projectDir: string): string {
   const hash = createHash("sha256").update(projectDir).digest("hex").slice(0, 8)
   return join(root, "projects", hash, "usage.json")
 }
 
-const emptyUsage = (): Usage => ({ version: 1, loads: {}, searches: 0 })
+const emptyUsage = (): Usage => ({ version: 1, loads: {}, searches: 0, suggestions: 0, lastSuggestedIds: [] })
 
 export function readUsage(file: string): Usage {
   if (!existsSync(file)) return emptyUsage()
@@ -18,7 +24,13 @@ export function readUsage(file: string): Usage {
     if (!parsed || parsed.version !== 1 || typeof parsed.loads !== "object" || parsed.loads === null || Array.isArray(parsed.loads)) {
       return emptyUsage()
     }
-    return { version: 1, loads: parsed.loads, searches: typeof parsed.searches === "number" ? parsed.searches : 0 }
+    return {
+      version: 1,
+      loads: parsed.loads,
+      searches: typeof parsed.searches === "number" ? parsed.searches : 0,
+      suggestions: typeof parsed.suggestions === "number" ? parsed.suggestions : 0,
+      lastSuggestedIds: Array.isArray(parsed.lastSuggestedIds) ? parsed.lastSuggestedIds.filter((id): id is string => typeof id === "string") : [],
+    }
   } catch {
     return emptyUsage()
   }
@@ -42,5 +54,12 @@ export function recordLoad(file: string, id: string, now: Date): Usage {
 export function recordSearch(file: string, now: Date): Usage {
   const usage = readUsage(file)
   usage.searches += 1
+  return write(file, usage)
+}
+
+export function recordSuggestion(file: string, ids: string[], now: Date): Usage {
+  const usage = readUsage(file)
+  usage.suggestions += 1
+  usage.lastSuggestedIds = [...ids]
   return write(file, usage)
 }

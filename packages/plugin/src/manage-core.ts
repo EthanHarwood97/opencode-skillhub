@@ -1,4 +1,4 @@
-export { usageFileFor, readUsage, recordLoad, recordSearch, type Usage } from "./usage.ts"
+export { usageFileFor, readUsage, recordLoad, recordSearch, recordSuggestion, type Usage } from "./usage.ts"
 
 export type ActiveAdvert = { id: string; name: string; description: string }
 

@@ -7,6 +7,7 @@ export type SearchRow = {
   risk: string
   provenance: string
   status: string
+  rank?: number
 }
 
 export const estimateTokens = (text: string): number => Math.ceil(text.length / 4)

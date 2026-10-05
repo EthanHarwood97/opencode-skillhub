@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, readdirSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { dirname, join } from "node:path"
 import { describe, expect, it } from "vitest"
-import { enforceBudget, estimateAdvertisedTokens, promotionCandidates, readUsage, recordLoad, recordSearch, usageFileFor } from "../src/manage-core.ts"
+import { enforceBudget, estimateAdvertisedTokens, promotionCandidates, readUsage, recordLoad, recordSearch, recordSuggestion, usageFileFor } from "../src/manage-core.ts"
 
 const advert = (id: string, description = "d".repeat(100)) => ({ id, name: id.split("/").at(-1)!, description })
 
@@ -23,11 +23,40 @@ describe("usage", () => {
     const file = usageFileFor(root, "C:/projects/beta")
     mkdirSync(dirname(file), { recursive: true })
     writeFileSync(file, "{not json")
-    expect(readUsage(file)).toEqual({ version: 1, loads: {}, searches: 0 })
+    expect(readUsage(file)).toEqual({ version: 1, loads: {}, searches: 0, suggestions: 0, lastSuggestedIds: [] })
     const u = recordSearch(file, new Date("2026-10-05T00:00:00Z"))
     expect(u.searches).toBe(1)
     expect(readUsage(file).searches).toBe(1)
     expect(readdirSync(dirname(file))).toEqual(["usage.json"])
+  })
+
+  it("records suggestions with the last suggested ids", () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-usage-"))
+    const file = usageFileFor(root, "C:/projects/gamma")
+    const first = recordSuggestion(file, ["a/one", "a/two"], new Date("2026-10-05T00:00:02Z"))
+    expect(first.suggestions).toBe(1)
+    expect(first.lastSuggestedIds).toEqual(["a/one", "a/two"])
+    const second = recordSuggestion(file, ["a/three"], new Date("2026-10-05T00:00:03Z"))
+    expect(second.suggestions).toBe(2)
+    expect(second.lastSuggestedIds).toEqual(["a/three"])
+    expect(readUsage(file)).toEqual({ version: 1, loads: {}, searches: 0, suggestions: 2, lastSuggestedIds: ["a/three"] })
+  })
+
+  it("normalizes old usage files that predate suggestion telemetry", () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-usage-"))
+    const file = usageFileFor(root, "C:/projects/legacy")
+    mkdirSync(dirname(file), { recursive: true })
+    writeFileSync(file, JSON.stringify({ version: 1, loads: { "a/one": { count: 2, lastAt: "2026-10-01T00:00:00Z" } }, searches: 7 }))
+    expect(readUsage(file)).toEqual({
+      version: 1,
+      loads: { "a/one": { count: 2, lastAt: "2026-10-01T00:00:00Z" } },
+      searches: 7,
+      suggestions: 0,
+      lastSuggestedIds: [],
+    })
+    const after = recordSuggestion(file, [], new Date("2026-10-05T00:00:04Z"))
+    expect(after.suggestions).toBe(1)
+    expect(after.searches).toBe(7)
   })
 })
 
