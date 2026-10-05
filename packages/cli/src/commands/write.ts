@@ -16,10 +16,19 @@ export type UpdatePlan = {
   scoreDelta: { from: number; to: number }
 }
 
-export function planUpdate(l: StoreLayout, index: CatalogIndex, lock: Lockfile, id: string): UpdatePlan | undefined {
+export type UpdatePlanResult =
+  | { kind: "update"; plan: UpdatePlan }
+  | { kind: "up-to-date" }
+  | { kind: "not-installed" }
+  | { kind: "blocked"; record: SkillRecord }
+
+export function planUpdate(l: StoreLayout, index: CatalogIndex, lock: Lockfile, id: string): UpdatePlanResult {
   const from = lock.skills[id]
   const to = index.skills.find((s) => s.id === id)
-  if (!from || !to || from.contentHash === to.contentHash) return undefined
+  if (!from) return { kind: "not-installed" }
+  if (!to) return { kind: "up-to-date" }
+  if (to.status !== "candidate") return { kind: "blocked", record: to }
+  if (from.contentHash === to.contentHash) return { kind: "up-to-date" }
 
   const oldByPath = new Map(from.files.map((f) => [f.path, f.sha256]))
   const newByPath = new Map(to.files.map((f) => [f.path, f.sha256]))
@@ -35,13 +44,20 @@ export function planUpdate(l: StoreLayout, index: CatalogIndex, lock: Lockfile, 
     })
 
   return {
-    id,
-    from,
-    to,
-    changes,
-    riskDelta: { from: from.riskLevel, to: to.risk.level },
-    scoreDelta: { from: from.total, to: to.scores.total },
+    kind: "update",
+    plan: {
+      id,
+      from,
+      to,
+      changes,
+      riskDelta: { from: from.riskLevel, to: to.risk.level },
+      scoreDelta: { from: from.total, to: to.scores.total },
+    },
   }
+}
+
+export function findingRules(record: SkillRecord): string[] {
+  return [...new Set(record.risk.findings.map((f) => f.rule))]
 }
 
 export async function reviewSkill(opts: {

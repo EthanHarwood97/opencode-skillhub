@@ -6,7 +6,7 @@ import { importCatalog } from "./catalog-cache.ts"
 import { searchSkills } from "./search.ts"
 import { installSkill } from "./installer.ts"
 import { readLockfile, upsertEntry, writeLockfile } from "./lockfile.ts"
-import { activateSkill, deactivateSkill, planUpdate, applyUpdate, reviewSkill } from "./write-helpers.ts"
+import { activateSkill, deactivateSkill, planUpdate, applyUpdate, reviewSkill, findingRules } from "./write-helpers.ts"
 import { join } from "node:path"
 
 const program = new Command("skillhub").option("--root <dir>", "SkillHub home (defaults to SKILLHUB_HOME)")
@@ -67,7 +67,7 @@ program
     const index = readCatalog(l)
     const record = findRecord(index, id)
     if (!record) throw new Error(`skill not found in catalog: ${id}`)
-    if (record.status === "quarantined") throw new Error(`refusing to install quarantined skill: ${id}`)
+    if (record.status !== "candidate") throw new Error(`refusing to install ${record.status} skill: ${id}`)
     const entry = await installSkill({ record, l, rawBase: process.env.SKILLHUB_RAW_BASE, dryRun: opts.dryRun })
     if (!opts.dryRun) writeLockfile(l.lockfilePath, upsertEntry(readLockfile(l.lockfilePath), entry))
     if (opts.activate) activateSkill(l, id)
@@ -80,15 +80,45 @@ program
   .option("--json")
   .action(async (id: string, opts: { json?: boolean }) => {
     const l = store()
-    const plan = planUpdate(l, readCatalog(l), readLockfile(l.lockfilePath), id)
-    if (!plan) return console.log(`${id} is up to date`)
-    const { changes } = await reviewSkill({ plan, l, rawBase: process.env.SKILLHUB_RAW_BASE })
-    if (opts.json) {
-      console.log(JSON.stringify({ id, changes: changes.map((c) => ({ path: c.path, status: c.status })), riskDelta: plan.riskDelta, scoreDelta: plan.scoreDelta }, null, 2))
+    const result = planUpdate(l, readCatalog(l), readLockfile(l.lockfilePath), id)
+    if (result.kind === "not-installed") {
+      if (opts.json) console.log(JSON.stringify({ id, status: "not-installed" }))
+      else console.log(`${id} is not installed`)
       return
     }
-    console.log(changes.map((c) => `${c.status} ${c.path}`).join("\n"))
-    console.log(`risk ${plan.riskDelta.from} -> ${plan.riskDelta.to}; score ${plan.scoreDelta.from} -> ${plan.scoreDelta.to}`)
+    if (result.kind === "up-to-date") {
+      if (opts.json) console.log(JSON.stringify({ id, status: "up-to-date" }))
+      else console.log(`${id} is up to date`)
+      return
+    }
+    if (result.kind === "blocked") {
+      const findings = findingRules(result.record)
+      if (opts.json) console.log(JSON.stringify({ id, status: "blocked", riskLevel: result.record.risk.level, findings }, null, 2))
+      else console.log(`${id}: blocked (status ${result.record.status}; findings: ${findings.join(", ") || "none"})`)
+      return
+    }
+    const { changes } = await reviewSkill({ plan: result.plan, l, rawBase: process.env.SKILLHUB_RAW_BASE })
+    if (opts.json) {
+      console.log(
+        JSON.stringify(
+          {
+            id,
+            status: "update-available",
+            changes: changes.map((c) => ({ path: c.path, status: c.status, patch: c.patch })),
+            riskDelta: result.plan.riskDelta,
+            scoreDelta: result.plan.scoreDelta,
+          },
+          null,
+          2,
+        ),
+      )
+      return
+    }
+    for (const change of changes) {
+      console.log(`${change.status} ${change.path}`)
+      if (change.patch) console.log(change.patch)
+    }
+    console.log(`risk ${result.plan.riskDelta.from} -> ${result.plan.riskDelta.to}; score ${result.plan.scoreDelta.from} -> ${result.plan.scoreDelta.to}`)
   })
 
 program
@@ -99,13 +129,25 @@ program
   .action(async (id: string | undefined, opts: { apply?: boolean; json?: boolean }) => {
     const l = store()
     const lock = readLockfile(l.lockfilePath)
+    const index = readCatalog(l)
     const targets = id ? [id] : Object.keys(lock.skills)
-    const results: { id: string; status: "up-to-date" | "update-available" | "updated"; contentHash?: string; riskLevel?: string }[] = []
+    const results: { id: string; status: "not-installed" | "up-to-date" | "update-available" | "updated" | "blocked"; contentHash?: string; riskLevel?: string; findings?: string[] }[] = []
     for (const target of targets) {
-      const plan = planUpdate(l, readCatalog(l), lock, target)
-      if (!plan) {
+      const result = planUpdate(l, index, lock, target)
+      if (result.kind === "not-installed") {
+        if (opts.json) results.push({ id: target, status: "not-installed" })
+        else console.log(`${target}: not installed`)
+        continue
+      }
+      if (result.kind === "up-to-date") {
         if (opts.json) results.push({ id: target, status: "up-to-date" })
         else console.log(`${target}: up to date`)
+        continue
+      }
+      if (result.kind === "blocked") {
+        const findings = findingRules(result.record)
+        if (opts.json) results.push({ id: target, status: "blocked", riskLevel: result.record.risk.level, findings })
+        else console.log(`${target}: blocked (status ${result.record.status}; findings: ${findings.join(", ") || "none"})`)
         continue
       }
       if (!opts.apply) {
@@ -113,7 +155,7 @@ program
         else console.log(`${target}: update available (re-run with --apply after review)`)
         continue
       }
-      const entry = await applyUpdate({ plan, l, rawBase: process.env.SKILLHUB_RAW_BASE })
+      const entry = await applyUpdate({ plan: result.plan, l, rawBase: process.env.SKILLHUB_RAW_BASE })
       if (opts.json) results.push({ id: target, status: "updated", contentHash: entry.contentHash, riskLevel: entry.riskLevel })
       else console.log(`${target}: updated to ${entry.contentHash.slice(0, 12)} (risk ${entry.riskLevel})`)
     }

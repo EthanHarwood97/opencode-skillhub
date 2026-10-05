@@ -48,6 +48,13 @@ describe("installSkill (github, sha-pinned)", () => {
     expect(() => readdirSync(join(l.storeDir, record.id))).toThrow()
   })
 
+  it("refuses records that are not candidates", async () => {
+    const record = { ...recordFrom("good-skill"), status: "quarantined" as const }
+    const l = layout(mkdtempSync(join(tmpdir(), "skillhub-install-")))
+    await expect(installSkill({ record, l })).rejects.toThrow(/refusing to install quarantined skill/)
+    expect(existsSync(join(l.storeDir, record.id))).toBe(false)
+  })
+
   it("refuses unsafe file paths", async () => {
     const record = recordFrom("good-skill")
     const content = new TextEncoder().encode(readFileSync(join(fixtures, "good-skill", "SKILL.md"), "utf8"))

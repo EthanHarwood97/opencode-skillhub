@@ -48,14 +48,39 @@ describe("update plan", () => {
       files: [{ ...record.files[0]!, sha256: "a".repeat(64) }],
       scores: { ...record.scores, total: record.scores.total + 5 },
     }
-    const plan = planUpdate(l, { ...index, skills: [changed] }, readLockfile(l.lockfilePath), record.id)
-    expect(plan?.changes.some((c) => c.status === "modified")).toBe(true)
-    expect(plan?.scoreDelta.to).toBeGreaterThan(plan!.scoreDelta.from)
+    const result = planUpdate(l, { ...index, skills: [changed] }, readLockfile(l.lockfilePath), record.id)
+    expect(result.kind).toBe("update")
+    if (result.kind !== "update") throw new Error("expected update plan")
+    expect(result.plan.changes.some((c) => c.status === "modified")).toBe(true)
+    expect(result.plan.scoreDelta.to).toBeGreaterThan(result.plan.scoreDelta.from)
   })
 
-  it("returns undefined when the installed content matches the catalog", async () => {
+  it("reports up-to-date when the installed content matches the catalog", async () => {
     const { l, index, record } = await prepared()
-    expect(planUpdate(l, index, readLockfile(l.lockfilePath), record.id)).toBeUndefined()
+    expect(planUpdate(l, index, readLockfile(l.lockfilePath), record.id).kind).toBe("up-to-date")
+  })
+
+  it("reports not-installed when the lockfile has no entry", async () => {
+    const { l, index } = await prepared()
+    expect(planUpdate(l, index, readLockfile(l.lockfilePath), "acme-skills/other").kind).toBe("not-installed")
+  })
+
+  it("blocks an update whose catalog record is not a candidate", async () => {
+    const { l, index, record } = await prepared()
+    const quarantined = {
+      ...record,
+      contentHash: "f".repeat(64),
+      files: [{ ...record.files[0]!, sha256: "a".repeat(64) }],
+      status: "quarantined" as const,
+      risk: {
+        level: "critical" as const,
+        findings: [{ rule: "injection.ignore-previous", category: "injection" as const, severity: "critical" as const, match: "ignore all previous instructions", line: 3 }],
+      },
+    }
+    const result = planUpdate(l, { ...index, skills: [quarantined] }, readLockfile(l.lockfilePath), record.id)
+    expect(result.kind).toBe("blocked")
+    if (result.kind !== "blocked") throw new Error("expected blocked")
+    expect(result.record.status).toBe("quarantined")
   })
 })
 

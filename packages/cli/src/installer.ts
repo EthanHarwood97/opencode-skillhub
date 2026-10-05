@@ -63,6 +63,7 @@ export async function installSkill(opts: {
   now?: Date
 }): Promise<LockEntry> {
   const { record, l } = opts
+  if (record.status !== "candidate") throw new Error(`refusing to install ${record.status} skill: ${record.id}`)
   const files = await fetchRecordFiles(record, { fetchImpl: opts.fetchImpl, rawBase: opts.rawBase })
   verifyFiles(record, files)
 
