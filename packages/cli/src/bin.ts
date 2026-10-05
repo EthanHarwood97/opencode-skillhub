@@ -7,6 +7,7 @@ import { searchSkills } from "./search.ts"
 import { installSkill } from "./installer.ts"
 import { readLockfile, upsertEntry, writeLockfile } from "./lockfile.ts"
 import { activateSkill, deactivateSkill, planUpdate, applyUpdate, reviewSkill, findingRules } from "./write-helpers.ts"
+import { applyCalibration, runCalibrate, runLabelExport, runLabelImport } from "./commands/depth.ts"
 import { join } from "node:path"
 
 const program = new Command("skillhub").option("--root <dir>", "SkillHub home (defaults to SKILLHUB_HOME)")
@@ -181,6 +182,41 @@ catalogCommand
   .action((dir: string) => {
     importCatalog(dir, store())
     console.log(`imported catalog from ${dir}`)
+  })
+
+program
+  .command("calibrate")
+  .option("--golden <file>", "golden set JSON file", "golden.json")
+  .option("--json", "machine-readable output")
+  .option("--apply", "write catalog/calibration.json")
+  .action((opts: { golden: string; json?: boolean; apply?: boolean }) => {
+    const result = runCalibrate(store(), opts.golden)
+    const path = opts.apply ? applyCalibration(store(), result) : undefined
+    if (opts.json) {
+      console.log(JSON.stringify({ ...result, applied: path }, null, 2))
+    } else {
+      console.log(`golden set: ${result.goldenSize} labels; agreement ${result.agreement.toFixed(3)} (baseline ${result.baselineAgreement.toFixed(3)}), grid ${result.gridSize}`)
+      console.log(`weights: ${JSON.stringify(result.weights)}`)
+      if (path) console.log(`applied -> ${path}`)
+    }
+  })
+
+const labelCommand = program.command("label")
+labelCommand
+  .command("export")
+  .option("--out <file>", "worksheet path", "label-worksheet.tsv")
+  .option("--limit <n>", "sample size", "40")
+  .action((opts: { out: string; limit: string }) => {
+    const count = runLabelExport(store(), opts.out, Number(opts.limit))
+    console.log(`wrote ${count} candidate(s) to ${opts.out} — fill the tier column (1=best … 4=weak), then run: skillhub label import ${opts.out}`)
+  })
+labelCommand
+  .command("import")
+  .argument("<tsv>")
+  .option("--out <file>", "golden set output", "golden.json")
+  .action((tsv: string, opts: { out: string }) => {
+    const count = runLabelImport(tsv, opts.out)
+    console.log(`imported ${count} label(s) -> ${opts.out}`)
   })
 
 await program.parseAsync()
