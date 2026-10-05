@@ -479,3 +479,11 @@ git commit -m "feat(scripts): daily 03:00 catalog sync task with registration he
 
 - Slice 2 replaces the lazy-by-command model with retrieval-driven loads; the ensure/open seams stay unchanged.
 - Packaging (Slice 5) replaces `-RepoRoot` with the installed location and moves the task registration into the installer.
+
+## Implementation notes (as shipped)
+
+- The command is `/skillhub`; it is registered by `applyConfigToSkillHub` and never overwrites an existing command of the same name.
+- `makeLazyEnsure` caches usable results only: an `{ error }` result or a rejected load evicts the memo so the next `/skillhub` retries; concurrent calls while a load is in flight share that single load.
+- Probe is a listener check, not a health check: any HTTP response (including an `/api/status` 404 when the catalog is not yet synced) counts as up and is reused; only a thrown error/timeout starts a new server and risks EADDRINUSE.
+- Cold-start acceptance was verified in-process on 2026-10-05: with port 4517 free, `command.execute.before` produced `SkillHub dashboard: http://127.0.0.1:4517/ (started just now) — opened in your browser.` and `/api/status` answered 200 in 46 ms.
+- The true-Bun, real-profile smoke runs post-merge in `opencode run --command skillhub`; the Node in-process harness cannot prove Bun runtime behaviour.

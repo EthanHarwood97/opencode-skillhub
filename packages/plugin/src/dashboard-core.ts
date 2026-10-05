@@ -11,8 +11,8 @@ export type EnsureDashboardOptions = {
 
 const probe = async (fetchImpl: typeof fetch, port: number, timeoutMs: number): Promise<boolean> => {
   try {
-    const res = await fetchImpl(`http://127.0.0.1:${port}/api/status`, { signal: AbortSignal.timeout(timeoutMs) })
-    return res.ok
+    await fetchImpl(`http://127.0.0.1:${port}/api/status`, { signal: AbortSignal.timeout(timeoutMs) })
+    return true
   } catch {
     return false
   }
@@ -39,10 +39,16 @@ export function makeLazyEnsure(load: () => Promise<EnsureDashboardResult>): () =
   let pending: Promise<EnsureDashboardResult> | undefined
   return () => {
     if (!pending) {
-      pending = load().then((result) => {
-        if ("error" in result) pending = undefined
-        return result
-      })
+      pending = load().then(
+        (result) => {
+          if ("error" in result) pending = undefined
+          return result
+        },
+        (error) => {
+          pending = undefined
+          throw error
+        },
+      )
     }
     return pending
   }

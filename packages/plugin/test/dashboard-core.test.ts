@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 import { ensureDashboard, makeDashboardCommand, makeLazyEnsure } from "../src/dashboard-core.ts"
 
 const healthy = (async () => new Response("{}", { status: 200 })) as unknown as typeof fetch
+const notFound = (async () => new Response("no catalog yet", { status: 404 })) as unknown as typeof fetch
 const refused = (async () => {
   throw new Error("ECONNREFUSED")
 }) as unknown as typeof fetch
@@ -21,6 +22,41 @@ describe("ensureDashboard", () => {
     })
     expect(result).toEqual({ url: "http://127.0.0.1:4517/", started: false })
     expect(started).toBe(0)
+  })
+
+  it("reuses a listener that answers with 404 before the catalog is synced", async () => {
+    let started = 0
+    const result = await ensureDashboard({
+      root: "C:/root",
+      uiDist: "C:/dist",
+      port: 4517,
+      fetchImpl: notFound,
+      start: async () => {
+        started++
+        return { url: "http://x/" }
+      },
+    })
+    expect(result).toEqual({ url: "http://127.0.0.1:4517/", started: false })
+    expect(started).toBe(0)
+  })
+
+  it("probes /api/status with an abort timeout", async () => {
+    const calls: { url: string; signal: AbortSignal | null | undefined }[] = []
+    const recording = (async (input: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
+      calls.push({ url: String(input), signal: init?.signal })
+      throw new Error("ECONNREFUSED")
+    }) as unknown as typeof fetch
+    await ensureDashboard({
+      root: "C:/root",
+      uiDist: "C:/dist",
+      port: 4599,
+      fetchImpl: recording,
+      timeoutMs: 500,
+      start: async () => ({ url: "http://x/" }),
+    })
+    expect(calls).toHaveLength(1)
+    expect(calls[0]!.url).toBe("http://127.0.0.1:4599/api/status")
+    expect(calls[0]!.signal).toBeInstanceOf(AbortSignal)
   })
 
   it("starts the server when the probe fails and returns its url", async () => {
@@ -80,6 +116,36 @@ describe("makeLazyEnsure", () => {
     expect(await ensure()).toEqual({ error: "boom" })
     expect(await ensure()).toEqual({ url: "http://127.0.0.1:4517/", started: true })
     expect(calls).toBe(2)
+  })
+
+  it("retries after a rejected load instead of caching the rejection", async () => {
+    let calls = 0
+    const ensure = makeLazyEnsure(async () => {
+      calls++
+      if (calls === 1) throw new Error("boom")
+      return { url: "http://127.0.0.1:4517/", started: false }
+    })
+    await expect(ensure()).rejects.toThrow("boom")
+    expect(await ensure()).toEqual({ url: "http://127.0.0.1:4517/", started: false })
+    expect(calls).toBe(2)
+  })
+
+  it("dedupes concurrent calls into one load and shares the result", async () => {
+    let loads = 0
+    let resolveLoad!: (result: { url: string; started: boolean }) => void
+    const ensure = makeLazyEnsure(() => {
+      loads++
+      return new Promise((resolve) => {
+        resolveLoad = resolve
+      })
+    })
+    const first = ensure()
+    const second = ensure()
+    const result = { url: "http://127.0.0.1:4517/", started: true }
+    resolveLoad(result)
+    expect(await first).toBe(result)
+    expect(await second).toBe(result)
+    expect(loads).toBe(1)
   })
 })
 
