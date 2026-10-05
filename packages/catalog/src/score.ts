@@ -75,13 +75,14 @@ export function scoreRecord(input: ScoreInput): Scores {
 
   let freshness = 100
   if (source.kind !== "local") {
-    if (signals.pushedAt) {
-      const days = Math.max(0, (now.getTime() - Date.parse(signals.pushedAt)) / 86_400_000)
+    const pushedAt = signals.pushedAt ? Date.parse(signals.pushedAt) : Number.NaN
+    if (Number.isFinite(pushedAt)) {
+      const days = Math.max(0, (now.getTime() - pushedAt) / 86_400_000)
       freshness = clamp(Math.round(100 * Math.exp(-days / 365)))
       reasons.push(`freshness: pushed ${Math.round(days)} days ago (${freshness})`)
     } else {
       freshness = 10
-      reasons.push("freshness: no push date (10)")
+      reasons.push(signals.pushedAt ? "freshness: invalid push date (10)" : "freshness: no push date (10)")
     }
   } else {
     reasons.push("freshness: local skill (100)")
@@ -91,7 +92,7 @@ export function scoreRecord(input: ScoreInput): Scores {
   const compatibility = clamp(100 - missing * 25)
   reasons.push(missing ? `compatibility: ${missing} missing file(s) (-${missing * 25})` : "compatibility: all files present (100)")
 
-  const adoption = clamp(Math.log10(1 + signals.stars) * 10 + Math.log10(1 + signals.installs) * 8)
+  const adoption = clamp(Math.log10(1 + Math.max(0, signals.stars)) * 10 + Math.log10(1 + Math.max(0, signals.installs)) * 8)
   reasons.push(`adoption: ${signals.stars} stars / ${signals.installs} installs (${Math.round(adoption)})`)
 
   const parts = {

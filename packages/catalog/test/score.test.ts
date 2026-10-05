@@ -51,4 +51,22 @@ describe("scoreRecord", () => {
     })
     expect(stale.freshness).toBeLessThan(40)
   })
+
+  it("keeps total finite for a malformed push date", () => {
+    const scores = scoreRecord({
+      ...healthy,
+      signals: SignalsSchema.parse({ ...healthy.signals, pushedAt: "not-a-date" }),
+    })
+    expect(scores.freshness).toBe(10)
+    expect(Number.isFinite(scores.total)).toBe(true)
+  })
+
+  it("keeps total finite for negative star/install counts", () => {
+    const scores = scoreRecord({
+      ...healthy,
+      signals: SignalsSchema.parse({ ...healthy.signals, stars: -5, installs: -5 }),
+    })
+    expect(Number.isFinite(scores.total)).toBe(true)
+    expect(scores.adoption).toBeGreaterThanOrEqual(0)
+  })
 })
