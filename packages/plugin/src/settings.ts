@@ -17,7 +17,7 @@ export function readRetrievalSettings(root: string, env: NodeJS.ProcessEnv = pro
   }
   const settings: RetrievalSettings = {
     mode: isMode(raw.mode) ? raw.mode : DEFAULT_RETRIEVAL.mode,
-    embed: raw.embed === "off" ? "off" : DEFAULT_RETRIEVAL.embed,
+    embed: raw.embed === undefined ? DEFAULT_RETRIEVAL.embed : raw.embed === "gemini" ? "gemini" : "off",
     minScore: ratio(raw.minScore, DEFAULT_RETRIEVAL.minScore),
     autoScore: ratio(raw.autoScore, DEFAULT_RETRIEVAL.autoScore),
     maxPointers:

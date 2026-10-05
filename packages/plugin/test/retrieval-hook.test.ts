@@ -71,11 +71,21 @@ describe("makeRetrievalTransform", () => {
     }
   })
 
-  it("fails open when the embedder or the deps throw", async () => {
+  it("falls back to the lexical match when the embedder throws", async () => {
     const failing = deps({
       embed: async () => {
         throw new Error("down")
       },
+    })
+    const output = { system: ["base"] as string[] }
+    await makeRetrievalTransform(failing, stateWith("s1", "x"))({ sessionID: "s1" }, output)
+    expect(output.system).toHaveLength(2)
+    expect(output.system[1]).toContain("<skillhub-retrieval>")
+    expect(output.system[1]).toContain("weizhena-deep-research-skills/research")
+  })
+
+  it("fails open when the deps throw", async () => {
+    const failing = deps({
       search: async () => {
         throw new Error("down")
       },

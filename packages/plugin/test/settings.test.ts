@@ -23,6 +23,11 @@ describe("readRetrievalSettings", () => {
     expect(readRetrievalSettings(rootWith({ retrieval: { mode: "wild", minScore: 12, maxPointers: 0 } }))).toEqual(DEFAULT_RETRIEVAL)
   })
 
+  it("treats an unrecognized embed value as off and keeps gemini explicit", () => {
+    expect(readRetrievalSettings(rootWith({ retrieval: { embed: "nope" } })).embed).toBe("off")
+    expect(readRetrievalSettings(rootWith({ retrieval: { embed: "gemini" } })).embed).toBe("gemini")
+  })
+
   it("honours the env override", () => {
     const root = rootWith({ retrieval: { mode: "suggest" } })
     expect(readRetrievalSettings(root, { SKILLHUB_RETRIEVAL: "off" }).mode).toBe("off")

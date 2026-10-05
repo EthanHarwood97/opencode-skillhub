@@ -47,7 +47,14 @@ export function makeRetrievalTransform(deps: RetrievalDeps, state: RetrievalStat
     try {
       const settings = deps.settings()
       if (settings.mode === "off") return
-      const queryVector = settings.embed === "gemini" ? await deps.embed(prompt) : undefined
+      let queryVector: Float32Array | undefined
+      if (settings.embed === "gemini") {
+        try {
+          queryVector = await deps.embed(prompt)
+        } catch {
+          queryVector = undefined
+        }
+      }
       const rows = await deps.search(prompt, 10)
       if (rows.length === 0) return
       const inputs: CandidateInput[] = rows.map((row) => ({

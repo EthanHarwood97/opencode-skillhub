@@ -6,8 +6,12 @@ import type { SkillRecord } from "./types.ts"
 export const VECTORS_VERSION = 1
 
 export function removeVectors(outDir: string): void {
-  rmSync(join(outDir, "vectors.json"), { force: true })
-  rmSync(join(outDir, "vectors.bin"), { force: true })
+  try {
+    rmSync(join(outDir, "vectors.json"), { force: true })
+  } catch {}
+  try {
+    rmSync(join(outDir, "vectors.bin"), { force: true })
+  } catch {}
 }
 
 export type VectorsMeta = {
