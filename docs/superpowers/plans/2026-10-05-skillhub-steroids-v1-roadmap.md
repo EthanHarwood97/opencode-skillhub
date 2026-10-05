@@ -12,8 +12,10 @@
 |---|---|---|---|
 | Catalog | 10k+ scored skills | `catalog/index.json` + `search.db` | 0 tokens; local search in ms |
 | Installed | 100s of pinned skills | `store/<id>/` | 0 tokens idle; `skillhub_load` reads from here on demand |
-| Retrieved | 1–2 skills per prompt | injected by retrieval | hard-capped; loaded bodies persist for that session |
+| Retrieved | every skill that clears the match threshold, up to the retrieval budget | injected by retrieval | budget-capped; the count is **emergent** (often 0, sometimes several); loaded bodies persist for that session |
 | Advertised | the always-on handful | `managed/` | ~68 tokens each; keep at 0–2 with good retrieval |
+
+**Why "advertised" exists:** it is opencode's native skills scan — any skill inside a scanned folder gets its name + description shown in every prompt and can auto-invoke without help. `managed/` holds the few always-consider skills; `store/` (the installed long list) sits deliberately **outside** the scan, so hundreds of installed skills cost zero tokens until retrieval or the router reads a body.
 
 **Measured today (59 skills, 1 active): 0.39 MB store; 251/1000 advertised tokens.** Projections: 1k ≈ 8 MB · 10k ≈ 60 MB · 35k ≈ 200 MB. Scale gates are git churn and sync RAM (10k+), with fixes already designed (release-asset search.db, SQLite-first later).
 
