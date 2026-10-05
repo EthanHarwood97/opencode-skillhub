@@ -1,8 +1,12 @@
-# SkillHub
+# SkillHub — Opencode on Steroids
 
-A local catalog and dashboard for agent skills. Pull skills from GitHub and marketplaces, score them, install the ones you pick as pinned copies, and keep your agent's context small: opencode advertises only the skills you activate.
+A local catalog and dashboard for agent skills. Pull skills from GitHub and marketplaces, score them on evidence, install the ones you pick as pinned copies, and let the right skill show up automatically — while opencode's context stays small.
 
-The name is provisional. The tool is personal-first and works offline after a sync.
+Independent project, not affiliated with the opencode team. Personal-first, and it works offline after a sync.
+
+## Why this exists
+
+A model is half the equation; the other half is what it knows how to do. Skill libraries today are a lottery — ranked by stars, hype, and whoever shouted loudest. SkillHub gives opencode an algorithmic skill layer: every skill gated, scanned, scored and clustered on evidence, then matched to the task automatically. Your context stays small, the right skill shows up when it matters, and nothing installs or activates without you. No selling. Public so it's useful, and so the work speaks for itself.
 
 ## What it does
 
@@ -12,19 +16,19 @@ The name is provisional. The tool is personal-first and works offline after a sy
 - **Learn.** Skills you load often become promotion candidates; the dashboard shows the queue.
 - **Trend.** Daily star snapshots produce 7-day and 30-day velocity, plus new-this-month finds.
 
-## Quickstart
+## Install (one command)
 
-```bash
-git clone <repository-url> SkillHub
-cd SkillHub
-npm install
-npm run catalog:sync -- --topics claude-skills --max-repos 5 --max-skills 5
-npm run skillhub -- catalog import catalog
-npm run ui:build
-npm run skillhub -- ui
+Requires Node 22.23+ and opencode. Windows-first; Linux works.
+
+```powershell
+git clone https://github.com/EthanHarwood97/opencode-skillhub
+cd opencode-skillhub
+pwsh ./scripts/install.ps1
 ```
 
-The dashboard opens at http://127.0.0.1:4517.
+The installer runs `npm install`, builds the dashboard, adds the plugin to `~/.config/opencode/opencode.json` (with a timestamped backup), and registers the daily 03:00 catalog sync. Restart opencode, then run `/skills` for status or `/skillhub` to open the dashboard at http://127.0.0.1:4517.
+
+Manual setup (the same steps): clone, `npm install`, `npm run catalog:sync -- --topics claude-skills --max-repos 5 --max-skills 5`, `npm run skillhub -- catalog import catalog`, `npm run ui:build`, add the plugin path to your opencode config, then `npm run skillhub -- ui`.
 
 ## Commands
 
@@ -77,6 +81,10 @@ Ranking starts with fixed weights. To tune it against your judgment:
 - A deterministic scan flags injection, exfiltration, shell, and obfuscation patterns. Critical findings quarantine the skill instead of hiding it.
 - The dashboard binds to 127.0.0.1. Its mutating endpoints require a per-run token, and the static export has no actions at all.
 - The LLM rubric treats skill text as untrusted data, and it never runs unless you pass `--llm` with a dollar cap.
+
+## Data & licenses
+
+Skill content belongs to its upstream repository; SkillHub stores metadata and installs fetch from origin, pinned and verified. The code here is MIT (see `LICENSE`). Catalog snapshots in this repo are metadata only.
 
 ## Development
 
