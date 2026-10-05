@@ -1,0 +1,93 @@
+import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
+import { describe, expect, it } from "vitest"
+import { makeRecord } from "../../catalog/test/helpers.ts"
+import type { Lockfile } from "../src/lockfile.ts"
+import { layout } from "../src/paths.ts"
+import { buildClusters, buildDetail, buildReview, buildSkills, buildStatus, buildTrending, loadSnapshot, toCard, type UiSnapshot } from "../src/ui/data.ts"
+
+const scores = (total: number) => ({ total, quality: total, trust: total, freshness: total, compatibility: total, adoption: total, reasons: [], rubricVersion: "heuristic-v0", evaluatedAt: "2026-10-05T00:00:00.000Z" })
+
+const snapshot = (): UiSnapshot => ({
+  index: {
+    version: 1,
+    generatedAt: "2026-10-05T00:00:00.000Z",
+    counts: { total: 3, byStatus: { candidate: 2, quarantined: 1 }, byCategory: { writing: 1 } },
+    skills: [
+      makeRecord({ id: "a/one", category: "writing", tags: ["pdf"], scores: scores(90) }),
+      makeRecord({ id: "a/two", status: "quarantined", scores: scores(70) }),
+      makeRecord({ id: "a/three", scores: scores(60) }),
+    ],
+  },
+  lock: {
+    version: 1,
+    skills: {
+      "a/one": { id: "a/one", contentHash: "old", provenanceTier: "sha-pinned", installedAt: "", files: [], active: true, riskLevel: "low", total: 80 },
+    },
+  } satisfies Lockfile,
+  reconciliation: {
+    version: 1,
+    generatedAt: "2026-10-05T00:00:00.000Z",
+    totals: { previous: 0, current: 3, added: ["a/three"], removed: [], changed: [] },
+    sources: [{ source: "github:x", candidates: 3, fetchedAt: "2026-10-05T00:00:00.000Z" }],
+    gaps: ["source y: boom"],
+    reviewQueue: ["a/three"],
+  },
+  warnings: [],
+})
+
+describe("toCard", () => {
+  it("joins record state with the lockfile", () => {
+    const snap = snapshot()
+    const card = toCard(snap.index.skills[0]!, snap.lock)
+    expect(card).toMatchObject({ id: "a/one", total: 90, installed: true, active: true, updateAvailable: true })
+    expect(toCard(snap.index.skills[1]!, snap.lock)).toMatchObject({ installed: false, updateAvailable: false })
+  })
+})
+
+describe("builders", () => {
+  it("builds the status summary", () => {
+    const status = buildStatus(snapshot())
+    expect(status).toMatchObject({ installed: 1, active: 1, updates: 1, reviewQueue: 1 })
+    expect(status.gaps).toEqual(["source y: boom"])
+  })
+
+  it("filters and paginates cards", () => {
+    const page = buildSkills(snapshot(), { q: "pdf" })
+    expect(page.items.map((c) => c.id)).toEqual(["a/one"])
+  })
+
+  it("finds details and returns undefined for unknown ids", () => {
+    expect(buildDetail(snapshot(), "a/three")?.scores.total).toBe(60)
+    expect(buildDetail(snapshot(), "a/nope")).toBeUndefined()
+  })
+
+  it("assembles the review queue", () => {
+    const review = buildReview(snapshot())
+    expect(review.newCandidates.map((c) => c.id)).toEqual(["a/three"])
+    expect(review.updates).toEqual([{ id: "a/one", from: 80, to: 90, riskFrom: "low", riskTo: "low" }])
+    expect(review.quarantined.map((c) => c.id)).toEqual(["a/two"])
+  })
+
+  it("degrades gracefully when optional artifacts are missing", () => {
+    const snap = { ...snapshot(), clusters: undefined, trending: undefined, reconciliation: undefined }
+    expect(buildClusters(snap).clusters).toEqual([])
+    expect(buildTrending(snap).topVelocity).toEqual([])
+    expect(buildReview(snap).newCandidates).toEqual([])
+  })
+})
+
+describe("loadSnapshot", () => {
+  it("explains a missing catalog and warns on unreadable optionals", () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-ui-data-"))
+    const l = layout(root)
+    mkdirSync(l.catalogDir, { recursive: true })
+    expect(loadSnapshot(l)).toMatchObject({ error: expect.stringContaining("no catalog") })
+
+    writeFileSync(join(l.catalogDir, "index.json"), JSON.stringify({ version: 1, generatedAt: "", counts: { total: 0, byStatus: {}, byCategory: {} }, skills: [] }))
+    writeFileSync(join(l.catalogDir, "clusters.json"), "{not json")
+    const snap = loadSnapshot(l)
+    expect("index" in snap && snap.warnings).toHaveLength(1)
+  })
+})
