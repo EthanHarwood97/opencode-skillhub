@@ -8,6 +8,7 @@ import { installSkill } from "./installer.ts"
 import { readLockfile, upsertEntry, writeLockfile } from "./lockfile.ts"
 import { activateSkill, deactivateSkill, planUpdate, applyUpdate, reviewSkill, findingRules } from "./write-helpers.ts"
 import { applyCalibration, formatTrending, readTrending, runCalibrate, runLabelExport, runLabelImport } from "./commands/depth.ts"
+import { formatCoverage, runCoverage } from "./commands/coverage.ts"
 import { resolveUiDist } from "./ui/paths.ts"
 import { startUiServer } from "./ui/server.ts"
 import { exportStaticSite } from "./ui/export.ts"
@@ -254,6 +255,28 @@ program
     const file = readTrending(store())
     if (!file) throw new Error("no trending.json in the store catalog — run `npm run catalog:sync` first")
     console.log(opts.json ? JSON.stringify(file, null, 2) : formatTrending(file))
+  })
+
+program
+  .command("coverage")
+  .option("--profile <id>", "show the full category table for one goal profile")
+  .option("--json", "machine-readable output")
+  .action((opts: { profile?: string; json?: boolean }) => {
+    const results = runCoverage(store(), opts.profile)
+    if (opts.json) {
+      console.log(JSON.stringify(results, null, 2))
+      return
+    }
+    if (!opts.profile) {
+      console.log(formatCoverage(results))
+      return
+    }
+    const result = results[0]
+    console.log(`${result.profile} ${result.coverage}%`)
+    for (const entry of result.categories) {
+      const top = entry.top.map((item) => item.id).join(", ") || "(none)"
+      console.log(`  ${entry.category}  w ${entry.weight}  supply ${entry.supply}/${entry.min}  ${top}`)
+    }
   })
 
 await program.parseAsync()
