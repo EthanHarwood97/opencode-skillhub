@@ -1,0 +1,55 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line-strong);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.chipNeutral { color: var(--text); }
+.chipMuted { color: var(--text-faint); }
+.chipAccent { color: var(--accent); border-color: var(--accent-dim); }
+.chipInfo { color: var(--info); border-color: color-mix(in oklab, var(--info) 40%, transparent); }
+.chipLow { color: var(--risk-low); border-color: color-mix(in oklab, var(--risk-low) 40%, transparent); }
+.chipMedium { color: var(--risk-medium); border-color: color-mix(in oklab, var(--risk-medium) 40%, transparent); }
+.chipHigh { color: var(--risk-high); border-color: color-mix(in oklab, var(--risk-high) 40%, transparent); }
+.chipCritical { color: var(--risk-critical); border-color: color-mix(in oklab, var(--risk-critical) 40%, transparent); }
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line-strong);
+  background: var(--panel-2);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  transition: background var(--duration) var(--ease), border-color var(--duration) var(--ease);
+}
+.button:hover { border-color: var(--accent-dim); }
+.button:disabled { opacity: 0.5; cursor: not-allowed; }
+.buttonPrimary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.buttonPrimary:hover { filter: brightness(1.05); border-color: var(--accent); }
+.buttonDanger { border-color: color-mix(in oklab, var(--danger) 50%, transparent); color: var(--danger); }
+.buttonDanger:hover { border-color: var(--danger); }
+
+.meter { display: inline-flex; align-items: center; gap: var(--space-2); }
+.meterValue { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--text); }
+.meterTrack { width: 56px; height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
+.meterFill { display: block; height: 100%; background: var(--accent); }
+
+.stat { display: flex; flex-direction: column; gap: var(--space-1); padding: var(--space-3) var(--space-4); background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-md); min-width: 130px; }
+.statLabel { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-faint); }
+.statValue { font-family: var(--font-mono); font-size: var(--text-2xl); }
+.statHint { font-size: var(--text-xs); color: var(--text-muted); }
+
+.skeleton { display: block; background: linear-gradient(90deg, var(--panel) 25%, var(--panel-2) 50%, var(--panel) 75%); background-size: 200% 100%; animation: shimmer 1.4s linear infinite; border-radius: var(--radius-sm); }
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+.state { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); padding: var(--space-6); border: 1px dashed var(--line-strong); border-radius: var(--radius-lg); background: var(--bg-raise); }
+.stateTitle { font-size: var(--text-lg); }
+.stateBody { color: var(--text-muted); max-width: 60ch; }
