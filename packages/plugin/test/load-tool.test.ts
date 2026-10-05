@@ -36,6 +36,16 @@ describe("readSkillBodyFromDisk", () => {
     writeFileSync(join(dir, "SKILL.md"), body)
     expect(readSkillBodyFromDisk(root, "acme-skills/good-skill")).toBe(body)
   })
+
+  it("prefers the direct <base>/<id>/SKILL.md over nested decoys", () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-load-"))
+    const direct = join(root, "managed", "acme-skills", "good-skill")
+    const decoy = join(direct, "ref")
+    mkdirSync(decoy, { recursive: true })
+    writeFileSync(join(direct, "SKILL.md"), body)
+    writeFileSync(join(decoy, "SKILL.md"), "# Decoy\n")
+    expect(readSkillBodyFromDisk(root, "acme-skills/good-skill")).toBe(body)
+  })
 })
 
 describe("makeLoadTool", () => {

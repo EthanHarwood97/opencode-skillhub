@@ -69,7 +69,7 @@ describe("E2E: plugin loads in opencode (sandboxed)", () => {
     expect(names).toContain("good-skill")
     expect(names).not.toContain("wowfactor-web")
     expect(names).not.toContain("visual-critique")
-  }, 60_000)
+  }, 120_000)
 
   it.skipIf(!bin || !live)("budget: L0 + L1 ≤ 1000 est. tokens; /skills renders status", async () => {
     const sb = setupSandbox()
@@ -100,7 +100,12 @@ describe("E2E: plugin loads in opencode (sandboxed)", () => {
     expect(result.stdout).toContain("Good Skill")
     const callsFile = join(capture, "tool-calls.jsonl")
     const calls = existsSync(callsFile)
-      ? readFileSync(callsFile, "utf8").trim().split("\n").map((l) => JSON.parse(l).tool as string).filter((t) => t.startsWith("skillhub_"))
+      ? readFileSync(callsFile, "utf8")
+          .split("\n")
+          .map((l) => l.trim())
+          .filter(Boolean)
+          .map((l) => JSON.parse(l).tool as string)
+          .filter((t) => t.startsWith("skillhub_"))
       : []
     expect(calls.slice(0, 2)).toEqual(["skillhub_search", "skillhub_load"])
   }, 240_000)

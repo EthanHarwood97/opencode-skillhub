@@ -23,6 +23,26 @@ describe("listManagedAdverts", () => {
     const adverts = listManagedAdverts(root)
     expect(adverts).toEqual([{ id: "acme-skills/good-skill", name: "good-skill", description: "Demonstrates a well-formed skill." }])
   })
+
+  it("keeps exactly one advert per id, preferring the shallower file", () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-wire-"))
+    const skillDir = join(root, "managed", "acme-skills", "good-skill", "good-skill")
+    const refDir = join(root, "managed", "acme-skills", "good-skill", "ref")
+    mkdirSync(skillDir, { recursive: true })
+    mkdirSync(refDir, { recursive: true })
+    writeFileSync(join(skillDir, "SKILL.md"), "---\nname: good-skill\ndescription: installed skill body\n---\n\n# Good Skill\n")
+    writeFileSync(join(refDir, "SKILL.md"), "---\nname: ref-example\ndescription: bundled reference decoy\n---\n\n# Ref\n")
+    const adverts = listManagedAdverts(root)
+    expect(adverts).toEqual([{ id: "acme-skills/good-skill", name: "good-skill", description: "installed skill body" }])
+  })
+
+  it("ignores SKILL.md paths shallower than <org>/<name>/", () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-wire-"))
+    mkdirSync(join(root, "managed", "stray"), { recursive: true })
+    writeFileSync(join(root, "managed", "SKILL.md"), "---\nname: top\n---\n")
+    writeFileSync(join(root, "managed", "stray", "SKILL.md"), "---\nname: stray\n---\n")
+    expect(listManagedAdverts(root)).toEqual([])
+  })
 })
 
 describe("collectStatus", () => {

@@ -29,11 +29,21 @@ export function listManagedAdverts(root: string): ActiveAdvert[] {
     return files
   }
 
+  const best = new Map<string, { rel: string; file: string; depth: number }>()
   for (const file of walk(base)) {
-    const segments = relative(base, file).replace(/\\/g, "/").split("/")
-    if (segments.length < 2) continue
+    const rel = relative(base, file).replace(/\\/g, "/")
+    const segments = rel.split("/")
+    if (segments.length < 3) continue
     const id = `${segments[0]}/${segments[1]}`
-    const fallbackName = segments[segments.length - 2]
+    const depth = segments.length
+    const current = best.get(id)
+    if (!current || depth < current.depth || (depth === current.depth && rel < current.rel)) {
+      best.set(id, { rel, file, depth })
+    }
+  }
+
+  for (const [id, { rel, file }] of best) {
+    const fallbackName = rel.split("/").at(-2) ?? ""
     try {
       const parsed = matter(readFileSync(file, "utf8"))
       const fmName = typeof parsed.data.name === "string" ? parsed.data.name : fallbackName
