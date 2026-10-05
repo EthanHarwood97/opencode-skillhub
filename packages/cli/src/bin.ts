@@ -82,7 +82,11 @@ program
     const plan = planUpdate(l, readCatalog(l), readLockfile(l.lockfilePath), id)
     if (!plan) return console.log(`${id} is up to date`)
     const { changes } = await reviewSkill({ plan, l, rawBase: process.env.SKILLHUB_RAW_BASE })
-    console.log(opts.json ? JSON.stringify({ id, changes: changes.map((c) => ({ path: c.path, status: c.status })) }, null, 2) : changes.map((c) => `${c.status} ${c.path}`).join("\n"))
+    if (opts.json) {
+      console.log(JSON.stringify({ id, changes: changes.map((c) => ({ path: c.path, status: c.status })), riskDelta: plan.riskDelta, scoreDelta: plan.scoreDelta }, null, 2))
+      return
+    }
+    console.log(changes.map((c) => `${c.status} ${c.path}`).join("\n"))
     console.log(`risk ${plan.riskDelta.from} -> ${plan.riskDelta.to}; score ${plan.scoreDelta.from} -> ${plan.scoreDelta.to}`)
   })
 
@@ -95,19 +99,24 @@ program
     const l = store()
     const lock = readLockfile(l.lockfilePath)
     const targets = id ? [id] : Object.keys(lock.skills)
+    const results: { id: string; status: "up-to-date" | "update-available" | "updated"; contentHash?: string; riskLevel?: string }[] = []
     for (const target of targets) {
       const plan = planUpdate(l, readCatalog(l), lock, target)
       if (!plan) {
-        console.log(`${target}: up to date`)
+        if (opts.json) results.push({ id: target, status: "up-to-date" })
+        else console.log(`${target}: up to date`)
         continue
       }
       if (!opts.apply) {
-        console.log(`${target}: update available (re-run with --apply after review)`)
+        if (opts.json) results.push({ id: target, status: "update-available" })
+        else console.log(`${target}: update available (re-run with --apply after review)`)
         continue
       }
       const entry = await applyUpdate({ plan, l, rawBase: process.env.SKILLHUB_RAW_BASE })
-      console.log(`${target}: updated to ${entry.contentHash.slice(0, 12)} (risk ${entry.riskLevel})`)
+      if (opts.json) results.push({ id: target, status: "updated", contentHash: entry.contentHash, riskLevel: entry.riskLevel })
+      else console.log(`${target}: updated to ${entry.contentHash.slice(0, 12)} (risk ${entry.riskLevel})`)
     }
+    if (opts.json) console.log(JSON.stringify(results, null, 2))
   })
 
 program.command("activate").argument("<id>").action((id: string) => {

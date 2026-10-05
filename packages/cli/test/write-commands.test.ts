@@ -83,6 +83,39 @@ describe("applyUpdate path guard", () => {
   })
 })
 
+describe("applyUpdate pruning", () => {
+  it("deletes files removed by the update and writes the new ones", async () => {
+    const { l, record } = await prepared()
+    const skillBytes = new Uint8Array(readFileSync(join(fixtures, "good-skill", "SKILL.md")))
+    const extraBytes = new TextEncoder().encode("extra\n")
+    const fromRecord = {
+      ...record,
+      files: [
+        { path: "SKILL.md", sha256: sha256(skillBytes), size: skillBytes.length },
+        { path: "extra.md", sha256: sha256(extraBytes), size: extraBytes.length },
+      ],
+    }
+    const fromFetch = (async (url: string | URL) => new Response(String(url).endsWith("extra.md") ? extraBytes : skillBytes)) as unknown as typeof fetch
+    const entry = await installSkill({ record: fromRecord, l, fetchImpl: fromFetch, rawBase: "https://raw.test" })
+    writeLockfile(l.lockfilePath, upsertEntry({ version: 1, skills: {} }, entry))
+
+    const nextBytes = new TextEncoder().encode("# Good Skill\n\nnew\n")
+    const toRecord = { ...fromRecord, contentHash: "d".repeat(64), files: [{ path: "SKILL.md", sha256: sha256(nextBytes), size: nextBytes.length }] }
+    const plan = {
+      id: record.id,
+      from: entry,
+      to: toRecord,
+      changes: [{ path: "extra.md", status: "removed" as const }],
+      riskDelta: { from: record.risk.level, to: record.risk.level },
+      scoreDelta: { from: record.scores.total, to: record.scores.total },
+    }
+    await applyUpdate({ plan, l, fetchImpl: (async () => new Response(nextBytes)) as unknown as typeof fetch, rawBase: "https://raw.test" })
+
+    expect(existsSync(join(l.storeDir, record.id, "extra.md"))).toBe(false)
+    expect(readFileSync(join(l.storeDir, record.id, "SKILL.md"), "utf8")).toContain("new")
+  })
+})
+
 describe("activate / deactivate", () => {
   it("copies into managed/ and toggles the lockfile, then reverses", async () => {
     const { l, record } = await prepared()

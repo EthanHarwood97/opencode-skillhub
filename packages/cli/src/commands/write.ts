@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from "node:fs"
+import { mkdirSync, rmSync, writeFileSync } from "node:fs"
 import { dirname, join, resolve, sep } from "node:path"
 import type { CatalogIndex } from "../../../catalog/src/publish.ts"
 import type { SkillRecord } from "../../../catalog/src/types.ts"
@@ -67,12 +67,16 @@ export async function applyUpdate(opts: {
 
   const target = join(opts.l.storeDir, opts.plan.id)
   const resolvedTarget = resolve(target)
-  for (const path of fetched.keys()) {
+  const toPaths = new Set(opts.plan.to.files.map((f) => f.path))
+  const removed = opts.plan.from.files.map((f) => f.path).filter((path) => !toPaths.has(path))
+  for (const path of [...fetched.keys(), ...removed]) {
     const dest = resolve(resolvedTarget, path)
     if (dest !== resolvedTarget && !dest.startsWith(resolvedTarget + sep)) {
       throw new MissingSourceError(`unsafe file path (escapes store): ${path}`)
     }
   }
+
+  for (const path of removed) rmSync(join(opts.l.storeDir, opts.plan.id, path), { force: true })
 
   for (const [path, bytes] of fetched) {
     const dest = join(opts.l.storeDir, opts.plan.id, path)
