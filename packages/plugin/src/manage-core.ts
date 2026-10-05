@@ -3,7 +3,7 @@ export { usageFileFor, readUsage, recordLoad, recordSearch, type Usage } from ".
 export type ActiveAdvert = { id: string; name: string; description: string }
 
 export function estimateAdvertisedTokens(adverts: ActiveAdvert[]): number {
-  const chars = adverts.reduce((n, a) => n + a.name.length + a.description.length + 24, 0)
+  const chars = adverts.reduce((n, a) => n + a.name.length + a.description.length + 140, 0)
   return Math.ceil(chars / 4)
 }
 

@@ -1,7 +1,9 @@
 import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
-import { join } from "node:path"
+import { dirname, join } from "node:path"
 import { describe, expect, it } from "vitest"
+import { usageFileFor } from "../src/manage-core.ts"
+import { renderStatus } from "../src/status-core.ts"
 import { collectStatus, listManagedAdverts } from "../src/wiring.ts"
 import { SkillHubPlugin } from "../src/plugin.ts"
 
@@ -81,6 +83,34 @@ describe("collectStatus", () => {
     expect(status.active).toEqual(["a/one"])
     expect(status.l1Tokens).toBeGreaterThan(0)
     expect(status.l0Tokens).toBeGreaterThan(0)
+  })
+
+  it("suggests demotions for least-used adverts over budget", () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-wire-"))
+    const big = "x".repeat(4000)
+    const mk = (name: string, description: string) => {
+      const dir = join(root, "managed", "a", name)
+      mkdirSync(dir, { recursive: true })
+      writeFileSync(join(dir, "SKILL.md"), `---\nname: ${name}\ndescription: ${description}\n---\n`)
+    }
+    mk("keep", "")
+    mk("hot", big)
+    mk("old", big)
+    writeFileSync(
+      join(root, "lockfile.json"),
+      JSON.stringify({
+        version: 1,
+        skills: Object.fromEntries(["a/keep", "a/hot", "a/old"].map((id) => [id, { id, active: true, contentHash: "x", files: [] }])),
+      }),
+    )
+    const usageFile = usageFileFor(root, "C:/proj")
+    mkdirSync(dirname(usageFile), { recursive: true })
+    writeFileSync(usageFile, JSON.stringify({ version: 1, searches: 0, loads: { "a/keep": { count: 10, lastAt: "" }, "a/hot": { count: 5, lastAt: "" } } }))
+    const status = collectStatus(root, "C:/proj")
+    expect(status.demote).toEqual(["a/hot", "a/old"])
+    const text = renderStatus(status)
+    expect(text).toContain("demote suggestions: a/hot, a/old")
+    expect(text).toContain("over budget")
   })
 })
 

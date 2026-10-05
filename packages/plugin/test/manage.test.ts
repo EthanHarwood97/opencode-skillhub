@@ -20,8 +20,8 @@ describe("usage", () => {
 })
 
 describe("budget", () => {
-  it("estimates tokens from names + descriptions", () => {
-    expect(estimateAdvertisedTokens([advert("a/one")])).toBeGreaterThan(25)
+  it("estimates tokens from names + descriptions + the verbose-format overhead", () => {
+    expect(estimateAdvertisedTokens([advert("a/one")])).toBe(61)
   })
   it("demotes least-used skills beyond the cap, keeping highest-use first", () => {
     const adverts = [advert("a/hot"), advert("a/cold"), advert("a/mid")]

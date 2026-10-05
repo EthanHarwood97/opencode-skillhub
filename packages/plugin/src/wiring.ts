@@ -3,7 +3,7 @@ import type { Dirent } from "node:fs"
 import { join, relative, resolve, sep } from "node:path"
 import matter from "gray-matter"
 import { readCatalogIndex, readLock } from "./catalog-read.ts"
-import { estimateAdvertisedTokens, promotionCandidates, readUsage, usageFileFor, type ActiveAdvert } from "./manage-core.ts"
+import { enforceBudget, estimateAdvertisedTokens, promotionCandidates, readUsage, usageFileFor, type ActiveAdvert } from "./manage-core.ts"
 import { estimateTokens, ROUTER_DESCRIPTION } from "./search-core.ts"
 import type { StatusInput } from "./status-core.ts"
 
@@ -101,13 +101,16 @@ export function collectStatus(root: string, projectDir: string, _now?: Date): St
       }).length
     : 0
   const adverts = listManagedAdverts(root)
+  const l0Tokens = estimateTokens(ROUTER_DESCRIPTION)
+  const uses = Object.fromEntries(Object.entries(usage.loads).map(([id, v]) => [id, v.count]))
   return {
     active,
     installed: Object.keys(lock.skills).length,
     updates,
     proposals: promotionCandidates({ lock, usage }),
+    demote: enforceBudget({ adverts, uses, cap: 1000 - l0Tokens }).demote,
     l1Tokens: estimateAdvertisedTokens(adverts),
-    l0Tokens: estimateTokens(ROUTER_DESCRIPTION),
+    l0Tokens,
   }
 }
 
