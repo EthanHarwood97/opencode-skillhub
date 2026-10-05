@@ -19,6 +19,14 @@ describe("applyConfigToSkillHub", () => {
     applyConfigToSkillHub(cfg, { root: "C:/root" })
     expect(cfg.command.skills.template).toBe("custom")
   })
+  it("adds the /skillhub command but never overwrites an existing one", () => {
+    const cfg: any = {}
+    applyConfigToSkillHub(cfg, { root: "C:/root" })
+    expect(cfg.command.skillhub.template).toBeTruthy()
+    cfg.command.skillhub = { description: "custom", template: "custom" }
+    applyConfigToSkillHub(cfg, { root: "C:/root" })
+    expect(cfg.command.skillhub.template).toBe("custom")
+  })
 })
 
 describe("renderStatus", () => {

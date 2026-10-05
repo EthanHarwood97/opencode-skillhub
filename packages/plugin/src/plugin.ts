@@ -9,9 +9,17 @@ import { searchRuntime } from "./search-runtime.ts"
 import { makeStartupNotifier, renderStatus } from "./status-core.ts"
 import { makeRouterTool } from "./tools.ts"
 import { collectStatus, makeCapture } from "./wiring.ts"
+import { openBrowser } from "../../cli/src/ui/open.ts"
+import { resolveUiDist } from "../../cli/src/ui/paths.ts"
+import { startUiServer } from "../../cli/src/ui/server.ts"
+import { ensureDashboard, makeDashboardCommand, type EnsureDashboardResult } from "./dashboard-core.ts"
 
 export const SkillHubPlugin: Plugin = async ({ client, directory }) => {
   const root = resolveRoot()
+  let dashboardResult: Promise<EnsureDashboardResult> | undefined
+  const ensure = () =>
+    (dashboardResult ??= ensureDashboard({ root, uiDist: resolveUiDist(), port: 4517, start: startUiServer }))
+  const dashboardCommand = makeDashboardCommand({ ensure, open: openBrowser })
   const capture = makeCapture(process.env.SKILLHUB_CAPTURE_DIR)
   const notifier = makeStartupNotifier({
     toast: async (message, variant) => {
@@ -51,6 +59,9 @@ export const SkillHubPlugin: Plugin = async ({ client, directory }) => {
     "command.execute.before": async (input, output) => {
       if (input.command === "skills") {
         output.parts.push({ type: "text", text: renderStatus(collectStatus(root, directory, new Date())) } as any)
+      }
+      if (input.command === "skillhub") {
+        await dashboardCommand(output as { parts: unknown[] })
       }
     },
     "tool.execute.before": async (input) => {
