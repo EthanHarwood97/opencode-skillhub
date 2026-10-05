@@ -74,15 +74,17 @@ describe("makeGeminiEmbedder", () => {
     expect(Math.sqrt(norm)).toBeCloseTo(1, 6)
   })
 
-  it("chunks above batchSize", async () => {
+  it("chunks above batchSize, echoing exactly the requested count", async () => {
     let calls = 0
-    const fetchImpl = (async () => {
+    const fetchImpl = (async (_url: string | URL, init?: RequestInit) => {
       calls++
-      return reply(2)
+      const body = JSON.parse(String(init?.body)) as { requests: unknown[] }
+      return reply(body.requests.length)
     }) as unknown as typeof fetch
     const embedder = makeGeminiEmbedder({ apiKey: "k", dim: 4, fetchImpl, batchSize: 2 })
-    await embedder.embed(["a", "b", "c", "d", "e"])
+    const vectors = await embedder.embed(["a", "b", "c", "d", "e"])
     expect(calls).toBe(3)
+    expect(vectors).toHaveLength(5)
   })
 
   it("retries once on 500 then succeeds; throws EmbeddingError on 400", async () => {
@@ -502,7 +504,9 @@ describe("rankCandidates", () => {
   it("falls back to lexical-only when no query vector is available", () => {
     const ranked = rankCandidates("research", [row("a/one", { ftsRank: 5 }), row("a/two", { ftsRank: 1 })], undefined, undefined)
     expect(ranked[0]!.id).toBe("a/one")
-    expect(ranked[0]!.score).toBeCloseTo(1 + 0.05 + 0.03, 3)
+    // lexical 1 + tag boost 0.03, clamped to 1
+    expect(ranked[0]!.score).toBe(1)
+    expect(ranked[1]!.score).toBeCloseTo(0.23, 3)
   })
 
   it("is deterministic on ties", () => {
@@ -534,10 +538,17 @@ describe("formatRetrievalBlock", () => {
 
 describe("pickAutoBody", () => {
   it("picks only in auto mode and only above autoScore", () => {
-    const high = rankCandidates("x", [row("a/one", { ftsRank: 10 })], undefined, undefined)
-    expect(pickAutoBody(high, { ...DEFAULT_RETRIEVAL, mode: "auto", autoScore: 0.5 })?.id).toBe("a/one")
-    expect(pickAutoBody(high, { ...DEFAULT_RETRIEVAL, mode: "suggest" })).toBeUndefined()
-    expect(pickAutoBody(high, { ...DEFAULT_RETRIEVAL, mode: "auto", autoScore: 0.99 })).toBeUndefined()
+    const query = Float32Array.from([1, 0])
+    const vectors = new Map([
+      ["a/one", Float32Array.from([0.6, 0.8])],
+      ["a/two", Float32Array.from([0.8, 0.6])],
+    ])
+    // equal lexical weight -> one 0.77, two 0.90 (plus the 0.03 tag boost)
+    const mixed = rankCandidates("research", [row("a/one", { ftsRank: 10 }), row("a/two", { ftsRank: 10 })], query, vectors)
+    expect(mixed[0]!.id).toBe("a/two")
+    expect(pickAutoBody(mixed, { ...DEFAULT_RETRIEVAL, mode: "auto", autoScore: 0.55 })?.id).toBe("a/two")
+    expect(pickAutoBody(mixed, { ...DEFAULT_RETRIEVAL, mode: "auto", autoScore: 0.95 })).toBeUndefined()
+    expect(pickAutoBody(mixed, { ...DEFAULT_RETRIEVAL, mode: "suggest" })).toBeUndefined()
   })
 })
 ```
