@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "generatedAt": "2026-10-05T10:00:28.162Z",
+  "clusters": [
+    {
+      "id": "engineering/good",
+      "label": "Good",
+      "category": "engineering",
+      "top": "local/good-skill",
+      "alternatives": []
+    },
+    {
+      "id": "engineering/risky",
+      "label": "Risky",
+      "category": "engineering",
+      "top": "local/risky-skill",
+      "alternatives": []
+    },
+    {
+      "id": "engineering/stale",
+      "label": "Stale",
+      "category": "engineering",
+      "top": "local/stale-skill",
+      "alternatives": []
+    }
+  ]
+}
