@@ -1,0 +1,6 @@
+{
+  "name": "@skillhub/catalog",
+  "private": true,
+  "type": "module",
+  "dependencies": { "gray-matter": "^4.0.3", "zod": "^3.25.0" }
+}

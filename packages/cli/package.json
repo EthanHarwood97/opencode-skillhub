@@ -1,0 +1,6 @@
+{
+  "name": "@skillhub/cli",
+  "private": true,
+  "type": "module",
+  "dependencies": { "commander": "^14.0.0", "diff": "^8.0.0", "fflate": "^0.8.2" }
+}
