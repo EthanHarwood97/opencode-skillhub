@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs"
+import { mkdtempSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
@@ -7,7 +7,7 @@ import { readRetrievalSettings } from "../src/settings.ts"
 
 const rootWith = (body: unknown) => {
   const root = mkdtempSync(join(tmpdir(), "skillhub-settings-"))
-  if (body !== undefined) writeFileSync(join(root, "settings.json"), JSON.stringify(body))
+  if (body !== undefined) writeFileSync(join(root, "settings.json"), typeof body === "string" ? body : JSON.stringify(body))
   return root
 }
 
