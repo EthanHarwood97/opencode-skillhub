@@ -2696,6 +2696,7 @@ export async function applyUpdate(opts: {
   writeLockfile(opts.l.lockfilePath, upsertEntry(readLockfile(opts.l.lockfilePath), entry))
   return entry
 }
+```
 
 - [ ] **Step 4: Wire commands into `bin.ts`**
 
