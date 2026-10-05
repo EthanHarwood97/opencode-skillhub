@@ -120,3 +120,32 @@ export function scoreRecord(input: ScoreInput): Scores {
 
   return { total, ...parts, reasons, rubricVersion: "heuristic-v0", evaluatedAt: now.toISOString() }
 }
+
+export function rescoreWithQuality(input: {
+  scores: Scores
+  quality: number
+  reasons: string[]
+  rubricVersion: string
+  evaluatedAt: string
+  weights?: ScoreWeights
+}): Scores {
+  const weights = input.weights ?? DEFAULT_WEIGHTS
+  const quality = clamp(input.quality)
+  const total =
+    Math.round(
+      (quality * weights.quality +
+        input.scores.trust * weights.trust +
+        input.scores.freshness * weights.freshness +
+        input.scores.compatibility * weights.compatibility +
+        input.scores.adoption * weights.adoption) *
+        100,
+    ) / 100
+  return {
+    ...input.scores,
+    quality,
+    total,
+    reasons: [...input.scores.reasons, ...input.reasons],
+    rubricVersion: input.rubricVersion,
+    evaluatedAt: input.evaluatedAt,
+  }
+}

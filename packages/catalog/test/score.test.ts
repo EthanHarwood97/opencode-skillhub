@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
-import { DEFAULT_WEIGHTS, qualityHeuristic, scoreRecord } from "../src/score.ts"
+import { DEFAULT_WEIGHTS, qualityHeuristic, rescoreWithQuality, scoreRecord } from "../src/score.ts"
 import { parseSkillMd } from "../src/parse.ts"
 import { SignalsSchema, SourceSchema } from "../src/types.ts"
 
@@ -74,5 +74,21 @@ describe("scoreRecord", () => {
     const missing = scoreRecord({ ...healthy, missingScripts: 2 })
     expect(missing.compatibility).toBeLessThan(scoreRecord(healthy).compatibility)
     expect(missing.compatibility).toBe(80)
+  })
+
+  it("rescores quality with the given weights and keeps other parts", () => {
+    const base = scoreRecord(healthy)
+    const updated = rescoreWithQuality({
+      scores: base,
+      quality: 100,
+      reasons: ["quality: rubric-v1 100"],
+      rubricVersion: "rubric-v1",
+      evaluatedAt: "2026-10-05T01:00:00.000Z",
+      weights: { quality: 1, trust: 0, freshness: 0, compatibility: 0, adoption: 0 },
+    })
+    expect(updated.total).toBe(100)
+    expect(updated.trust).toBe(base.trust)
+    expect(updated.reasons).toContain("quality: rubric-v1 100")
+    expect(updated.rubricVersion).toBe("rubric-v1")
   })
 })
