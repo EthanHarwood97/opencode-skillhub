@@ -19,7 +19,7 @@ export async function fetchAgentskills(opts: { baseUrl: string; fetchImpl: Fetch
     const files: CandidateFile[] = Object.entries(zip)
       .filter(([path]) => !path.endsWith("/"))
       .slice(0, 50)
-      .map(([path, bytes]) => ({ path, content: new TextDecoder().decode(bytes), size: bytes.length }))
+      .map(([path, bytes]) => ({ path, bytes, content: new TextDecoder().decode(bytes), size: bytes.byteLength }))
     if (!files.some((f) => f.path.endsWith("SKILL.md") && f.content)) continue
     candidates.push({
       source: { kind: "marketplace", path: "SKILL.md", url: `${base}/api/skills/download/${item.id}`, licenseFlags: ["unknown-license"] },

@@ -48,6 +48,28 @@ describe("installSkill (github, sha-pinned)", () => {
     expect(() => readdirSync(join(l.storeDir, record.id))).toThrow()
   })
 
+  it("verifies and materializes raw bytes when the decoded text carries a BOM", async () => {
+    const raw = new Uint8Array([0xef, 0xbb, 0xbf, ...new TextEncoder().encode(readFileSync(join(fixtures, "good-skill", "SKILL.md"), "utf8"))])
+    const record = normalizeCandidate(
+      {
+        source: { kind: "github", repo: "acme/skills", path: "good-skill/SKILL.md", ref: "abc123", license: "MIT", licenseFlags: [] },
+        name: "good-skill",
+        dir: "good-skill",
+        tags: ["good"],
+        signals: { pushedAt: "2026-09-01T00:00:00Z" },
+        files: [{ path: "good-skill/SKILL.md", bytes: raw, content: new TextDecoder().decode(raw), size: raw.byteLength }],
+      },
+      { now: new Date("2026-10-05T00:00:00Z") },
+    ).record!
+    expect(record.files[0]?.sha256).toBe(sha256(raw))
+
+    const l = layout(mkdtempSync(join(tmpdir(), "skillhub-install-")))
+    const fetchImpl = (async () => new Response(raw, { status: 200 })) as unknown as typeof fetch
+    const entry = await installSkill({ record, l, fetchImpl, rawBase: "https://raw.example.test" })
+    expect(entry.files[0]?.sha256).toBe(sha256(raw))
+    expect(new Uint8Array(readFileSync(join(l.storeDir, record.id, "good-skill/SKILL.md")))).toEqual(raw)
+  })
+
   it("refuses records that are not candidates", async () => {
     const record = { ...recordFrom("good-skill"), status: "quarantined" as const }
     const l = layout(mkdtempSync(join(tmpdir(), "skillhub-install-")))

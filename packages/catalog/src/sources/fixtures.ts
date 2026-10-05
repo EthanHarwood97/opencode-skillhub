@@ -13,8 +13,8 @@ export function loadFixtureCandidates(root: string): Candidate[] {
     .filter((entry) => statSync(join(root, entry)).isDirectory())
     .map((dirName) => {
       const files: CandidateFile[] = walk(join(root, dirName)).map((path) => {
-        const content = readFileSync(join(root, dirName, path), "utf8")
-        return { path: `${dirName}/${path}`, content, size: Buffer.byteLength(content) }
+        const bytes = new Uint8Array(readFileSync(join(root, dirName, path)))
+        return { path: `${dirName}/${path}`, bytes, content: new TextDecoder().decode(bytes), size: bytes.byteLength }
       })
       return {
         source: { kind: "local" as const, path: `${dirName}/SKILL.md`, license: "MIT", licenseFlags: [] },

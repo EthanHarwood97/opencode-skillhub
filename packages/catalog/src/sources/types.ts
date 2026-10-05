@@ -4,7 +4,7 @@ export type FetchLike = (
   url: string,
 ) => Promise<{ ok: boolean; status: number; arrayBuffer(): Promise<ArrayBuffer>; json(): Promise<unknown> }>
 
-export type CandidateFile = { path: string; sha256?: string; size?: number; content?: string }
+export type CandidateFile = { path: string; sha256?: string; size?: number; content?: string; bytes?: Uint8Array }
 
 export type Candidate = {
   source: Source

@@ -59,8 +59,8 @@ export async function fetchRepoSkills(opts: {
         headers: headers(opts.token),
       })
       if (!res.ok) throw new Error(`raw fetch failed for ${path}`)
-      const content = new TextDecoder().decode(await res.arrayBuffer())
-      files.push({ path, content, size: Buffer.byteLength(content) })
+      const bytes = new Uint8Array(await res.arrayBuffer())
+      files.push({ path, bytes, content: new TextDecoder().decode(bytes), size: bytes.byteLength })
     }
     candidates.push({
       source: { kind: "github", repo: opts.repo, path: `${dir}/SKILL.md`, ref: tree.sha, license: opts.license, licenseFlags: [] },

@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
 import { normalizeCandidate } from "../src/normalize.ts"
+import { sha256 } from "../src/parse.ts"
 import type { Candidate } from "../src/sources/types.ts"
 
 const now = new Date("2026-10-05T00:00:00Z")
@@ -47,5 +48,43 @@ describe("normalizeCandidate", () => {
   it("rejects candidates with no SKILL.md content", () => {
     const { rejected } = normalizeCandidate(candidate("good-skill", { files: [] }), { now })
     expect(rejected?.reason).toMatch(/SKILL\.md/)
+  })
+
+  it("pins file hashes over raw bytes when provided (BOM preserved)", () => {
+    const raw = new Uint8Array([0xef, 0xbb, 0xbf, ...new TextEncoder().encode("---\nname: bom-skill\ndescription: d\n---\n\nBody.\n")])
+    const text = new TextDecoder().decode(raw)
+    expect(sha256(raw)).not.toBe(sha256(text))
+    const { record } = normalizeCandidate(
+      {
+        ...candidate("good-skill"),
+        name: "bom-skill",
+        dir: "bom-skill",
+        files: [{ path: "bom-skill/SKILL.md", content: text, bytes: raw, size: raw.byteLength }],
+      },
+      { now },
+    )
+    expect(record?.files[0]?.sha256).toBe(sha256(raw))
+    expect(record?.files[0]?.size).toBe(raw.byteLength)
+  })
+
+  it("flags the derived summary when frontmatter has no description", () => {
+    const raw = "---\nname: derived-skill\n---\n\nA concise derived summary for this skill.\n"
+    const { record } = normalizeCandidate(
+      {
+        ...candidate("good-skill"),
+        name: "derived-skill",
+        dir: "derived-skill",
+        files: [{ path: "derived-skill/SKILL.md", content: raw }],
+      },
+      { now },
+    )
+    expect(record?.summaryDerived).toBe("A concise derived summary for this skill.")
+    expect(record?.description).toBe("A concise derived summary for this skill.")
+  })
+
+  it("leaves summaryDerived unset when frontmatter has a description", () => {
+    const { record } = normalizeCandidate(candidate("good-skill"), { now })
+    expect(record?.description).toBeTruthy()
+    expect(record?.summaryDerived).toBeUndefined()
   })
 })

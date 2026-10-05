@@ -21,16 +21,23 @@ export function normalizeCandidate(candidate: Candidate, opts: { now: Date; maxI
     return { rejected: { reason: e instanceof SkillParseError ? e.message : String(e) } }
   }
 
+  let summaryDerived: string | undefined
   if (!parsed.description) {
     const derived = deriveDescription(parsed.body)
-    if (derived) parsed = { ...parsed, description: derived }
+    if (derived) {
+      summaryDerived = derived
+      parsed = { ...parsed, description: derived }
+    }
   }
 
   const files: FileEntry[] = candidate.files
-    .filter((f) => f.content !== undefined)
-    .map((f) => ({ path: f.path, sha256: sha256(f.content as string), size: Buffer.byteLength(f.content as string) }))
+    .filter((f) => f.content !== undefined || f.bytes !== undefined)
+    .map((f) => {
+      const bytes = f.bytes ?? new TextEncoder().encode(f.content ?? "")
+      return { path: f.path, sha256: sha256(bytes), size: bytes.byteLength }
+    })
 
-  const missing = candidate.files.some((f) => f.content === undefined)
+  const missing = candidate.files.some((f) => f.content === undefined && f.bytes === undefined)
   const signals = SignalsSchema.parse(candidate.signals)
   const risk = scanSkill(parsed.body)
 
@@ -38,7 +45,7 @@ export function normalizeCandidate(candidate: Candidate, opts: { now: Date; maxI
     parsed,
     signals,
     source: candidate.source,
-    filesPresent: candidate.files.map((f) => f.content !== undefined),
+    filesPresent: candidate.files.map((f) => f.content !== undefined || f.bytes !== undefined),
     risk,
     now: opts.now,
     maxIdleMonths: opts.maxIdleMonths,
@@ -60,6 +67,7 @@ export function normalizeCandidate(candidate: Candidate, opts: { now: Date; maxI
     id: slugId(candidate.source.repo, candidate.name),
     name: parsed.name,
     description: parsed.description ?? "",
+    ...(summaryDerived !== undefined ? { summaryDerived } : {}),
     category: candidate.categoryHint ?? "engineering",
     tags: candidate.tags,
     clusterId: cluster.clusterId,
