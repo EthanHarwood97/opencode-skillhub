@@ -367,7 +367,7 @@ OPENCODE_DISABLE_CLAUDE_CODE_SKILLS=1
 | Component | plugin hooks, tool wiring, toast logic | Vitest + mocked SDK client |
 | E2E (no LLM) | opencode resolves managed skills; install/activate behave | spawn `opencode` headless in sandbox; assert resolved skills + filesystem + `opencode db path` |
 | E2E (LLM, budgeted) | benchmark: "a skill exists — does the agent find it unaided?" | sandbox + cheap model; session logs inspected; on-demand, budget-capped |
-| Dashboard (later) | UI flows | Playwright + fixture DB |
+| Dashboard (Phase 4) | UI flows + a11y | Playwright 1.63 + axe against a generated fixture store |
 
 CI matrix: `ubuntu-latest` (main) + `windows-latest` (junction/path logic).
 
@@ -390,7 +390,7 @@ CI matrix: `ubuntu-latest` (main) + `windows-latest` (junction/path logic).
 | **1 — Catalog + CLI MVP** | Sources 1–3 ingest, gates, static scan, static catalog, `search/info/why/install/update/review/list`, lockfile | A real skill is installed pinned from the catalog and opencode loads it |
 | **2 — Plugin + router** | Toast, `/skills`, router + load tools, permissions, tier management, promotion loop | Mid-session discover→load in ≤2 tool calls; advertised overhead ≤ ~1k tokens measured |
 | **3 — Ranking depth** | LLM rubric + calibration, clusters/taxonomy, requirements extraction, trending, reconciliation, live sources | **Done 2026-10-05** — `catalog:sync` ingests live sources; rubric is delta-only + hard-capped; calibration tooling + labeling flow shipped and validated on constructed fixtures; the provisional target (ρ ≥ 0.7) applies to the user's 30–50-skill golden set, labeled in the pending session (see §7.3) |
-| **4 — Dashboard + productize** | `skillhub ui` (gallery/clusters/trending/review/detail), then hosted catalog; fork decision only if justified | Others can use it; public gallery deployable |
+| **4 — Dashboard + productize** | `skillhub ui` (status/gallery/clusters/trending/review/detail) + read-only static export, live `catalog-sync` workflow, Pages deploy workflow, README | **Done 2026-10-05 (Phase 4 plan)** — actions stay CLI-engine-backed; static gallery is deployable once Pages is enabled; npm packaging still waits on the final name decision |
 | **5 — v2 alignment** | Emit v2-compatible native catalog channel; v2 permissions/autoinvoke support | Works on opencode v2 |
 
 ---
