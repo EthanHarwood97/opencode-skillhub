@@ -65,6 +65,14 @@ describe("builders", () => {
     expect(testing).toMatchObject({ supply: 0, min: 3, top: [] })
   })
 
+  it("drops installed skills from gap tops", () => {
+    const snap = snapshot()
+    snap.index.skills.push(makeRecord({ id: "a/four", category: "writing", tags: ["pdf"], scores: scores(70) }))
+    const content = buildStatus(snap).coverage.find((profile) => profile.profile === "content")!
+    const writing = content.gaps.find((gap) => gap.category === "writing")!
+    expect(writing.top).toEqual([{ id: "a/four", name: "four", total: 70 }])
+  })
+
   it("reports zero coverage for every profile when the index is empty", () => {
     const empty: UiSnapshot = {
       index: { version: 1, generatedAt: "", counts: { total: 0, byStatus: {}, byCategory: {} }, skills: [] },

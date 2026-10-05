@@ -26,5 +26,7 @@ export function writeLockfile(path: string, lock: Lockfile): void {
 }
 
 export function upsertEntry(lock: Lockfile, entry: LockEntry): Lockfile {
-  return { version: 1, skills: { ...lock.skills, [entry.id]: entry } }
+  const existing = lock.skills[entry.id]
+  const next = existing?.active ? { ...entry, active: true } : entry
+  return { version: 1, skills: { ...lock.skills, [entry.id]: next } }
 }

@@ -3,7 +3,7 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 import { ensureDirs, layout, resolveHome } from "../src/paths.ts"
-import { readLockfile, upsertEntry, writeLockfile } from "../src/lockfile.ts"
+import { readLockfile, upsertEntry, writeLockfile, type LockEntry } from "../src/lockfile.ts"
 import { importCatalog, readCatalogIndex } from "../src/catalog-cache.ts"
 
 const tmp = () => mkdtempSync(join(tmpdir(), "skillhub-foundation-"))
@@ -46,6 +46,27 @@ describe("lockfile", () => {
     const raw = JSON.parse(readFileSync(l.lockfilePath, "utf8"))
     expect(Object.keys(raw.skills)).toEqual(["acme/aaa", "acme/demo"])
     expect(readFileSync(l.lockfilePath, "utf8").endsWith("\n")).toBe(true)
+  })
+
+  it("preserves activation when a re-install replaces an active entry", () => {
+    const entry = (over: Partial<LockEntry> = {}): LockEntry => ({
+      id: "acme/demo",
+      contentHash: "0".repeat(64),
+      provenanceTier: "sha-pinned",
+      installedAt: "2026-10-05T00:00:00.000Z",
+      files: [],
+      active: false,
+      riskLevel: "low",
+      total: 50,
+      ...over,
+    })
+    const active = upsertEntry({ version: 1, skills: {} }, entry({ active: true }))
+    const reinstalled = upsertEntry(active, entry({ contentHash: "1".repeat(64), active: false, total: 60 }))
+    expect(reinstalled.skills["acme/demo"]).toMatchObject({ contentHash: "1".repeat(64), total: 60, active: true })
+
+    const inactive = upsertEntry({ version: 1, skills: {} }, entry({ active: false }))
+    const updated = upsertEntry(inactive, entry({ contentHash: "2".repeat(64), active: false }))
+    expect(updated.skills["acme/demo"].active).toBe(false)
   })
 })
 

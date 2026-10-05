@@ -35,24 +35,27 @@ export default function OverviewPage() {
   const installSelected = async () => {
     if (!installGap || installing || checked.size === 0) return
     setInstalling(true)
-    let successes = 0
-    for (const id of checked) {
-      try {
-        await installSkillAction(id, false)
-        successes += 1
-      } catch (failure) {
-        toast(failure instanceof Error ? failure.message : `Couldn't install ${id}.`, "error")
+    try {
+      let successes = 0
+      for (const id of checked) {
+        try {
+          await installSkillAction(id, false)
+          successes += 1
+        } catch (failure) {
+          toast(failure instanceof Error ? failure.message : `Couldn't install ${id}.`, "error")
+        }
       }
+      if (successes > 0) {
+        toast(`Installed ${successes} skill${successes === 1 ? "" : "s"}. Activate them from the gallery when you're ready.`, "success")
+        setInstallGap(null)
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ["status"] }),
+          queryClient.invalidateQueries({ queryKey: ["skills"] }),
+        ])
+      }
+    } finally {
+      setInstalling(false)
     }
-    if (successes > 0) {
-      toast(`Installed ${successes} skill${successes === 1 ? "" : "s"}. Activate them from the gallery when you're ready.`, "success")
-      setInstallGap(null)
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["status"] }),
-        queryClient.invalidateQueries({ queryKey: ["skills"] }),
-      ])
-    }
-    setInstalling(false)
   }
 
   if (isPending) {
@@ -137,7 +140,7 @@ export default function OverviewPage() {
                       <Link to={`/gallery?category=${encodeURIComponent(gap.category)}`} className={styles.gapLink}>
                         <Chip tone="muted">{gap.category} {gap.supply}/{gap.min}</Chip>
                       </Link>
-                      {isLive() ? <Button onClick={() => openInstall(gap)}>Review for install</Button> : null}
+                      {isLive() && gap.top.length > 0 ? <Button onClick={() => openInstall(gap)}>Review for install</Button> : null}
                     </span>
                   ))}
                 </span>
@@ -179,7 +182,7 @@ export default function OverviewPage() {
             {installGap.top.map((skill) => (
               <li key={skill.id}>
                 <label className={styles.installItem}>
-                  <input type="checkbox" checked={checked.has(skill.id)} onChange={() => toggleSkill(skill.id)} />
+                  <input type="checkbox" checked={checked.has(skill.id)} onChange={() => toggleSkill(skill.id)} disabled={installing} />
                   <span>{skill.name} ({skill.id}, score {skill.total})</span>
                 </label>
               </li>

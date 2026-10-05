@@ -50,6 +50,7 @@ Run them as `npm run skillhub -- <command>` from a checkout.
 Six views: Status, Gallery, Clusters, Trending, Review, and skill detail. Detail shows why a skill scored what it scored, the scan findings, requirements, files, and source. Install runs a dry-run verification first, and you see the result before anything is written.
 
 - Review flags an active skill when a better-ranked alternative exists, linking you to it — nothing is swapped without you acting.
+- Coverage percentages describe the catalog, so installing a skill does not move them — they answer "is there a good team of skills available", not "have I installed it".
 
 `skillhub ui --export <dir>` writes the same UI as a static site with `data/*.json` files. No server, no actions. Serve the folder anywhere, or use the bundled `pages` workflow after enabling GitHub Pages in the repository settings.
 

@@ -104,6 +104,9 @@ export function toDetail(record: SkillRecord, lock: Lockfile): SkillDetail {
   }
 }
 
+const uninstalledTop = (top: { id: string; name: string; total: number }[], lock: Lockfile) =>
+  top.filter((skill) => lock.skills[skill.id] === undefined)
+
 export function buildStatus(snapshot: UiSnapshot): StatusDto {
   const entries = Object.values(snapshot.lock.skills)
   const cards = snapshot.index.skills.map((record) => toCard(record, snapshot.lock))
@@ -121,7 +124,7 @@ export function buildStatus(snapshot: UiSnapshot): StatusDto {
       return {
         profile: result.profile,
         coverage: result.coverage,
-        gaps: result.gaps.map((gap) => ({ category: gap.category, supply: gap.supply, min: gap.min, top: gap.top })),
+        gaps: result.gaps.map((gap) => ({ category: gap.category, supply: gap.supply, min: gap.min, top: uninstalledTop(gap.top, snapshot.lock) })),
       }
     }),
   }
