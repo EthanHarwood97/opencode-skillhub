@@ -16,3 +16,14 @@ jobs:
       - run: npm run typecheck
       - run: npm install -g opencode-ai@1.18.18
       - run: npm test
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22.x"
+      - run: npm install
+      - run: npx playwright install chromium --with-deps
+      - run: npm run ui:build
+      - run: npm run test:e2e
