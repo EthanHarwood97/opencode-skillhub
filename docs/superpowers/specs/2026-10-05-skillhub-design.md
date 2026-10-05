@@ -416,6 +416,17 @@ CI matrix: `ubuntu-latest` (main) + `windows-latest` (junction/path logic).
 - mdskill ToS for any programmatic use (optional source).
 - License review before Phase 4 public hosting/mirroring (MVP does not redistribute).
 - Golden-set labeling session (user time, Phase 3).
+- Catalog-hosted-DB decision: only if multi-consumer distribution arrives (see the storage note below).
+
+### Catalog storage & distribution (note, 2026-10-05)
+
+How skills are pulled and used today, and where a database could ever fit:
+
+- **Runtime invariant:** opencode loads activated skills as plain files from the managed folder. No database replaces this path.
+- **Layers:** discovery (catalog artifacts + local SQLite `search.db`) → installation (pinned fetch, hash-verified) → activation (managed folder). Plugin search/load read local files only; a session never depends on the network.
+- **The local database is the right shape and already exists** (`search.db`, FTS5). The near-term upgrade if scale demands it: broaden the local SQLite (embeddings via `sqlite-vec`, richer columns, the dashboard served from the DB) rather than adding a server.
+- **A hosted database is only for distribution**, and only worth it when multiple machines or users consume one catalog, cross-user usage/ranking signals matter, or the public gallery needs server-side search. If adopted, the pattern is a sync-time read replica: each machine pulls a fresh local snapshot, and the plugin never queries remotely mid-session.
+- **Never** move the managed folder or the install ledger behind a database.
 
 ### Risks (with mitigations)
 

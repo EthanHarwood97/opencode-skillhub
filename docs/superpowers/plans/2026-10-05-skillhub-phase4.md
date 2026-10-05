@@ -4473,6 +4473,7 @@ git commit -m "docs(spec): Phase 4 status and dashboard test layer"
 - **Static gallery scale**: client-side filtering caps at `--max-records`; a hosted search service is future work.
 - **LLM cluster labeling** and a semantic `Embedder`: deferred from Phase 3, still open.
 - **macOS**: untested; the UI code is platform-neutral but the CLI's browser-open path and installer junctions have only Windows/Linux CI coverage.
+- **Catalog storage evolution:** local-first stays; a hosted DB is only ever a sync-time read replica, never the runtime path. Full note in the spec §14 "Catalog storage & distribution".
 
 
 
