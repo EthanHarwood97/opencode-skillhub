@@ -2,8 +2,8 @@ import type { Plugin } from "@opencode-ai/plugin"
 import { applyConfigToSkillHub } from "./config-hook.ts"
 import { isSessionBoundary } from "./events.ts"
 import { readCatalogIndex } from "./catalog-read.ts"
-import { makeLoadTool, readSkillBodyFromDisk } from "./load-core.ts"
-import { recordSearch, usageFileFor, readUsage } from "./manage-core.ts"
+import { makeLoadTool, makeSpill, readSkillBodyFromDisk } from "./load-core.ts"
+import { recordLoad, recordSearch, usageFileFor } from "./manage-core.ts"
 import { resolveRoot } from "./root.ts"
 import { searchRuntime } from "./search-runtime.ts"
 import { makeStartupNotifier, renderStatus } from "./status-core.ts"
@@ -35,6 +35,12 @@ export const SkillHubPlugin: Plugin = async ({ client, directory }) => {
       skillhub_load: makeLoadTool({
         read: async (id) => readSkillBodyFromDisk(root, id),
         riskFor: async (id) => readCatalogIndex(root)?.skills.find((s) => s.id === id)?.risk.level,
+        spill: makeSpill(root),
+        onLoad: (id) => {
+          try {
+            recordLoad(usageFileFor(root, directory), id, new Date())
+          } catch {}
+        },
       }),
     },
     event: async ({ event }) => {

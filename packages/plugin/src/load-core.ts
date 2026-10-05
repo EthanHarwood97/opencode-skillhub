@@ -1,5 +1,5 @@
-import { existsSync, readdirSync, readFileSync } from "node:fs"
-import { join } from "node:path"
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs"
+import { join, resolve } from "node:path"
 import type { Dirent } from "node:fs"
 import { tool } from "@opencode-ai/plugin"
 
@@ -41,21 +41,32 @@ export async function renderLoadResult(input: {
   body: string
   riskLevel?: string
   maxBytes?: number
-  spill?: (content: string) => Promise<string>
+  spill?: (content: string, id: string) => Promise<string>
 }): Promise<string> {
   const maxBytes = input.maxBytes ?? DEFAULT_MAX_BYTES
   const header = `SkillHub load: ${input.id}${input.riskLevel ? ` risk=${input.riskLevel}` : ""}`
   const bytes = Buffer.byteLength(input.body)
   if (bytes <= maxBytes) return `${header}\n\n${input.body}`
   if (!input.spill) return `${header}\n\n(omitted: ${bytes} bytes exceeds ${maxBytes} and no spill target available)`
-  const path = await input.spill(input.body)
+  const path = await input.spill(input.body, input.id)
   return `${header}\n\n(full body ${bytes} bytes written to ${path})`
+}
+
+export function makeSpill(root: string): (content: string, id: string) => Promise<string> {
+  return async (content, id) => {
+    const dir = join(root, "tmp", "loads")
+    mkdirSync(dir, { recursive: true })
+    const file = join(dir, `${id.replace(/[^a-z0-9-]/g, "-")}.md`)
+    writeFileSync(file, content)
+    return resolve(file)
+  }
 }
 
 export function makeLoadTool(deps: {
   read: (id: string) => Promise<string | undefined>
   riskFor?: (id: string) => Promise<string | undefined>
-  spill?: (content: string) => Promise<string>
+  spill?: (content: string, id: string) => Promise<string>
+  onLoad?: (id: string) => void | Promise<void>
 }) {
   return tool({
     description: "Load the full SKILL.md body for a SkillHub id returned by skillhub_search. Requires permission.",
@@ -64,6 +75,9 @@ export function makeLoadTool(deps: {
       await context.ask({ permission: "skillhub_load", patterns: [args.id], always: [], metadata: { id: args.id } })
       const body = await deps.read(args.id)
       if (body === undefined) return `SkillHub: "${args.id}" is not installed or not found. Run skillhub install ${args.id} first.`
+      try {
+        await deps.onLoad?.(args.id)
+      } catch {}
       return renderLoadResult({ id: args.id, body, riskLevel: await deps.riskFor?.(args.id), spill: deps.spill })
     },
   })

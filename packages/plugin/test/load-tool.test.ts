@@ -1,8 +1,8 @@
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs"
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { describe, expect, it, vi } from "vitest"
-import { makeLoadTool, readSkillBodyFromDisk, renderLoadResult } from "../src/load-core.ts"
+import { makeLoadTool, makeSpill, readSkillBodyFromDisk, renderLoadResult } from "../src/load-core.ts"
 
 describe("renderLoadResult", () => {
   it("returns the body with a risk line when small", async () => {
@@ -48,6 +48,16 @@ describe("readSkillBodyFromDisk", () => {
   })
 })
 
+describe("makeSpill", () => {
+  it("writes the body under tmp/loads and returns the path", async () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-spill-"))
+    const spill = makeSpill(root)
+    const path = await spill("# Big\n", "acme-skills/good-skill")
+    expect(path).toBe(join(root, "tmp", "loads", "acme-skills-good-skill.md"))
+    expect(readFileSync(path, "utf8")).toBe("# Big\n")
+  })
+})
+
 describe("makeLoadTool", () => {
   it("asks permission then returns the body", async () => {
     const ask = vi.fn(async () => {})
@@ -60,5 +70,32 @@ describe("makeLoadTool", () => {
     const t = makeLoadTool({ read: async () => undefined })
     const out = await t.execute({ id: "a/nope" }, { ask: async () => {} } as any)
     expect(typeof out === "string" ? out : out.output).toMatch(/not installed|not found/i)
+  })
+  it("records a load for hits but not for misses", async () => {
+    const onLoad = vi.fn()
+    const hit = makeLoadTool({ read: async () => "# Body\n", onLoad })
+    await hit.execute({ id: "a/x" }, { ask: async () => {} } as any)
+    expect(onLoad).toHaveBeenCalledTimes(1)
+    expect(onLoad).toHaveBeenCalledWith("a/x")
+    const miss = makeLoadTool({ read: async () => undefined, onLoad })
+    await miss.execute({ id: "a/nope" }, { ask: async () => {} } as any)
+    expect(onLoad).toHaveBeenCalledTimes(1)
+  })
+  it("survives a telemetry failure", async () => {
+    const sync = makeLoadTool({ read: async () => "# Body\n", onLoad: () => { throw new Error("boom") } })
+    const syncOut = await sync.execute({ id: "a/x" }, { ask: async () => {} } as any)
+    expect(typeof syncOut === "string" ? syncOut : syncOut.output).toContain("# Body")
+    const asyncT = makeLoadTool({ read: async () => "# Body\n", onLoad: async () => { throw new Error("async boom") } })
+    const asyncOut = await asyncT.execute({ id: "a/x" }, { ask: async () => {} } as any)
+    expect(typeof asyncOut === "string" ? asyncOut : asyncOut.output).toContain("# Body")
+  })
+  it("spills oversized bodies through the configured spill target", async () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-load-spill-"))
+    const big = "x".repeat(60_000)
+    const t = makeLoadTool({ read: async () => big, spill: makeSpill(root) })
+    const out = await t.execute({ id: "a/x" }, { ask: async () => {} } as any)
+    const text = typeof out === "string" ? out : out.output
+    expect(text).toContain(join(root, "tmp", "loads", "a-x.md"))
+    expect(text).not.toContain(big)
   })
 })
