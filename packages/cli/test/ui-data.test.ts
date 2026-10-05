@@ -90,4 +90,16 @@ describe("loadSnapshot", () => {
     const snap = loadSnapshot(l)
     expect("index" in snap && snap.warnings).toHaveLength(1)
   })
+
+  it("degrades to an empty lock with a warning when the lockfile is corrupt", () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-ui-data-lock-"))
+    const l = layout(root)
+    mkdirSync(l.catalogDir, { recursive: true })
+    writeFileSync(join(l.catalogDir, "index.json"), JSON.stringify({ version: 1, generatedAt: "", counts: { total: 0, byStatus: {}, byCategory: {} }, skills: [] }))
+    writeFileSync(l.lockfilePath, "{not json")
+    const snap = loadSnapshot(l)
+    expect("index" in snap && snap.lock).toEqual({ version: 1, skills: {} })
+    expect("index" in snap && snap.warnings).toHaveLength(1)
+    expect("index" in snap && snap.warnings[0]).toContain(l.lockfilePath)
+  })
 })

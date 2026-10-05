@@ -38,6 +38,15 @@ const readOptional = <T>(path: string, warnings: string[]): T | undefined => {
   }
 }
 
+const readLock = (path: string, warnings: string[]): Lockfile => {
+  try {
+    return readLockfile(path)
+  } catch (error) {
+    warnings.push(`could not read ${path}: ${error instanceof Error ? error.message : String(error)}`)
+    return { version: 1, skills: {} }
+  }
+}
+
 export function loadSnapshot(l: StoreLayout, catalogDir: string = l.catalogDir): UiSnapshot | { error: string } {
   const indexPath = join(catalogDir, "index.json")
   if (!existsSync(indexPath)) {
@@ -48,7 +57,7 @@ export function loadSnapshot(l: StoreLayout, catalogDir: string = l.catalogDir):
   if (!index) return { error: `catalog index at ${indexPath} is unreadable` }
   return {
     index,
-    lock: readLockfile(l.lockfilePath),
+    lock: readLock(l.lockfilePath, warnings),
     clusters: readOptional<ClustersFile>(join(catalogDir, "clusters.json"), warnings),
     trending: readOptional<TrendingFile>(join(catalogDir, "trending.json"), warnings),
     reconciliation: readOptional<ReconciliationFile>(join(catalogDir, "reconciliation.json"), warnings),
