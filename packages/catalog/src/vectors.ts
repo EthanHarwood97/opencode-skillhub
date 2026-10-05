@@ -1,9 +1,14 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 import type { EmbeddingProvider } from "./embeddings.ts"
 import type { SkillRecord } from "./types.ts"
 
 export const VECTORS_VERSION = 1
+
+export function removeVectors(outDir: string): void {
+  rmSync(join(outDir, "vectors.json"), { force: true })
+  rmSync(join(outDir, "vectors.bin"), { force: true })
+}
 
 export type VectorsMeta = {
   version: 1

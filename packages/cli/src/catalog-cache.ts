@@ -1,6 +1,7 @@
 import { cpSync, existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 import type { CatalogIndex } from "../../catalog/src/publish.ts"
+import { removeVectors } from "../../catalog/src/vectors.ts"
 import type { StoreLayout } from "./paths.ts"
 
 export function readCatalogIndex(catalogDir: string): CatalogIndex {
@@ -18,5 +19,7 @@ export function importCatalog(fromDir: string, l: StoreLayout): void {
   const vectorFiles = ["vectors.json", "vectors.bin"]
   if (vectorFiles.every((file) => existsSync(join(fromDir, file)))) {
     for (const file of vectorFiles) cpSync(join(fromDir, file), join(l.catalogDir, file))
+  } else {
+    removeVectors(l.catalogDir)
   }
 }

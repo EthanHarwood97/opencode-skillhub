@@ -1,4 +1,4 @@
-import { existsSync, mkdtempSync } from "node:fs"
+import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
@@ -113,6 +113,9 @@ describe("syncCatalog", () => {
     expect(existsSync(join(root, "catalog", "vectors.bin"))).toBe(true)
 
     const failing = { ...embedder, embed: async () => { throw new Error("api down") } }
+    mkdirSync(join(root, "catalog2"), { recursive: true })
+    writeFileSync(join(root, "catalog2", "vectors.json"), "{}")
+    writeFileSync(join(root, "catalog2", "vectors.bin"), "")
     const bad = await syncCatalog({
       sources: [{ name: "s", load: async () => [skill("pdf-tool", "acme/skills")] }],
       outDir: join(root, "catalog2"),
@@ -123,6 +126,24 @@ describe("syncCatalog", () => {
     expect(bad.vectors?.warnings.join(" ")).toContain("api down")
     expect(bad.index.skills.length).toBeGreaterThan(0)
     expect(existsSync(join(root, "catalog2", "index.json"))).toBe(true)
+    expect(existsSync(join(root, "catalog2", "vectors.json"))).toBe(false)
+    expect(existsSync(join(root, "catalog2", "vectors.bin"))).toBe(false)
+  })
+
+  it("removes stale vector artifacts when a later sync runs without vectors", async () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-sync-novec-"))
+    const embedder = { name: "fake", model: "fake-1", dim: 3, embed: async (texts: string[]) => texts.map(() => Float32Array.from([1, 0, 0])) }
+    const sources = [{ name: "s", load: async () => [skill("pdf-tool", "acme/skills")] }]
+    const outDir = join(root, "catalog")
+    const stateDir = join(root, "state")
+    await syncCatalog({ sources, outDir, stateDir, now, vectors: { embedder } })
+    expect(existsSync(join(outDir, "vectors.json"))).toBe(true)
+    expect(existsSync(join(outDir, "vectors.bin"))).toBe(true)
+
+    const second = await syncCatalog({ sources, outDir, stateDir, now })
+    expect(second.vectors).toBeUndefined()
+    expect(existsSync(join(outDir, "vectors.json"))).toBe(false)
+    expect(existsSync(join(outDir, "vectors.bin"))).toBe(false)
   })
 
   it("surfaces source warnings as reconciliation gaps", async () => {

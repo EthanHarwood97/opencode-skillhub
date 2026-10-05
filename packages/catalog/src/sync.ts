@@ -14,7 +14,7 @@ import type { ScoreWeights } from "./score.ts"
 import type { Candidate } from "./sources/types.ts"
 import { computeTrending, readSnapshots, snapshotFromRecords, writeSnapshot, type TrendingFile } from "./trending.ts"
 import type { SkillRecord } from "./types.ts"
-import { writeVectors } from "./vectors.ts"
+import { removeVectors, writeVectors } from "./vectors.ts"
 
 export type SyncSource = { name: string; load: () => Promise<Candidate[] | { candidates: Candidate[]; warnings?: string[] }> }
 
@@ -132,8 +132,11 @@ export async function syncCatalog(opts: {
       const stats = await writeVectors(refined.records, opts.outDir, { embedder: opts.vectors.embedder, now })
       vectors = { ...stats, warnings: [] }
     } catch (error) {
+      removeVectors(opts.outDir)
       vectors = { embedded: 0, reused: refined.records.length, warnings: [error instanceof Error ? error.message : String(error)] }
     }
+  } else {
+    removeVectors(opts.outDir)
   }
 
   return {

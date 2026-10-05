@@ -86,14 +86,31 @@ describe("catalog cache", () => {
     expect(parsed.skills).toEqual([])
   })
 
-  it("imports without vectors when the source has none", () => {
+  it("imports without vectors when the source has none (clearing stale destination vectors)", () => {
     const src = tmp()
     const l = layout(tmp())
     ensureDirs(l)
     writeFileSync(join(src, "index.json"), "{}")
     writeFileSync(join(src, "clusters.json"), "{}")
     writeFileSync(join(src, "search.db"), "")
+    writeFileSync(join(l.catalogDir, "vectors.json"), "{}")
+    writeFileSync(join(l.catalogDir, "vectors.bin"), "")
     importCatalog(src, l)
+    expect(existsSync(join(l.catalogDir, "vectors.json"))).toBe(false)
+    expect(existsSync(join(l.catalogDir, "vectors.bin"))).toBe(false)
+  })
+
+  it("cleans destination vectors when the source has a partial pair", () => {
+    const src = tmp()
+    const l = layout(tmp())
+    ensureDirs(l)
+    writeFileSync(join(src, "index.json"), "{}")
+    writeFileSync(join(src, "clusters.json"), "{}")
+    writeFileSync(join(src, "search.db"), "")
+    writeFileSync(join(src, "vectors.json"), "{}")
+    writeFileSync(join(l.catalogDir, "vectors.json"), "{}")
+    writeFileSync(join(l.catalogDir, "vectors.bin"), "")
+    expect(() => importCatalog(src, l)).not.toThrow()
     expect(existsSync(join(l.catalogDir, "vectors.json"))).toBe(false)
     expect(existsSync(join(l.catalogDir, "vectors.bin"))).toBe(false)
   })
