@@ -69,4 +69,9 @@ describe("scoreRecord", () => {
     expect(Number.isFinite(scores.total)).toBe(true)
     expect(scores.adoption).toBeGreaterThanOrEqual(0)
   })
+
+  it("penalizes required scripts that are not bundled", () => {
+    const missing = scoreRecord({ ...healthy, missingScripts: 2 })
+    expect(missing.compatibility).toBeLessThan(scoreRecord(healthy).compatibility)
+  })
 })

@@ -3,10 +3,11 @@ import { runGates } from "./gates.ts"
 import { scanSkill } from "./scan.ts"
 import { scoreRecord } from "./score.ts"
 import { assignCluster } from "./cluster.ts"
+import { extractRequires } from "./requires.ts"
 import { SignalsSchema, type FileEntry, type SkillRecord } from "./types.ts"
 import type { Candidate } from "./sources/types.ts"
 
-export type NormalizeResult = { record?: SkillRecord; rejected?: { reason: string } }
+export type NormalizeResult = { record?: SkillRecord; rejected?: { reason: string }; body?: string }
 
 export function normalizeCandidate(candidate: Candidate, opts: { now: Date; maxIdleMonths?: number }): NormalizeResult {
   const skillFile = candidate.files.find((f) => f.path.endsWith("SKILL.md") && f.content !== undefined)
@@ -60,7 +61,11 @@ export function normalizeCandidate(candidate: Candidate, opts: { now: Date; maxI
     return { rejected: { reason: "candidate has files without fetched content (cannot hash)" } }
   }
 
-  const scores = scoreRecord({ parsed, risk, signals, filesPresent: [true], source: candidate.source, now: opts.now })
+  const requires = extractRequires({ body: parsed.body, files: candidate.files.map((f) => f.path) })
+  const presentPaths = new Set(candidate.files.map((f) => f.path))
+  const missingScripts = requires.scripts.filter((s) => !presentPaths.has(s)).length
+
+  const scores = scoreRecord({ parsed, risk, signals, filesPresent: [true], source: candidate.source, now: opts.now, missingScripts })
   const cluster = assignCluster({ category: candidate.categoryHint ?? "engineering", tags: candidate.tags })
 
   const record: SkillRecord = {
@@ -75,7 +80,7 @@ export function normalizeCandidate(candidate: Candidate, opts: { now: Date; maxI
     source: candidate.source,
     files,
     contentHash: sha256(normalizeText(parsed.raw)),
-    requires: { runtime: [], scripts: [], mcp: [], env: [], services: [] },
+    requires,
     risk,
     signals,
     scores,
@@ -83,5 +88,5 @@ export function normalizeCandidate(candidate: Candidate, opts: { now: Date; maxI
     status: critical ? "quarantined" : "candidate",
     relations: { supersedes: [], duplicates: [], alternatives: [] },
   }
-  return { record }
+  return { record, body: parsed.body }
 }

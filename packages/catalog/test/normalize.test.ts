@@ -87,4 +87,17 @@ describe("normalizeCandidate", () => {
     expect(record?.description).toBeTruthy()
     expect(record?.summaryDerived).toBeUndefined()
   })
+
+  it("extracts requirements and body in the normalize result", () => {
+    const withRequires = candidate("good-skill")
+    const skillFile = withRequires.files[0]!
+    skillFile.content = `${skillFile.content}\n\nRun \`python scripts/missing.py\` with \`OPENAI_API_KEY\`.\n`
+    skillFile.bytes = new TextEncoder().encode(skillFile.content)
+    const { record, body } = normalizeCandidate(withRequires, { now })
+    expect(record?.requires.runtime).toEqual(["python"])
+    expect(record?.requires.scripts).toEqual(["scripts/missing.py"])
+    expect(record?.requires.env).toEqual(["OPENAI_API_KEY"])
+    expect(record?.scores.compatibility).toBeLessThan(100)
+    expect(body).toContain("# Good Skill")
+  })
 })

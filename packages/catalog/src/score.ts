@@ -12,6 +12,7 @@ export type ScoreInput = {
   source: Source
   now: Date
   weights?: ScoreWeights
+  missingScripts?: number
 }
 
 const clamp = (n: number, min = 0, max = 100) => Math.max(min, Math.min(max, n))
@@ -89,8 +90,13 @@ export function scoreRecord(input: ScoreInput): Scores {
   }
 
   const missing = filesPresent.filter((p) => !p).length
-  const compatibility = clamp(100 - missing * 25)
-  reasons.push(missing ? `compatibility: ${missing} missing file(s) (-${missing * 25})` : "compatibility: all files present (100)")
+  const missingScripts = input.missingScripts ?? 0
+  const compatibility = clamp(100 - missing * 25 - missingScripts * 10)
+  if (missingScripts > 0) {
+    reasons.push(`compatibility: ${missingScripts} required script(s) not bundled (-${missingScripts * 10})`)
+  } else {
+    reasons.push(missing ? `compatibility: ${missing} missing file(s) (-${missing * 25})` : "compatibility: all files present (100)")
+  }
 
   const adoption = clamp(Math.log10(1 + Math.max(0, signals.stars)) * 10 + Math.log10(1 + Math.max(0, signals.installs)) * 8)
   reasons.push(`adoption: ${signals.stars} stars / ${signals.installs} installs (${Math.round(adoption)})`)
