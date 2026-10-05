@@ -28,6 +28,7 @@ describe.skipIf(!live)("live sources", () => {
         fetchImpl,
         token,
         license: hits[0]!.license,
+        signals: hits[0]!.signals,
         maxSkills: 2,
         maxFileBytes: 128_000,
       })
