@@ -2,7 +2,13 @@ import type { Signals, Source } from "../types.ts"
 
 export type FetchLike = (
   url: string,
-) => Promise<{ ok: boolean; status: number; arrayBuffer(): Promise<ArrayBuffer>; json(): Promise<unknown> }>
+) => Promise<{
+  ok: boolean
+  status: number
+  headers?: { get(name: string): string | null }
+  arrayBuffer(): Promise<ArrayBuffer>
+  json(): Promise<unknown>
+}>
 
 export type CandidateFile = { path: string; sha256?: string; size?: number; content?: string; bytes?: Uint8Array }
 

@@ -1,4 +1,5 @@
 import { unzipSync } from "fflate"
+import { mapCategory } from "../taxonomy.ts"
 import type { Candidate, CandidateFile, FetchLike } from "./types.ts"
 
 type ApiSkill = { id: number | string; slug?: string; name: string; description?: string; category?: string; installs?: number; views?: number; author?: string }
@@ -30,6 +31,7 @@ export async function fetchAgentskills(opts: { baseUrl: string; fetchImpl: Fetch
       tags: item.category ? [item.category.toLowerCase()] : [],
       signals: { installs: item.installs ?? 0, views: item.views ?? 0 },
       files,
+      categoryHint: mapCategory(item.category),
     })
   }
   return candidates

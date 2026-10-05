@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest"
 import { zipSync } from "fflate"
 import { fetchAgentskills } from "../src/sources/agentskills.ts"
-import { fetchRepoSkills } from "../src/sources/github.ts"
+import { fetchRepoSkills, searchReposByTopic } from "../src/sources/github.ts"
+import { RateLimitError, mapLimit } from "../src/sources/util.ts"
 
 const json = (value: unknown) => new Response(JSON.stringify(value), { status: 200 })
 const raw = (text: string) => new Response(text, { status: 200 })
@@ -53,5 +54,42 @@ describe("agentskills adapter", () => {
     expect(candidates[1]?.source.repo).toBe("marketplace")
     expect(candidates[0]?.files[0]?.path).toBe("SKILL.md")
     expect(candidates[0]?.files[0]?.bytes).toBeInstanceOf(Uint8Array)
+    expect(candidates[0]?.categoryHint).toBe("writing")
+  })
+})
+
+describe("github adapter upgrades", () => {
+  it("returns default branches and licenses from topic search", async () => {
+    const fetchThing = (async () =>
+      new Response(
+        JSON.stringify({
+          items: [{ full_name: "acme/skills", default_branch: "main", stargazers_count: 12, forks_count: 3, pushed_at: "2026-09-01T00:00:00Z", created_at: "2025-01-01T00:00:00Z", archived: false, license: { spdx_id: "MIT" } }],
+        }),
+        { status: 200 },
+      )) as unknown as Parameters<typeof searchReposByTopic>[0]["fetchImpl"]
+    const hits = await searchReposByTopic({ topic: "claude-skills", fetchImpl: fetchThing })
+    expect(hits[0]).toMatchObject({ repo: "acme/skills", defaultBranch: "main", license: "MIT", archived: false })
+  })
+
+  it("throws RateLimitError when GitHub reports exhausted quota", async () => {
+    const fetchThing = (async () =>
+      new Response("{}", { status: 403, headers: { "x-ratelimit-remaining": "0", "x-ratelimit-reset": "123" } })) as unknown as Parameters<typeof searchReposByTopic>[0]["fetchImpl"]
+    await expect(searchReposByTopic({ topic: "x", fetchImpl: fetchThing })).rejects.toBeInstanceOf(RateLimitError)
+  })
+})
+
+describe("mapLimit", () => {
+  it("preserves order and respects the concurrency limit", async () => {
+    let inFlight = 0
+    let maxInFlight = 0
+    const out = await mapLimit([1, 2, 3, 4, 5], 2, async (n) => {
+      inFlight++
+      maxInFlight = Math.max(maxInFlight, inFlight)
+      await new Promise((resolve) => setTimeout(resolve, 5))
+      inFlight--
+      return n * 2
+    })
+    expect(out).toEqual([2, 4, 6, 8, 10])
+    expect(maxInFlight).toBeLessThanOrEqual(2)
   })
 })
