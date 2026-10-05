@@ -20,7 +20,7 @@ import { resolveUiDist } from "../../cli/src/ui/paths.ts"
 import { startUiServer } from "../../cli/src/ui/server.ts"
 import { ensureDashboard, makeDashboardCommand, makeLazyEnsure } from "./dashboard-core.ts"
 
-const retrievalState: RetrievalState = { prompts: new Map() }
+const retrievalState: RetrievalState = { prompts: new Map(), recorded: new Map() }
 
 export const SkillHubPlugin: Plugin = async ({ client, directory }) => {
   const root = resolveRoot()

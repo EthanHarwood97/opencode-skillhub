@@ -18,7 +18,7 @@ const deps = (over: Partial<Parameters<typeof makeRetrievalTransform>[0]> = {}) 
 })
 
 const stateWith = (sessionID: string, prompt: string): RetrievalState => {
-  const state: RetrievalState = { prompts: new Map() }
+  const state: RetrievalState = { prompts: new Map(), recorded: new Map() }
   rememberPrompt(state, sessionID, prompt)
   return state
 }
@@ -40,7 +40,32 @@ describe("makeRetrievalTransform", () => {
     expect(output.system[1]).toContain("weizhena-deep-research-skills/research")
     expect(output.system[2]).toContain("<skillhub-retrieval>")
     expect(output.system[2]).toContain("weizhena-deep-research-skills/research")
-    expect(suggestions).toEqual([["weizhena-deep-research-skills/research"], ["weizhena-deep-research-skills/research"]])
+    expect(suggestions).toEqual([["weizhena-deep-research-skills/research"]])
+  })
+
+  it("records the suggestion once per user message across turn requests", async () => {
+    const state = stateWith("s1", "I need deep web research for a report")
+    const output = { system: ["base"] as string[] }
+    const suggestions: string[][] = []
+    const transform = makeRetrievalTransform(deps({ onSuggestion: (ids) => void suggestions.push(ids) }), state)
+    await transform({ sessionID: "s1" }, output)
+    await transform({ sessionID: "s1" }, output)
+    expect(output.system).toHaveLength(3)
+    expect(suggestions).toEqual([["weizhena-deep-research-skills/research"]])
+  })
+
+  it("records again after a fresh rememberPrompt even when the text repeats", async () => {
+    const state = stateWith("s1", "deep research please")
+    const output = { system: ["base"] as string[] }
+    const suggestions: string[][] = []
+    const transform = makeRetrievalTransform(deps({ onSuggestion: (ids) => void suggestions.push(ids) }), state)
+    await transform({ sessionID: "s1" }, output)
+    await transform({ sessionID: "s1" }, output)
+    expect(suggestions).toHaveLength(1)
+    rememberPrompt(state, "s1", "deep research please")
+    await transform({ sessionID: "s1" }, output)
+    expect(output.system).toHaveLength(4)
+    expect(suggestions).toHaveLength(2)
   })
 
   it("replaces the pending prompt when a new message is remembered for the same session", async () => {
@@ -62,7 +87,7 @@ describe("makeRetrievalTransform", () => {
   })
 
   it("keeps session prompts isolated when two sessions interleave", async () => {
-    const state: RetrievalState = { prompts: new Map() }
+    const state: RetrievalState = { prompts: new Map(), recorded: new Map() }
     rememberPrompt(state, "s1", "deep research alpha")
     rememberPrompt(state, "s2", "deep research beta")
     const rowsFor = (query: string) => [
@@ -86,7 +111,7 @@ describe("makeRetrievalTransform", () => {
   it("does nothing when the mode is off, the prompt is empty, or nothing matches", async () => {
     const cases: { state: RetrievalState; d: Parameters<typeof makeRetrievalTransform>[0] }[] = [
       { state: stateWith("s1", "x"), d: deps({ settings: () => ({ ...DEFAULT_RETRIEVAL, mode: "off" as const }) }) },
-      { state: { prompts: new Map() }, d: deps() },
+      { state: { prompts: new Map(), recorded: new Map() }, d: deps() },
       { state: stateWith("s1", "x"), d: deps({ search: async () => [] }) },
     ]
     for (const entry of cases) {
@@ -127,6 +152,7 @@ describe("makeRetrievalTransform", () => {
       const suggestions: string[][] = []
       await makeRetrievalTransform(deps({ search: async () => [row], onSuggestion: (ids) => void suggestions.push(ids) }), {
         prompts: new Map([["s1", "I need deep web research for a report"]]),
+        recorded: new Map(),
       })({ sessionID: "s1" }, output)
       expect(output.system).toHaveLength(2)
       expect(suggestions).toEqual([["weizhena-deep-research-skills/research"]])
@@ -171,12 +197,24 @@ describe("makeRetrievalTransform", () => {
 
 describe("rememberPrompt", () => {
   it("bounds the map, evicting the oldest session", () => {
-    const state: RetrievalState = { prompts: new Map() }
+    const state: RetrievalState = { prompts: new Map(), recorded: new Map() }
     for (let i = 0; i < 21; i++) rememberPrompt(state, `s${i}`, `prompt ${i}`)
     expect(state.prompts.size).toBe(20)
     expect(state.prompts.has("s0")).toBe(false)
     expect(state.prompts.has("s20")).toBe(true)
     expect(state.last).toBe("prompt 20")
+  })
+
+  it("bounds the recorded map, evicting the oldest session", async () => {
+    const state: RetrievalState = { prompts: new Map(), recorded: new Map() }
+    const transform = makeRetrievalTransform(deps(), state)
+    for (let i = 0; i < 21; i++) {
+      rememberPrompt(state, `s${i}`, `prompt ${i}`)
+      await transform({ sessionID: `s${i}` }, { system: ["base"] })
+    }
+    expect(state.recorded.size).toBe(20)
+    expect(state.recorded.has("s0")).toBe(false)
+    expect(state.recorded.has("s20")).toBe(true)
   })
 })
 

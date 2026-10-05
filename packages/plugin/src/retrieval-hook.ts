@@ -21,25 +21,32 @@ export type RetrievalDeps = {
   onAutoLoad: (id: string) => void
 }
 
-export type RetrievalState = { prompts: Map<string, string>; last?: string }
+export type RetrievalState = { prompts: Map<string, string>; recorded: Map<string, string>; last?: string }
 
 export const PROMPT_STATE_LIMIT = 20
+
+function evictOldest(map: Map<string, string>): void {
+  while (map.size > PROMPT_STATE_LIMIT) {
+    const oldest = map.keys().next().value
+    if (oldest === undefined) break
+    map.delete(oldest)
+  }
+}
 
 /** Remember the latest prompt per session, replacing the previous one and evicting the oldest entry beyond the cap. */
 export function rememberPrompt(state: RetrievalState, sessionID: string, prompt: string): void {
   state.prompts.set(sessionID, prompt)
+  state.recorded.delete(sessionID)
   state.last = prompt
-  while (state.prompts.size > PROMPT_STATE_LIMIT) {
-    const oldest = state.prompts.keys().next().value
-    if (oldest === undefined) break
-    state.prompts.delete(oldest)
-  }
+  evictOldest(state.prompts)
+  evictOldest(state.recorded)
 }
 
 /**
  * Append the retrieval block to each request of the current turn. The prompt is
  * not consumed: it stays pending for the whole turn (title, main, tool-loop
  * requests) and is replaced when the next user message reaches rememberPrompt.
+ * The suggestion is recorded once per user message, not once per request.
  */
 export function makeRetrievalTransform(deps: RetrievalDeps, state: RetrievalState) {
   return async (input: { sessionID?: string }, output: { system: string[] }): Promise<void> => {
@@ -84,10 +91,15 @@ export function makeRetrievalTransform(deps: RetrievalDeps, state: RetrievalStat
         }
       }
       output.system.push(text)
-      deps.onSuggestion(
-        candidates.map((candidate) => candidate.id),
-        autoLoaded,
-      )
+      const sessionKey = sessionID ?? ""
+      if (state.recorded.get(sessionKey) !== prompt) {
+        deps.onSuggestion(
+          candidates.map((candidate) => candidate.id),
+          autoLoaded,
+        )
+        state.recorded.set(sessionKey, prompt)
+        evictOldest(state.recorded)
+      }
     } catch {
       // fail-open: retrieval must never block a turn
     }
