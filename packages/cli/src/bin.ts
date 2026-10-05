@@ -2,6 +2,7 @@
 import { Command } from "commander"
 import { layout, resolveHome } from "./paths.ts"
 import { readCatalog, findRecord, whyLines, formatHit } from "./commands/read.ts"
+import { importCatalog } from "./catalog-cache.ts"
 import { searchSkills } from "./search.ts"
 import { installSkill } from "./installer.ts"
 import { readLockfile, upsertEntry, writeLockfile } from "./lockfile.ts"
@@ -130,5 +131,14 @@ program.command("deactivate").argument("<id>").action((id: string) => {
   deactivateSkill(l, id)
   console.log(`deactivated ${id}`)
 })
+
+const catalogCommand = program.command("catalog")
+catalogCommand
+  .command("import")
+  .argument("<dir>")
+  .action((dir: string) => {
+    importCatalog(dir, store())
+    console.log(`imported catalog from ${dir}`)
+  })
 
 await program.parseAsync()
