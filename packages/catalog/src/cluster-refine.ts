@@ -98,9 +98,10 @@ function kmeansOnce(vectors: Float64Array[], k: number, seed: number, iters: num
 
 export function kmeans(vectors: Float64Array[], k: number, seed: number, iters = 25, restarts = 8): { centroids: Float64Array[]; assignments: number[] } {
   if (vectors.length === 0) return { centroids: [], assignments: [] }
+  const runs = Math.max(1, restarts)
   let best: { centroids: Float64Array[]; assignments: number[] } | undefined
   let bestInertia = Number.POSITIVE_INFINITY
-  for (let r = 0; r < restarts; r++) {
+  for (let r = 0; r < runs; r++) {
     const result = kmeansOnce(vectors, k, seed + r, iters)
     let inertia = 0
     for (let i = 0; i < vectors.length; i++) inertia += 1 - cosine(vectors[i]!, result.centroids[result.assignments[i]!]!)
@@ -160,7 +161,7 @@ export function refineClusters(
       label = displayLabel([...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] ?? "general")
     }
     return { id, label, centroid: Array.from(centroid, (v) => Math.round(v * 10_000) / 10_000), memberIndexes }
-  })
+  }).filter((cluster) => cluster.memberIndexes.length > 0)
 
   const clusterOf = new Map<string, string>()
   const recordCluster = new Map<number, { id: string; label: string }>()

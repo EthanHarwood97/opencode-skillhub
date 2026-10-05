@@ -20,6 +20,11 @@ describe("kmeans", () => {
     expect(one.assignments[2]).toBe(one.assignments[3])
     expect(one.assignments[0]).not.toBe(one.assignments[2])
   })
+
+  it("clamps non-positive restarts", () => {
+    const vectors = [Float64Array.from([1, 0, 0]), Float64Array.from([0, 1, 0])]
+    expect(kmeans(vectors, 2, 7, 25, 0)).toEqual(kmeans(vectors, 2, 7, 25, 1))
+  })
 })
 
 const records = [
@@ -62,5 +67,25 @@ describe("refineClusters", () => {
     writeClusterState(file, state)
     expect(readClusterState(file)).toEqual(state)
     expect(readClusterState(join(dir, "missing.json"))).toBeUndefined()
+  })
+
+  it("drops empty clusters so persisted state ids are unique", () => {
+    const exact = [rec("a/one", "seo audit for websites", 90, ["seo"]), rec("a/copy", "seo audit for websites", 60, ["seo"])]
+    const { records: out, state } = refineClusters(exact, { k: 3, seed: 1, now: new Date("2026-10-05T00:00:00Z") })
+    const ids = state.clusters.map((c) => c.id)
+    expect(new Set(ids).size).toBe(ids.length)
+    for (const record of out) expect(ids).toContain(record.clusterId)
+  })
+
+  it("drops multiple empty clusters instead of persisting duplicate ids", () => {
+    const trio = [
+      rec("a/one", "seo audit for websites", 90, ["seo"]),
+      rec("a/two", "seo audit for websites", 80, ["seo"]),
+      rec("a/three", "seo audit for websites", 70, ["seo"]),
+    ]
+    const { records: out, state } = refineClusters(trio, { k: 3, seed: 1, now: new Date("2026-10-05T00:00:00Z") })
+    const ids = state.clusters.map((c) => c.id)
+    expect(new Set(ids).size).toBe(ids.length)
+    for (const record of out) expect(ids).toContain(record.clusterId)
   })
 })
