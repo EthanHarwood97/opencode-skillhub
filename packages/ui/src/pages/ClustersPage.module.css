@@ -1,0 +1,7 @@
+.grid { display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.card { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-4); background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-md); }
+.head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-2); }
+.head h2 { font-size: var(--text-lg); }
+.count { color: var(--text-faint); font-size: var(--text-xs); white-space: nowrap; }
+.top { font-size: var(--text-sm); }
+.alts { list-style: none; display: flex; flex-direction: column; gap: var(--space-1); font-size: var(--text-sm); }
