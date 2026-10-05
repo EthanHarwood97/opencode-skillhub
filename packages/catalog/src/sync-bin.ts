@@ -70,15 +70,17 @@ if (values.topics) {
       load: async () => {
         const hits = await searchReposByTopic({ topic, token, fetchImpl, limit: Number(values["max-repos"]) })
         const out: Candidate[] = []
+        const warnings: string[] = []
         for (const hit of hits) {
           if (hit.archived) continue
           try {
             out.push(...(await fetchRepoSkills({ repo: hit.repo, ref: hit.defaultBranch, token, fetchImpl, license: hit.license, signals: hit.signals, maxSkills: Number(values["max-skills"]) })))
           } catch (error) {
             if (error instanceof RateLimitError) throw error
+            warnings.push(`repo ${hit.repo}: ${error instanceof Error ? error.message : String(error)}`)
           }
         }
-        return out
+        return warnings.length > 0 ? { candidates: out, warnings } : out
       },
     })
   }

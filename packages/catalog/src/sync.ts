@@ -14,7 +14,7 @@ import type { Candidate } from "./sources/types.ts"
 import { computeTrending, readSnapshots, snapshotFromRecords, writeSnapshot, type TrendingFile } from "./trending.ts"
 import type { SkillRecord } from "./types.ts"
 
-export type SyncSource = { name: string; load: () => Promise<Candidate[]> }
+export type SyncSource = { name: string; load: () => Promise<Candidate[] | { candidates: Candidate[]; warnings?: string[] }> }
 
 export type SyncSummary = {
   candidates: number
@@ -64,8 +64,15 @@ export async function syncCatalog(opts: {
   for (const source of opts.sources) {
     try {
       const loaded = await source.load()
-      candidates.push(...loaded)
-      sourceStats.push({ source: source.name, candidates: loaded.length, fetchedAt: now.toISOString() })
+      const loadedCandidates = Array.isArray(loaded) ? loaded : loaded.candidates
+      const warnings = Array.isArray(loaded) ? [] : loaded.warnings ?? []
+      candidates.push(...loadedCandidates)
+      sourceStats.push({
+        source: source.name,
+        candidates: loadedCandidates.length,
+        fetchedAt: now.toISOString(),
+        ...(warnings.length > 0 ? { warnings } : {}),
+      })
     } catch (error) {
       sourceStats.push({
         source: source.name,

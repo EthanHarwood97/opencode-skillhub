@@ -97,4 +97,17 @@ describe("syncCatalog", () => {
     })
     expect(second.summary).toMatchObject({ evaluated: 0, cached: 2, skippedBudget: 0 })
   })
+
+  it("surfaces source warnings as reconciliation gaps", async () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-sync-warn-"))
+    const result = await syncCatalog({
+      sources: [
+        { name: "fixtures", load: async () => ({ candidates: [skill("pdf-tool", "acme/skills")], warnings: ["repo x/y: boom"] }) },
+      ],
+      outDir: join(root, "catalog"),
+      stateDir: join(root, "state"),
+      now,
+    })
+    expect(result.reconciliation.gaps).toContain("source fixtures: repo x/y: boom")
+  })
 })

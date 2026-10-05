@@ -1,6 +1,6 @@
 import type { SkillRecord } from "./types.ts"
 
-export type SourceStat = { source: string; candidates: number; fetchedAt: string; error?: string }
+export type SourceStat = { source: string; candidates: number; fetchedAt: string; error?: string; warnings?: string[] }
 
 export type ReconciliationFile = {
   version: 1
@@ -38,7 +38,10 @@ export function reconcile(input: {
   if (input.previous && previousSkills.length > 0 && added.length > previousSkills.length) {
     gaps.push(`catalog grew by more than 100% (${previousSkills.length} -> ${input.current.length}) — verify intake`)
   }
-  for (const stat of input.sourceStats) if (stat.error) gaps.push(`source ${stat.source}: ${stat.error}`)
+  for (const stat of input.sourceStats) {
+    if (stat.error) gaps.push(`source ${stat.source}: ${stat.error}`)
+    for (const warning of stat.warnings ?? []) gaps.push(`source ${stat.source}: ${warning}`)
+  }
 
   const reviewMinScore = input.reviewMinScore ?? 60
   const reviewLimit = input.reviewLimit ?? 20

@@ -26,4 +26,13 @@ describe("reconcile", () => {
     const file = reconcile({ previous: { skills: [rec("a/x", "h")] }, current: [], sourceStats: [], now })
     expect(file.gaps).toContain("catalog emptied since the previous run")
   })
+
+  it("surfaces per-source warnings as gaps", () => {
+    const file = reconcile({
+      current: [rec("a/x", "h")],
+      sourceStats: [{ source: "fixtures", candidates: 1, fetchedAt: now.toISOString(), warnings: ["repo x/y: boom"] }],
+      now,
+    })
+    expect(file.gaps).toEqual(["source fixtures: repo x/y: boom"])
+  })
 })
