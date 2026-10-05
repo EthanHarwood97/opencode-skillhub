@@ -1015,7 +1015,7 @@ Commit: `feat(plugin): prompt-time retrieval injection with fail-open fallback`
 - Modify: `README.md` (retrieval section + privacy/opt-out, master-writer pass), `docs/superpowers/plans/2026-10-05-skillhub-steroids-v1-roadmap.md` (Slice 2 status), and the plan's own status notes
 - No code changes expected; fix forward only if acceptance finds real defects (then re-review as usual)
 
-- [ ] **Step 1: Generate real vectors into the real store**
+- [x] **Step 1: Generate real vectors into the real store**
 
 From the worktree (network + Gemini, ≈ cents):
 
@@ -1026,15 +1026,15 @@ npm run catalog:sync -- --topics claude-skills,opencode-skills --max-repos 6 --m
 
 Expected: `vectors: gemini-embedding-001 @ 768 dims`, `vectors: embedded N, reused M`, and `vectors.bin`/`vectors.json` in the store catalog. Second run: `embedded 0, reused N` (delta-only proof).
 
-- [ ] **Step 2: In-process retrieval harness (pre-merge, real deps from the worktree)**
+- [x] **Step 2: In-process retrieval harness (pre-merge, real deps from the worktree)**
 
 Run a one-off Node harness that builds the real transform with worktree code against the real store and a research-flavoured prompt; print the injected block and its estimated size. Assert the block exists and contains at least one catalog id. Then repeat with a deliberately broken key (`GOOGLE_API_KEY=bad`) to prove lexical-only fail-open still yields a block. Record both outputs.
 
-- [ ] **Step 3: Precision fixture (once, live, cheap)**
+- [x] **Step 3: Precision fixture (once, live, cheap)**
 
 Take 10 representative prompts mapped to expected catalog ids (drawn from the store's index), run each through the real ranker (embed + FTS), and record top-3 hit-rate. Report the number and the minScore in use; tune `minScore` once if the measured precision says so (one settings change, re-run the fixture, record both).
 
-- [ ] **Step 4: Docs + roadmap status, commit**
+- [x] **Step 4: Docs + roadmap status, commit**
 
 README: add "Automatic retrieval" under The dashboard/How it works: what it does, the default `suggest`, how to opt into `auto`, the privacy line ("when retrieval is on, your prompt is sent to Google's embeddings endpoint; set `retrieval.embed` to `off` to keep it local/lexical-only"), and the cost note (pennies). Roadmap: mark Slice 2 done (with date) and note the measured precision + any decision gates hit. Commit: `docs: automatic retrieval section, privacy note, slice 2 status`.
 
