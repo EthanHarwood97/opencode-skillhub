@@ -34,6 +34,20 @@ export async function ensureDashboard(opts: EnsureDashboardOptions): Promise<Ens
   }
 }
 
+/** Cache one ensure result while it is usable; retry after errors. */
+export function makeLazyEnsure(load: () => Promise<EnsureDashboardResult>): () => Promise<EnsureDashboardResult> {
+  let pending: Promise<EnsureDashboardResult> | undefined
+  return () => {
+    if (!pending) {
+      pending = load().then((result) => {
+        if ("error" in result) pending = undefined
+        return result
+      })
+    }
+    return pending
+  }
+}
+
 /** Command handler factory for the /skillhub command. */
 export function makeDashboardCommand(opts: { ensure: () => Promise<EnsureDashboardResult>; open: (url: string) => void }) {
   return async (output: { parts: unknown[] }): Promise<void> => {

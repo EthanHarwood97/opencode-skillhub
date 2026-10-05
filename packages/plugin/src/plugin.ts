@@ -12,13 +12,11 @@ import { collectStatus, makeCapture } from "./wiring.ts"
 import { openBrowser } from "../../cli/src/ui/open.ts"
 import { resolveUiDist } from "../../cli/src/ui/paths.ts"
 import { startUiServer } from "../../cli/src/ui/server.ts"
-import { ensureDashboard, makeDashboardCommand, type EnsureDashboardResult } from "./dashboard-core.ts"
+import { ensureDashboard, makeDashboardCommand, makeLazyEnsure } from "./dashboard-core.ts"
 
 export const SkillHubPlugin: Plugin = async ({ client, directory }) => {
   const root = resolveRoot()
-  let dashboardResult: Promise<EnsureDashboardResult> | undefined
-  const ensure = () =>
-    (dashboardResult ??= ensureDashboard({ root, uiDist: resolveUiDist(), port: 4517, start: startUiServer }))
+  const ensure = makeLazyEnsure(() => ensureDashboard({ root, uiDist: resolveUiDist(), port: 4517, start: startUiServer }))
   const dashboardCommand = makeDashboardCommand({ ensure, open: openBrowser })
   const capture = makeCapture(process.env.SKILLHUB_CAPTURE_DIR)
   const notifier = makeStartupNotifier({

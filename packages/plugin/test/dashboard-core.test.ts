@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { ensureDashboard, makeDashboardCommand } from "../src/dashboard-core.ts"
+import { ensureDashboard, makeDashboardCommand, makeLazyEnsure } from "../src/dashboard-core.ts"
 
 const healthy = (async () => new Response("{}", { status: 200 })) as unknown as typeof fetch
 const refused = (async () => {
@@ -55,6 +55,31 @@ describe("ensureDashboard", () => {
       },
     })
     expect(result).toEqual({ error: "could not start the dashboard: port 4517 busy" })
+  })
+})
+
+describe("makeLazyEnsure", () => {
+  it("caches a usable result across calls", async () => {
+    let calls = 0
+    const result = { url: "http://127.0.0.1:4517/", started: false }
+    const ensure = makeLazyEnsure(async () => {
+      calls++
+      return result
+    })
+    expect(await ensure()).toBe(result)
+    expect(await ensure()).toBe(result)
+    expect(calls).toBe(1)
+  })
+
+  it("does not cache an error result", async () => {
+    let calls = 0
+    const ensure = makeLazyEnsure(async () => {
+      calls++
+      return calls === 1 ? { error: "boom" } : { url: "http://127.0.0.1:4517/", started: true }
+    })
+    expect(await ensure()).toEqual({ error: "boom" })
+    expect(await ensure()).toEqual({ url: "http://127.0.0.1:4517/", started: true })
+    expect(calls).toBe(2)
   })
 })
 
