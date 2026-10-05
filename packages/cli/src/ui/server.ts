@@ -5,6 +5,7 @@ import { extname, join, resolve, sep } from "node:path"
 import type { SkillsQuery } from "../../../ui/src/lib/contract.ts"
 import { layout } from "../paths.ts"
 import { buildClusters, buildDetail, buildReview, buildSkills, buildStatus, buildTrending, loadSnapshot, type UiSnapshot } from "./data.ts"
+import { handleActivate, handleInstall, handleUpdateApply, handleUpdateReview, UiActionError, type EngineContext } from "./mutations.ts"
 
 export type UiServerOptions = {
   root: string
@@ -12,6 +13,8 @@ export type UiServerOptions = {
   port: number
   host?: string
   catalogDir?: string
+  fetchImpl?: typeof fetch
+  rawBase?: string
   now?: () => Date
 }
 
@@ -57,6 +60,45 @@ export function startUiServer(opts: UiServerOptions): Promise<UiServerHandle> {
   let boundPort = opts.port
 
   const readSnapshot = () => loadSnapshot(l, opts.catalogDir)
+
+  const readBody = (req: IncomingMessage): Promise<unknown> =>
+    new Promise((resolvePromise, reject) => {
+      const chunks: Buffer[] = []
+      let size = 0
+      req.on("data", (chunk: Buffer) => {
+        size += chunk.length
+        if (size > 65_536) {
+          reject(new UiActionError("request body is too large", 413, "invalid"))
+          req.destroy()
+          return
+        }
+        chunks.push(chunk)
+      })
+      req.on("end", () => {
+        try {
+          resolvePromise(chunks.length === 0 ? {} : JSON.parse(Buffer.concat(chunks).toString("utf8")))
+        } catch {
+          reject(new UiActionError("request body must be JSON", 400, "invalid"))
+        }
+      })
+      req.on("error", reject)
+    })
+
+  const guardMutation = (req: IncomingMessage): void => {
+    const contentType = String(req.headers["content-type"] ?? "")
+    if (!contentType.startsWith("application/json")) throw new UiActionError("content-type must be application/json", 415, "invalid")
+    if (req.headers["x-skillhub-token"] !== token) throw new UiActionError("missing or invalid dashboard token", 403, "forbidden")
+    const origin = req.headers.origin
+    if (origin && origin !== `http://127.0.0.1:${boundPort}` && origin !== `http://localhost:${boundPort}`) {
+      throw new UiActionError("cross-origin request rejected", 403, "forbidden")
+    }
+  }
+
+  const engineContext = (): EngineContext => {
+    const snap = readSnapshot()
+    if ("error" in snap) throw new UiActionError(snap.error, 404, "not_found")
+    return { l, index: snap.index, fetchImpl: opts.fetchImpl, rawBase: opts.rawBase, now: opts.now }
+  }
 
   const injectRuntime = (html: string, runtime: Record<string, unknown>): string =>
     html.includes("</head>")
@@ -127,6 +169,10 @@ export function startUiServer(opts: UiServerOptions): Promise<UiServerHandle> {
           }
           return sendJson(res, 200, buildSkills(snap, query))
         }
+        if (pathname.startsWith("/api/skills/") && pathname.endsWith("/update")) {
+          const id = pathname.slice("/api/skills/".length, -"/update".length)
+          return sendJson(res, 200, await handleUpdateReview(engineContext(), id))
+        }
         if (pathname.startsWith("/api/skills/")) {
           const snap = readSnapshot()
           if ("error" in snap) return sendError(res, 404, "not_found", snap.error)
@@ -158,8 +204,33 @@ export function startUiServer(opts: UiServerOptions): Promise<UiServerHandle> {
         return sendError(res, 404, "not_found", `no file for ${pathname}`)
       }
 
+      if (pathname.startsWith("/api/skills/") && req.method === "POST") {
+        const rest = pathname.slice("/api/skills/".length)
+        guardMutation(req)
+        const body = (await readBody(req)) as Record<string, unknown>
+
+        if (rest.endsWith("/install")) {
+          const id = rest.slice(0, -"/install".length)
+          return sendJson(res, 200, await handleInstall(engineContext(), id, body.dryRun === true))
+        }
+        if (rest.endsWith("/activate")) {
+          const id = rest.slice(0, -"/activate".length)
+          return sendJson(res, 200, handleActivate(engineContext(), id, true))
+        }
+        if (rest.endsWith("/deactivate")) {
+          const id = rest.slice(0, -"/deactivate".length)
+          return sendJson(res, 200, handleActivate(engineContext(), id, false))
+        }
+        if (rest.endsWith("/update/apply")) {
+          const id = rest.slice(0, -"/update/apply".length)
+          return sendJson(res, 200, await handleUpdateApply(engineContext(), id, body.confirm))
+        }
+        return sendError(res, 404, "not_found", `no action for ${pathname}`)
+      }
+
       return sendError(res, 405, "invalid", `${req.method} is not allowed here`)
     } catch (error) {
+      if (error instanceof UiActionError) return sendError(res, error.status, error.code, error.message)
       sendError(res, 500, "internal", error instanceof Error ? error.message : "internal error")
     }
   }
