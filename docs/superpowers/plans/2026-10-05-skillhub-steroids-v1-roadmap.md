@@ -41,6 +41,8 @@
 | **5 — packaging + public release** | one-command install, bundled plugin/CLI, README + motive, license review, public repo, CI + Pages | clone → install → skills working in one command; repo public; gallery live | after 4 | — |
 | **6 — quality levers (optional)** | golden-set labeling, live rubric pass | calibration target met; rubric cached | on demand | — |
 
+**Slice 5 status (2026-10-05): Done.** Public at github.com/EthanHarwood97/opencode-skillhub (MIT). One-command installer verified twice (idempotent); CI, Pages gallery and the daily live sync all green; first CI catalog run: 449 skills / 21 clusters; `search.db` published as a rolling release asset.
+
 ## Open items carried
 
 - Final public repo name (working title only) + trademark glance before launch.
