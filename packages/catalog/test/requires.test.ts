@@ -22,6 +22,11 @@ describe("extractRequires", () => {
     expect(r.scripts).toEqual(["scripts/missing.py"])
   })
 
+  it("normalizes a leading ./ on body-referenced scripts so bundled files match", () => {
+    const r = extractRequires({ body: "Then run `./run.ps1`.", files: ["SKILL.md", "run.ps1"] })
+    expect(r.scripts).toEqual(["run.ps1"])
+  })
+
   it("returns empty arrays for a plain doc", () => {
     const r = extractRequires({ body: "# T\n\nJust prose about writing.\n", files: ["SKILL.md"] })
     expect(r).toEqual({ runtime: [], scripts: [], mcp: [], env: [], services: [] })

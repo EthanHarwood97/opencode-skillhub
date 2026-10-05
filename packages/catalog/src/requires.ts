@@ -33,7 +33,10 @@ export function extractRequires(input: { body: string; files: string[] }): Requi
     const dot = path.lastIndexOf(".")
     if (dot !== -1 && SCRIPT_EXTENSIONS.has(path.slice(dot).toLowerCase())) scripts.add(path)
   }
-  for (const match of input.body.matchAll(SCRIPT_REF_RE)) if (match[1]) scripts.add(match[1])
+  for (const match of input.body.matchAll(SCRIPT_REF_RE)) {
+    const ref = match[1]?.replace(/^\.[\\/]/, "")
+    if (ref) scripts.add(ref)
+  }
 
   const env = new Set<string>()
   for (const match of input.body.matchAll(ENV_RE)) if (match[1]) env.add(match[1])
