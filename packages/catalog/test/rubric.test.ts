@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 import type { LlmClient } from "../src/llm.ts"
-import { buildRubricMessages, MAX_BODY_CHARS, makeRubricEvaluator, parseRubricResponse, RUBRIC_VERSION } from "../src/rubric.ts"
+import { buildRubricMessages, MAX_BODY_CHARS, makeRubricEvaluator, parseRubricResponse, RUBRIC_INSTRUCTIONS, RUBRIC_VERSION } from "../src/rubric.ts"
 
 const valid = {
   score: 82,
@@ -15,6 +15,13 @@ describe("buildRubricMessages", () => {
     expect(messages).toHaveLength(2)
     expect(messages[1]!.content.length).toBeLessThan(MAX_BODY_CHARS + 1_000)
     expect(messages[1]!.content).toContain("[truncated]")
+  })
+
+  it("wraps the body as untrusted skill content", () => {
+    const messages = buildRubricMessages({ id: "a/x", name: "x", description: "d", body: "# Instructions" })
+    expect(messages[1]!.content).toContain("<skill-content>")
+    expect(messages[1]!.content).toContain("</skill-content>")
+    expect(RUBRIC_INSTRUCTIONS).toContain("untrusted")
   })
 })
 
