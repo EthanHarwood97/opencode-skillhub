@@ -19,7 +19,7 @@ export function Chip({ children, tone = "neutral" }: { children: ReactNode; tone
 }
 
 export function Button({ tone = "ghost", ...props }: ButtonHTMLAttributes<HTMLButtonElement> & { tone?: "primary" | "ghost" | "danger" }) {
-  const toneClass = tone === "primary" ? styles.buttonPrimary : tone === "danger" ? styles.buttonDanger : styles.buttonGhost
+  const toneClass = tone === "primary" ? styles.buttonPrimary : tone === "danger" ? styles.buttonDanger : ""
   return <button type="button" {...props} className={`${styles.button} ${toneClass}`} />
 }
 
