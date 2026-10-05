@@ -5,6 +5,7 @@ import { normalizeAll } from "./build.ts"
 import { composeTotal } from "./calibrate.ts"
 import { readClusterState, refineClusters, writeClusterState, type ClusterState } from "./cluster-refine.ts"
 import type { Embedder } from "./embed.ts"
+import type { EmbeddingProvider } from "./embeddings.ts"
 import { readEvalCache, writeEvalCache } from "./eval-cache.ts"
 import { evaluateRecords, type EvaluateFn, type EvaluateStats } from "./evaluate.ts"
 import { writeCatalog, type CatalogIndex } from "./publish.ts"
@@ -13,6 +14,7 @@ import type { ScoreWeights } from "./score.ts"
 import type { Candidate } from "./sources/types.ts"
 import { computeTrending, readSnapshots, snapshotFromRecords, writeSnapshot, type TrendingFile } from "./trending.ts"
 import type { SkillRecord } from "./types.ts"
+import { writeVectors } from "./vectors.ts"
 
 export type SyncSource = { name: string; load: () => Promise<Candidate[] | { candidates: Candidate[]; warnings?: string[] }> }
 
@@ -36,6 +38,7 @@ export type SyncResult = {
   reconciliation: ReconciliationFile
   clusterState: ClusterState
   evalStats?: EvaluateStats
+  vectors?: { embedded: number; reused: number; warnings: string[] }
 }
 
 const readIndex = (outDir: string): CatalogIndex | undefined => {
@@ -56,6 +59,7 @@ export async function syncCatalog(opts: {
   evaluation?: { evaluate: EvaluateFn; maxEvals?: number; maxUsd?: number; costPerEvalUsd?: number }
   cluster?: { k?: number; seed?: number; dupThreshold?: number }
   embed?: Embedder
+  vectors?: { embedder: EmbeddingProvider }
 }): Promise<SyncResult> {
   const now = opts.now ?? new Date()
   const sourceStats: SourceStat[] = []
@@ -122,6 +126,16 @@ export async function syncCatalog(opts: {
   const { index } = writeCatalog(refined.records, opts.outDir, now, { trending, reconciliation })
   writeSnapshot(opts.stateDir, snapshotFromRecords(refined.records, now))
 
+  let vectors: { embedded: number; reused: number; warnings: string[] } | undefined
+  if (opts.vectors) {
+    try {
+      const stats = await writeVectors(refined.records, opts.outDir, { embedder: opts.vectors.embedder, now })
+      vectors = { ...stats, warnings: [] }
+    } catch (error) {
+      vectors = { embedded: 0, reused: refined.records.length, warnings: [error instanceof Error ? error.message : String(error)] }
+    }
+  }
+
   return {
     summary: {
       candidates: candidates.length,
@@ -140,5 +154,6 @@ export async function syncCatalog(opts: {
     reconciliation,
     clusterState: refined.state,
     evalStats,
+    vectors,
   }
 }

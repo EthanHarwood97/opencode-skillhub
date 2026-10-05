@@ -2,6 +2,7 @@ import { existsSync } from "node:fs"
 import { join } from "node:path"
 import { parseArgs } from "node:util"
 import { readCalibration } from "./calibrate.ts"
+import { makeGeminiEmbedder, type EmbeddingProvider } from "./embeddings.ts"
 import { makeOpenAiCompatClient } from "./llm.ts"
 import { makeRubricEvaluator } from "./rubric.ts"
 import { fetchAgentskills } from "./sources/agentskills.ts"
@@ -26,6 +27,7 @@ const { values } = parseArgs({
     "max-usd": { type: "string", default: "0" },
     "llm-model": { type: "string" },
     "llm-base-url": { type: "string" },
+    "no-vectors": { type: "boolean", default: false },
   },
 })
 
@@ -36,6 +38,15 @@ if (!values.fixtures && !values.topics && !values.agentskills) {
 
 const fetchImpl = fetch as unknown as FetchLike
 const stateDir = values.state ?? join(values.out, "state")
+
+let vectors: { embedder: EmbeddingProvider } | undefined
+const vectorKey = process.env.GOOGLE_API_KEY ?? process.env.GEMINI_API_KEY
+if (values["no-vectors"]) console.log("vectors: disabled by --no-vectors")
+else if (vectorKey) {
+  const embedder = makeGeminiEmbedder({ apiKey: vectorKey })
+  vectors = { embedder }
+  console.log(`vectors: ${embedder.model} @ ${embedder.dim} dims`)
+} else console.log("vectors: skipped (no GOOGLE_API_KEY/GEMINI_API_KEY)")
 
 let evaluation: { evaluate: ReturnType<typeof makeRubricEvaluator>; maxEvals?: number; maxUsd: number } | undefined
 if (values.llm) {
@@ -95,10 +106,14 @@ const calibrationPath = join(values.out, "calibration.json")
 const weights = existsSync(calibrationPath) ? readCalibration(calibrationPath) : undefined
 console.log(`sync: ${sources.length} source(s) -> ${values.out} (state ${stateDir})${weights ? "; calibrated weights applied" : ""}`)
 
-const result = await syncCatalog({ sources, outDir: values.out, stateDir, weights, evaluation })
+const result = await syncCatalog({ sources, outDir: values.out, stateDir, weights, evaluation, vectors })
 const summary = result.summary
 console.log(`sync: ${summary.candidates} candidate(s) -> ${summary.published} published, ${summary.quarantined} quarantined, ${summary.rejected} rejected`)
 const failedNote = summary.failed > 0 ? `, failed ${summary.failed}` : ""
 console.log(`  evaluated ${summary.evaluated} (cached ${summary.cached}, budget-skipped ${summary.skippedBudget}${failedNote}, spend $${summary.spentUsd.toFixed(4)}), duplicates ${summary.duplicates}`)
 console.log(`  added ${result.reconciliation.totals.added.length}, removed ${result.reconciliation.totals.removed.length}, changed ${result.reconciliation.totals.changed.length}`)
 for (const gap of result.reconciliation.gaps) console.log(`  gap: ${gap}`)
+if (result.vectors) {
+  console.log(`vectors: embedded ${result.vectors.embedded}, reused ${result.vectors.reused}`)
+  for (const warning of result.vectors.warnings) console.log(`  vector warning: ${warning}`)
+}

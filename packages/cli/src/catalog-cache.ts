@@ -15,4 +15,8 @@ export function importCatalog(fromDir: string, l: StoreLayout): void {
     if (!existsSync(src)) throw new Error(`catalog artifact missing: ${src}`)
     cpSync(src, join(l.catalogDir, file))
   }
+  const vectorFiles = ["vectors.json", "vectors.bin"]
+  if (vectorFiles.every((file) => existsSync(join(fromDir, file)))) {
+    for (const file of vectorFiles) cpSync(join(fromDir, file), join(l.catalogDir, file))
+  }
 }

@@ -60,7 +60,7 @@ describe("catalog cache", () => {
     expect(() => importCatalog(src, layout(tmp()))).toThrow(/artifact missing/)
   })
 
-  it("imports all three artifacts and reads the index back", () => {
+  it("imports all artifacts (including vectors) and reads the index back", () => {
     const src = tmp()
     const l = layout(tmp())
     ensureDirs(l)
@@ -73,12 +73,28 @@ describe("catalog cache", () => {
     writeFileSync(join(src, "index.json"), JSON.stringify(index))
     writeFileSync(join(src, "clusters.json"), "{}")
     writeFileSync(join(src, "search.db"), "")
+    writeFileSync(join(src, "vectors.json"), "{}")
+    writeFileSync(join(src, "vectors.bin"), "")
     importCatalog(src, l)
     expect(existsSync(join(l.catalogDir, "index.json"))).toBe(true)
     expect(existsSync(join(l.catalogDir, "clusters.json"))).toBe(true)
     expect(existsSync(join(l.catalogDir, "search.db"))).toBe(true)
+    expect(existsSync(join(l.catalogDir, "vectors.json"))).toBe(true)
+    expect(existsSync(join(l.catalogDir, "vectors.bin"))).toBe(true)
     const parsed = readCatalogIndex(l.catalogDir)
     expect(parsed.version).toBe(1)
     expect(parsed.skills).toEqual([])
+  })
+
+  it("imports without vectors when the source has none", () => {
+    const src = tmp()
+    const l = layout(tmp())
+    ensureDirs(l)
+    writeFileSync(join(src, "index.json"), "{}")
+    writeFileSync(join(src, "clusters.json"), "{}")
+    writeFileSync(join(src, "search.db"), "")
+    importCatalog(src, l)
+    expect(existsSync(join(l.catalogDir, "vectors.json"))).toBe(false)
+    expect(existsSync(join(l.catalogDir, "vectors.bin"))).toBe(false)
   })
 })

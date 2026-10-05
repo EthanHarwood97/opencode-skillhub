@@ -98,6 +98,33 @@ describe("syncCatalog", () => {
     expect(second.summary).toMatchObject({ evaluated: 0, cached: 2, skippedBudget: 0 })
   })
 
+  it("writes vector artifacts when an embedder is provided and warns (without failing) when it errors", async () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-sync-vec-"))
+    const embedder = { name: "fake", model: "fake-1", dim: 3, embed: async (texts: string[]) => texts.map(() => Float32Array.from([1, 0, 0])) }
+    const ok = await syncCatalog({
+      sources: [{ name: "s", load: async () => [skill("pdf-tool", "acme/skills")] }],
+      outDir: join(root, "catalog"),
+      stateDir: join(root, "state"),
+      now,
+      vectors: { embedder },
+    })
+    expect(ok.vectors).toEqual({ embedded: 1, reused: 0, warnings: [] })
+    expect(existsSync(join(root, "catalog", "vectors.json"))).toBe(true)
+    expect(existsSync(join(root, "catalog", "vectors.bin"))).toBe(true)
+
+    const failing = { ...embedder, embed: async () => { throw new Error("api down") } }
+    const bad = await syncCatalog({
+      sources: [{ name: "s", load: async () => [skill("pdf-tool", "acme/skills")] }],
+      outDir: join(root, "catalog2"),
+      stateDir: join(root, "state2"),
+      now,
+      vectors: { embedder: failing },
+    })
+    expect(bad.vectors?.warnings.join(" ")).toContain("api down")
+    expect(bad.index.skills.length).toBeGreaterThan(0)
+    expect(existsSync(join(root, "catalog2", "index.json"))).toBe(true)
+  })
+
   it("surfaces source warnings as reconciliation gaps", async () => {
     const root = mkdtempSync(join(tmpdir(), "skillhub-sync-warn-"))
     const result = await syncCatalog({
