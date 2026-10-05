@@ -1,26 +1,12 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-05T10:00:28.162Z",
+  "generatedAt": "2026-10-05T16:04:48.939Z",
   "clusters": [
     {
-      "id": "engineering/good",
-      "label": "Good",
+      "id": "c-2196b96b",
+      "label": ".Agents",
       "category": "engineering",
-      "top": "local/good-skill",
-      "alternatives": []
-    },
-    {
-      "id": "engineering/risky",
-      "label": "Risky",
-      "category": "engineering",
-      "top": "local/risky-skill",
-      "alternatives": []
-    },
-    {
-      "id": "engineering/stale",
-      "label": "Stale",
-      "category": "engineering",
-      "top": "local/stale-skill",
+      "top": "tt-a1i-archify/archify-review",
       "alternatives": []
     }
   ]

@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "generatedAt": "2026-10-05T16:04:48.939Z",
+  "totals": {
+    "previous": 3,
+    "current": 1,
+    "added": [
+      "tt-a1i-archify/archify-review"
+    ],
+    "removed": [
+      "local/good-skill",
+      "local/risky-skill",
+      "local/stale-skill"
+    ],
+    "changed": []
+  },
+  "sources": [
+    {
+      "source": "agentskills",
+      "candidates": 0,
+      "fetchedAt": "2026-10-05T16:04:48.939Z",
+      "error": "fetch failed"
+    },
+    {
+      "source": "github:claude-skills",
+      "candidates": 1,
+      "fetchedAt": "2026-10-05T16:04:48.939Z",
+      "warnings": [
+        "repo thedotmack/claude-mem: fetch failed",
+        "repo Egonex-AI/Understand-Anything: fetch failed"
+      ]
+    }
+  ],
+  "gaps": [
+    "source github:claude-skills: repo thedotmack/claude-mem: fetch failed",
+    "source github:claude-skills: repo Egonex-AI/Understand-Anything: fetch failed",
+    "source agentskills: fetch failed"
+  ],
+  "reviewQueue": [
+    "tt-a1i-archify/archify-review"
+  ]
+}

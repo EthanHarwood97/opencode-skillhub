@@ -1,41 +1,43 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-05T10:00:28.162Z",
+  "generatedAt": "2026-10-05T16:04:48.939Z",
   "counts": {
-    "total": 3,
+    "total": 1,
     "byStatus": {
-      "candidate": 2,
-      "quarantined": 1
+      "candidate": 1
     },
     "byCategory": {
-      "engineering": 3
+      "engineering": 1
     }
   },
   "skills": [
     {
-      "id": "local/good-skill",
-      "name": "good-skill",
-      "description": "Demonstrates a well-formed skill. Use when testing SkillHub parsing, scoring, and install flows.",
+      "id": "tt-a1i-archify/archify-review",
+      "name": "archify-review",
+      "description": "Review Archify issues, PRs, or code through value, cost, and impact to support evidence-based maintenance decisions. Use for issue triage, change reviews, and code quality assessments.",
       "category": "engineering",
       "tags": [
-        "good"
+        ".agents",
+        "skills"
       ],
-      "clusterId": "engineering/good",
-      "clusterLabel": "Good",
+      "clusterId": "c-2196b96b",
+      "clusterLabel": ".Agents",
       "source": {
-        "kind": "local",
-        "path": "good-skill/SKILL.md",
+        "kind": "github",
+        "repo": "tt-a1i/archify",
+        "path": ".agents/skills/archify-review/SKILL.md",
+        "ref": "73aaa0696e8f72c232ea710e6fa94fd953f3e773",
         "license": "MIT",
         "licenseFlags": []
       },
       "files": [
         {
-          "path": "good-skill/SKILL.md",
-          "sha256": "52a1a3cfbcd7254a6f62749cbcbeb2763525e6a9a91f262d371a9badd4c805fb",
-          "size": 357
+          "path": ".agents/skills/archify-review/SKILL.md",
+          "sha256": "811eb78d69360b741475053a08a0060e60126af2405ffa24afdc0498f17b6cb8",
+          "size": 1658
         }
       ],
-      "contentHash": "52a1a3cfbcd7254a6f62749cbcbeb2763525e6a9a91f262d371a9badd4c805fb",
+      "contentHash": "811eb78d69360b741475053a08a0060e60126af2405ffa24afdc0498f17b6cb8",
       "requires": {
         "runtime": [],
         "scripts": [],
@@ -48,205 +50,36 @@
         "findings": []
       },
       "signals": {
-        "stars": 0,
+        "stars": 77940,
         "starVelocity30d": 0,
-        "forks": 0,
+        "forks": 5239,
         "installs": 0,
         "views": 0,
-        "pushedAt": null,
-        "createdAt": null,
+        "pushedAt": "2026-10-05T15:38:47Z",
+        "createdAt": "2026-04-15T05:27:37Z",
         "archived": false
       },
       "scores": {
-        "total": 78.75,
-        "quality": 75,
+        "total": 76.65,
+        "quality": 55,
         "trust": 90,
         "freshness": 100,
         "compatibility": 100,
-        "adoption": 0,
+        "adoption": 49,
         "reasons": [
           "quality: description present (+20)",
           "quality: description states when to use (+10)",
-          "quality: three or more sections (+15)",
           "quality: workflow/steps present (+10)",
-          "quality: code example present (+10)",
-          "quality: examples/usage section (+10)",
+          "quality: substantial body (+15)",
           "trust: license known (+10)",
-          "freshness: local skill (100)",
+          "freshness: pushed 0 days ago (100)",
           "compatibility: all files present (100)",
-          "adoption: 0 stars / 0 installs (0)"
+          "adoption: 77940 stars / 0 installs (49)"
         ],
         "rubricVersion": "heuristic-v0",
-        "evaluatedAt": "2026-10-05T10:00:28.162Z"
+        "evaluatedAt": "2026-10-05T16:04:48.939Z"
       },
-      "provenanceTier": "local",
-      "status": "candidate",
-      "relations": {
-        "supersedes": [],
-        "duplicates": [],
-        "alternatives": []
-      }
-    },
-    {
-      "id": "local/risky-skill",
-      "name": "risky-skill",
-      "description": "Fixture containing hostile patterns. Use only in scan tests.",
-      "category": "engineering",
-      "tags": [
-        "risky"
-      ],
-      "clusterId": "engineering/risky",
-      "clusterLabel": "Risky",
-      "source": {
-        "kind": "local",
-        "path": "risky-skill/SKILL.md",
-        "license": "MIT",
-        "licenseFlags": []
-      },
-      "files": [
-        {
-          "path": "risky-skill/SKILL.md",
-          "sha256": "f49f4d3c92c07b4a6f89a8016874e44c59737d9126f685d04e6d6d9afc7d99e7",
-          "size": 245
-        }
-      ],
-      "contentHash": "f49f4d3c92c07b4a6f89a8016874e44c59737d9126f685d04e6d6d9afc7d99e7",
-      "requires": {
-        "runtime": [],
-        "scripts": [],
-        "mcp": [],
-        "env": [],
-        "services": []
-      },
-      "risk": {
-        "level": "critical",
-        "findings": [
-          {
-            "rule": "injection.ignore-previous",
-            "category": "injection",
-            "severity": "critical",
-            "match": "Ignore all previous instructions",
-            "line": 4
-          },
-          {
-            "rule": "injection.silently",
-            "category": "injection",
-            "severity": "medium",
-            "match": "silently",
-            "line": 4
-          },
-          {
-            "rule": "exfil.credential-paths",
-            "category": "exfiltration",
-            "severity": "critical",
-            "match": ".ssh/id_rsa",
-            "line": 6
-          }
-        ]
-      },
-      "signals": {
-        "stars": 0,
-        "starVelocity30d": 0,
-        "forks": 0,
-        "installs": 0,
-        "views": 0,
-        "pushedAt": null,
-        "createdAt": null,
-        "archived": false
-      },
-      "scores": {
-        "total": 41.75,
-        "quality": 30,
-        "trust": 5,
-        "freshness": 100,
-        "compatibility": 100,
-        "adoption": 0,
-        "reasons": [
-          "quality: description present (+20)",
-          "quality: description states when to use (+10)",
-          "trust: license known (+10)",
-          "trust: injection.ignore-previous (-40)",
-          "trust: injection.silently (-5)",
-          "trust: exfil.credential-paths (-40)",
-          "freshness: local skill (100)",
-          "compatibility: all files present (100)",
-          "adoption: 0 stars / 0 installs (0)"
-        ],
-        "rubricVersion": "heuristic-v0",
-        "evaluatedAt": "2026-10-05T10:00:28.162Z"
-      },
-      "provenanceTier": "local",
-      "status": "quarantined",
-      "relations": {
-        "supersedes": [],
-        "duplicates": [],
-        "alternatives": []
-      }
-    },
-    {
-      "id": "local/stale-skill",
-      "name": "stale-skill",
-      "description": "Fixture used to exercise the maintenance gate. Use only in gate tests.",
-      "category": "engineering",
-      "tags": [
-        "stale"
-      ],
-      "clusterId": "engineering/stale",
-      "clusterLabel": "Stale",
-      "source": {
-        "kind": "local",
-        "path": "stale-skill/SKILL.md",
-        "license": "MIT",
-        "licenseFlags": []
-      },
-      "files": [
-        {
-          "path": "stale-skill/SKILL.md",
-          "sha256": "a03e1197e0ace3fc10be719e5229dd73aee722fc29f29dfe801dcb02acf4079c",
-          "size": 165
-        }
-      ],
-      "contentHash": "a03e1197e0ace3fc10be719e5229dd73aee722fc29f29dfe801dcb02acf4079c",
-      "requires": {
-        "runtime": [],
-        "scripts": [],
-        "mcp": [],
-        "env": [],
-        "services": []
-      },
-      "risk": {
-        "level": "low",
-        "findings": []
-      },
-      "signals": {
-        "stars": 0,
-        "starVelocity30d": 0,
-        "forks": 0,
-        "installs": 0,
-        "views": 0,
-        "pushedAt": null,
-        "createdAt": null,
-        "archived": false
-      },
-      "scores": {
-        "total": 63,
-        "quality": 30,
-        "trust": 90,
-        "freshness": 100,
-        "compatibility": 100,
-        "adoption": 0,
-        "reasons": [
-          "quality: description present (+20)",
-          "quality: description states when to use (+10)",
-          "trust: license known (+10)",
-          "freshness: local skill (100)",
-          "compatibility: all files present (100)",
-          "adoption: 0 stars / 0 installs (0)"
-        ],
-        "rubricVersion": "heuristic-v0",
-        "evaluatedAt": "2026-10-05T10:00:28.162Z"
-      },
-      "provenanceTier": "local",
+      "provenanceTier": "sha-pinned",
       "status": "candidate",
       "relations": {
         "supersedes": [],
