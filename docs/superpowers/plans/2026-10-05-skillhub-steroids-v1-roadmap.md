@@ -43,6 +43,8 @@
 
 **Slice 5 status (2026-10-05): Done.** Public at github.com/EthanHarwood97/opencode-skillhub (MIT). One-command installer verified twice (idempotent); CI, Pages gallery and the daily live sync all green; first CI catalog run: 449 skills / 21 clusters; `search.db` published as a rolling release asset.
 
+**Slice 6 status (2026-10-05): rubric pass done; labeling session ready.** Local catalog is 29/29 `rubric-v1` (LLM quality overrides, reasons cached); total spend $0.041 across two live runs; the delta-only cache was proven in the wild (second run: 3 evaluated, 26 cached, $0.0047). Labeling worksheet generated at `Desktop/skillhub-label-worksheet.tsv` from the live catalog — the human tier-filling session (`label import` then `calibrate --apply`) remains the last step and is deliberately user-time.
+
 ## Open items carried
 
 - Final public repo name (working title only) + trademark glance before launch.
