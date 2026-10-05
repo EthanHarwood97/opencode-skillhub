@@ -22,6 +22,7 @@ export type SyncSummary = {
   quarantined: number
   rejected: number
   evaluated: number
+  failed: number
   cached: number
   skippedBudget: number
   spentUsd: number
@@ -121,6 +122,7 @@ export async function syncCatalog(opts: {
       quarantined: refined.records.filter((record) => record.status === "quarantined").length,
       rejected: rejected.length,
       evaluated: evalStats?.evaluated ?? 0,
+      failed: evalStats?.failed ?? 0,
       cached: evalStats?.cached ?? 0,
       skippedBudget: evalStats?.skippedBudget ?? 0,
       spentUsd: evalStats?.spentUsd ?? 0,

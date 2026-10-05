@@ -8,6 +8,7 @@ export type EvaluateFn = (input: EvaluateInput) => Promise<RubricEvaluation>
 
 export type EvaluateStats = {
   evaluated: number
+  failed: number
   cached: number
   skippedBudget: number
   skippedQuarantined: number
@@ -54,7 +55,7 @@ export async function evaluateRecords(
   const maxUsd = opts.maxUsd ?? Number.POSITIVE_INFINITY
   const costPerEvalUsd = opts.costPerEvalUsd ?? 0.01
   const entries = { ...opts.cache.entries }
-  const stats: EvaluateStats = { evaluated: 0, cached: 0, skippedBudget: 0, skippedQuarantined: 0, skippedNoBody: 0, spentUsd: 0 }
+  const stats: EvaluateStats = { evaluated: 0, failed: 0, cached: 0, skippedBudget: 0, skippedQuarantined: 0, skippedNoBody: 0, spentUsd: 0 }
   const out: SkillRecord[] = []
 
   for (const record of records) {
@@ -81,7 +82,18 @@ export async function evaluateRecords(
       out.push(markBudgetSkip(record))
       continue
     }
-    const evaluation = await opts.evaluate({ id: record.id, name: record.name, description: record.description, body })
+    let evaluation: RubricEvaluation
+    try {
+      evaluation = await opts.evaluate({ id: record.id, name: record.name, description: record.description, body })
+    } catch (error) {
+      stats.failed++
+      const message = error instanceof Error ? error.message : String(error)
+      out.push({
+        ...record,
+        scores: { ...record.scores, reasons: [...record.scores.reasons, `quality: evaluation failed (${message.slice(0, 200)})`] },
+      })
+      continue
+    }
     stats.evaluated++
     stats.spentUsd = Math.round((stats.spentUsd + evaluation.costUsd) * 1e6) / 1e6
     const entry: EvalCacheEntry = {

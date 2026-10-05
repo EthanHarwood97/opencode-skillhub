@@ -84,4 +84,25 @@ describe("evaluateRecords", () => {
     expect(stats.skippedBudget).toBe(1)
     expect(stats.spentUsd).toBeCloseTo(0.02, 10)
   })
+
+  it("isolates a failed evaluation, keeps its heuristic score, and caches only successes", async () => {
+    const failed = makeRecord({ id: "a/fail", contentHash: "hf" })
+    const ok = makeRecord({ id: "a/ok", contentHash: "ho" })
+    const { records, stats, cache: out } = await evaluateRecords([failed, ok], {
+      cache: { version: 1, entries: {} },
+      bodies: new Map([["a/fail", "# F"], ["a/ok", "# O"]]),
+      evaluate: async (input) => {
+        if (input.id === "a/fail") throw new Error("429 rate limited")
+        return evaluation(88)
+      },
+      weights: qualityOnly,
+      now: new Date("2026-10-05T00:00:00Z"),
+    })
+    expect(stats).toMatchObject({ evaluated: 1, failed: 1 })
+    expect(records[0]!.scores.total).toBe(50)
+    expect(records[0]!.scores.reasons.join(" ")).toMatch(/evaluation failed \(429 rate limited\)/)
+    expect(records[1]!.scores.total).toBe(88)
+    expect(out.entries[evalKey("hf", RUBRIC_VERSION)]).toBeUndefined()
+    expect(out.entries[evalKey("ho", RUBRIC_VERSION)]?.score).toBe(88)
+  })
 })

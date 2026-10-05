@@ -96,6 +96,7 @@ console.log(`sync: ${sources.length} source(s) -> ${values.out} (state ${stateDi
 const result = await syncCatalog({ sources, outDir: values.out, stateDir, weights, evaluation })
 const summary = result.summary
 console.log(`sync: ${summary.candidates} candidate(s) -> ${summary.published} published, ${summary.quarantined} quarantined, ${summary.rejected} rejected`)
-console.log(`  evaluated ${summary.evaluated} (cached ${summary.cached}, budget-skipped ${summary.skippedBudget}, spend $${summary.spentUsd.toFixed(4)}), duplicates ${summary.duplicates}`)
+const failedNote = summary.failed > 0 ? `, failed ${summary.failed}` : ""
+console.log(`  evaluated ${summary.evaluated} (cached ${summary.cached}, budget-skipped ${summary.skippedBudget}${failedNote}, spend $${summary.spentUsd.toFixed(4)}), duplicates ${summary.duplicates}`)
 console.log(`  added ${result.reconciliation.totals.added.length}, removed ${result.reconciliation.totals.removed.length}, changed ${result.reconciliation.totals.changed.length}`)
 for (const gap of result.reconciliation.gaps) console.log(`  gap: ${gap}`)
