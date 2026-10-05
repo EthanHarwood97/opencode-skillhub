@@ -1,5 +1,5 @@
 import { mkdirSync, writeFileSync } from "node:fs"
-import { dirname, join } from "node:path"
+import { dirname, join, resolve, sep } from "node:path"
 import { unzipSync } from "fflate"
 import { sha256 } from "../../catalog/src/parse.ts"
 import type { SkillRecord } from "../../catalog/src/types.ts"
@@ -66,8 +66,16 @@ export async function installSkill(opts: {
   const files = await fetchRecordFiles(record, { fetchImpl: opts.fetchImpl, rawBase: opts.rawBase })
   verifyFiles(record, files)
 
+  const target = join(l.storeDir, record.id)
+  const resolvedTarget = resolve(target)
+  for (const file of record.files) {
+    const dest = resolve(resolvedTarget, file.path)
+    if (dest !== resolvedTarget && !dest.startsWith(resolvedTarget + sep)) {
+      throw new MissingSourceError(`unsafe file path (escapes store): ${file.path}`)
+    }
+  }
+
   if (!opts.dryRun) {
-    const target = join(l.storeDir, record.id)
     for (const [path, bytes] of files) {
       const dest = join(target, path)
       mkdirSync(dirname(dest), { recursive: true })

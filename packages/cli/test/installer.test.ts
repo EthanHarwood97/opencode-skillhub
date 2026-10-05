@@ -1,4 +1,4 @@
-import { mkdtempSync, readFileSync } from "node:fs"
+import { existsSync, mkdtempSync, readdirSync, readFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
@@ -15,7 +15,7 @@ const recordFrom = (name: string) => {
   const content = readFileSync(join(fixtures, name, "SKILL.md"), "utf8")
   return normalizeCandidate(
     {
-      source: { kind: "github", repo: "acme/skills", path: `${name}/SKILL.md`, ref: "abc123", license: "MIT" },
+      source: { kind: "github", repo: "acme/skills", path: `${name}/SKILL.md`, ref: "abc123", license: "MIT", licenseFlags: [] },
       name,
       dir: name,
       tags: [name],
@@ -45,6 +45,22 @@ describe("installSkill (github, sha-pinned)", () => {
     const fetchImpl = (async () => new Response("tampered", { status: 200 })) as unknown as typeof fetch
     const l = layout(mkdtempSync(join(tmpdir(), "skillhub-install-")))
     await expect(installSkill({ record, l, fetchImpl, rawBase: "https://raw.example.test" })).rejects.toThrow(/hash mismatch/i)
+    expect(() => readdirSync(join(l.storeDir, record.id))).toThrow()
+  })
+
+  it("refuses unsafe file paths", async () => {
+    const record = recordFrom("good-skill")
+    const content = new TextEncoder().encode(readFileSync(join(fixtures, "good-skill", "SKILL.md"), "utf8"))
+    const unsafeRecord = {
+      ...record,
+      files: [{ path: "../escape.md", sha256: sha256(content), size: content.length }],
+    }
+    const fetchImpl = (async () => new Response(content, { status: 200 })) as unknown as typeof fetch
+    const l = layout(mkdtempSync(join(tmpdir(), "skillhub-install-")))
+    await expect(installSkill({ record: unsafeRecord, l, fetchImpl, rawBase: "https://raw.example.test" })).rejects.toThrow(/unsafe file path/)
+    expect(existsSync(join(l.storeDir, "escape.md"))).toBe(false)
+    expect(existsSync(join(l.storeDir, "..", "escape.md"))).toBe(false)
+    expect(existsSync(join(l.storeDir, record.id, "..", "escape.md"))).toBe(false)
   })
 })
 
