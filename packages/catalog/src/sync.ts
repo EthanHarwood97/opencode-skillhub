@@ -94,9 +94,8 @@ export async function syncCatalog(opts: {
     evaluated = result.records
     evalStats = result.stats
     writeEvalCache(cacheFile, result.cache)
-  } else if (opts.weights) {
-    evaluated = rescoreAll(records, opts.weights)
   }
+  if (opts.weights) evaluated = rescoreAll(evaluated, opts.weights)
 
   const stateFile = join(opts.stateDir, "clusters-state.json")
   const refined = refineClusters(evaluated, {

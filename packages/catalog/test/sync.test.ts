@@ -62,6 +62,7 @@ describe("syncCatalog", () => {
     expect(result.summary).toMatchObject({ candidates: 3, published: 3, rejected: 0, evaluated: 2, cached: 0, skippedBudget: 1, duplicates: 1 })
     expect(evaluatedIds).toEqual(["acme-skills/pdf-tool", "beta-skills/pdf-tool"])
     expect(result.index.skills.find((s) => s.id === "acme-skills/pdf-tool")!.scores.total).toBe(88)
+    expect(result.index.skills.find((s) => s.id === "acme-skills/k8s-tool")!.scores.total).toBe(result.index.skills.find((s) => s.id === "acme-skills/k8s-tool")!.scores.quality)
     expect(result.index.skills.find((s) => s.id === "acme-skills/pdf-tool")!.relations.duplicates).toEqual(["beta-skills/pdf-tool"])
     expect(result.reconciliation.gaps).toEqual(["source broken-source: boom"])
     expect(result.reconciliation.reviewQueue).toContain("acme-skills/pdf-tool")
