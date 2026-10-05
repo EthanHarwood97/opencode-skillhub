@@ -11,6 +11,7 @@ import { activateSkill, deactivateSkill, planUpdate, applyUpdate, reviewSkill, f
 import { applyCalibration, formatTrending, readTrending, runCalibrate, runLabelExport, runLabelImport } from "./commands/depth.ts"
 import { resolveUiDist } from "./ui/paths.ts"
 import { startUiServer } from "./ui/server.ts"
+import { exportStaticSite } from "./ui/export.ts"
 import { join } from "node:path"
 
 const program = new Command("skillhub").option("--root <dir>", "SkillHub home (defaults to SKILLHUB_HOME)")
@@ -189,10 +190,20 @@ program
   .description("Open the local SkillHub dashboard")
   .option("--port <n>", "port to listen on", "4517")
   .option("--no-open", "do not open a browser")
-  .action(async (opts: { port: string; open: boolean }) => {
+  .option("--export <dir>", "write a read-only static gallery and exit")
+  .option("--catalog-dir <dir>", "catalog artifacts directory for export (defaults to the store catalog)")
+  .option("--max-records <n>", "max records in a static export", "5000")
+  .option("--force", "replace the export target if it already exists")
+  .action(async (opts: { port: string; open: boolean; export?: string; catalogDir?: string; maxRecords: string; force?: boolean }) => {
     const l = store()
     const uiDist = resolveUiDist()
     if (!uiDist) throw new Error('UI is not built — run "npm run ui:build" first')
+    if (opts.export) {
+      const result = exportStaticSite({ l, outDir: opts.export, uiDist, catalogDir: opts.catalogDir, maxRecords: Number(opts.maxRecords), force: opts.force })
+      console.log(`exported ${result.skills} skill(s) to ${result.outDir} (${Math.round(result.bytes / 1024)} KiB)`)
+      for (const warning of result.warnings) console.log(`  warning: ${warning}`)
+      return
+    }
     const server = await startUiServer({ root: l.root, uiDist, port: Number(opts.port), catalogDir: l.catalogDir })
     console.log(`SkillHub dashboard: ${server.url}`)
     if (opts.open) openBrowser(server.url)
