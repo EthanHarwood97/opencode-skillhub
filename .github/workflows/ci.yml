@@ -14,4 +14,5 @@ jobs:
           node-version: "22.x"
       - run: npm install
       - run: npm run typecheck
+      - run: npm install -g opencode-ai@1.18.18
       - run: npm test
