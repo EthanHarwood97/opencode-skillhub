@@ -1,4 +1,4 @@
-export const EMBED_DIM = 192
+export const EMBED_DIM = 1024
 
 export type Embedder = (text: string) => Float64Array
 
@@ -23,7 +23,7 @@ export function embedText(text: string, dim: number = EMBED_DIM): Float64Array {
   const vector = new Float64Array(dim)
   for (const token of tokenize(text)) {
     const h = hash32(token)
-    vector[h % dim] += (h >>> 20) & 1 ? -1 : 1
+    vector[h % dim] += 1
   }
   let norm = 0
   for (let i = 0; i < dim; i++) norm += vector[i]! * vector[i]!

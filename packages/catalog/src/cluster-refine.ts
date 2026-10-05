@@ -29,7 +29,7 @@ const mulberry32 = (seed: number) => () => {
 }
 
 /** Deterministic k-means++ over unit vectors. Empty clusters keep their previous centroid. */
-export function kmeans(vectors: Float64Array[], k: number, seed: number, iters = 25): { centroids: Float64Array[]; assignments: number[] } {
+function kmeansOnce(vectors: Float64Array[], k: number, seed: number, iters: number): { centroids: Float64Array[]; assignments: number[] } {
   const n = vectors.length
   const dim = vectors[0]?.length ?? 0
   const kk = Math.max(1, Math.min(k, n))
@@ -94,6 +94,22 @@ export function kmeans(vectors: Float64Array[], k: number, seed: number, iters =
     if (!changed && iter > 0) break
   }
   return { centroids, assignments }
+}
+
+export function kmeans(vectors: Float64Array[], k: number, seed: number, iters = 25, restarts = 8): { centroids: Float64Array[]; assignments: number[] } {
+  if (vectors.length === 0) return { centroids: [], assignments: [] }
+  let best: { centroids: Float64Array[]; assignments: number[] } | undefined
+  let bestInertia = Number.POSITIVE_INFINITY
+  for (let r = 0; r < restarts; r++) {
+    const result = kmeansOnce(vectors, k, seed + r, iters)
+    let inertia = 0
+    for (let i = 0; i < vectors.length; i++) inertia += 1 - cosine(vectors[i]!, result.centroids[result.assignments[i]!]!)
+    if (!best || inertia < bestInertia - 1e-12) {
+      best = result
+      bestInertia = inertia
+    }
+  }
+  return best!
 }
 
 const displayLabel = (tag: string) => tag.replace(/\b\w/g, (c) => c.toUpperCase())
