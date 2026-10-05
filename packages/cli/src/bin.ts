@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { spawn } from "node:child_process"
 import { Command } from "commander"
 import { layout, resolveHome } from "./paths.ts"
 import { readCatalog, findRecord, whyLines, formatHit } from "./commands/read.ts"
@@ -8,6 +9,8 @@ import { installSkill } from "./installer.ts"
 import { readLockfile, upsertEntry, writeLockfile } from "./lockfile.ts"
 import { activateSkill, deactivateSkill, planUpdate, applyUpdate, reviewSkill, findingRules } from "./write-helpers.ts"
 import { applyCalibration, formatTrending, readTrending, runCalibrate, runLabelExport, runLabelImport } from "./commands/depth.ts"
+import { resolveUiDist } from "./ui/paths.ts"
+import { startUiServer } from "./ui/server.ts"
 import { join } from "node:path"
 
 const program = new Command("skillhub").option("--root <dir>", "SkillHub home (defaults to SKILLHUB_HOME)")
@@ -174,6 +177,26 @@ program.command("deactivate").argument("<id>").action((id: string) => {
   deactivateSkill(l, id)
   console.log(`deactivated ${id}`)
 })
+
+const openBrowser = (url: string): void => {
+  const command = process.platform === "win32" ? "cmd" : process.platform === "darwin" ? "open" : "xdg-open"
+  const args = process.platform === "win32" ? ["/c", "start", "", url] : [url]
+  spawn(command, args, { detached: true, stdio: "ignore" }).unref()
+}
+
+program
+  .command("ui")
+  .description("Open the local SkillHub dashboard")
+  .option("--port <n>", "port to listen on", "4517")
+  .option("--no-open", "do not open a browser")
+  .action(async (opts: { port: string; open: boolean }) => {
+    const l = store()
+    const uiDist = resolveUiDist()
+    if (!uiDist) throw new Error('UI is not built — run "npm run ui:build" first')
+    const server = await startUiServer({ root: l.root, uiDist, port: Number(opts.port), catalogDir: l.catalogDir })
+    console.log(`SkillHub dashboard: ${server.url}`)
+    if (opts.open) openBrowser(server.url)
+  })
 
 const catalogCommand = program.command("catalog")
 catalogCommand
