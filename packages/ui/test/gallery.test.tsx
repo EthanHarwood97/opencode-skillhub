@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { screen, waitFor } from "@testing-library/react"
+import { screen, waitFor, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { http, HttpResponse } from "msw"
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest"
@@ -82,5 +82,43 @@ describe("gallery", () => {
     renderPage(<GalleryPage />)
     expect(await screen.findByText("Couldn't load the gallery.")).toBeInTheDocument()
     expect(screen.getByText("boom")).toBeInTheDocument()
+  })
+
+  it("keeps cards visible and shows an updating hint while filters load", async () => {
+    ;(globalThis as { __SKILLHUB__?: unknown }).__SKILLHUB__ = { mode: "live", token: "t" }
+    let release: () => void = () => {}
+    const gate = new Promise<void>((resolve) => {
+      release = resolve
+    })
+    server.use(
+      http.get("/api/skills", async ({ request }) => {
+        const category = new URL(request.url).searchParams.get("category")
+        if (category) {
+          await gate
+          return respond([card("acme/only-test", { name: "Only Test", category: "testing" })])
+        }
+        return respond(CARDS)
+      }),
+    )
+    const user = userEvent.setup()
+    const { container } = renderPage(<GalleryPage />)
+
+    expect(await screen.findByText("PDF Tool")).toBeInTheDocument()
+    await user.selectOptions(screen.getByLabelText("Category"), "testing")
+
+    expect(await screen.findByText(/updating/)).toBeInTheDocument()
+    expect(screen.getByText("PDF Tool")).toBeInTheDocument()
+    expect(container.querySelector('[class*="skeleton"]')).toBeNull()
+
+    release()
+    expect(await screen.findByText("Only Test")).toBeInTheDocument()
+  })
+
+  it("renders a single Active chip for an active skill", async () => {
+    ;(globalThis as { __SKILLHUB__?: unknown }).__SKILLHUB__ = { mode: "live", token: "t" }
+    server.use(http.get("/api/skills", () => respond([card("acme/live-skill", { name: "Live Skill", active: true, status: "active" })])))
+    renderPage(<GalleryPage />)
+    const cardLink = await screen.findByRole("link", { name: /Live Skill/ })
+    expect(within(cardLink).getAllByText("Active")).toHaveLength(1)
   })
 })

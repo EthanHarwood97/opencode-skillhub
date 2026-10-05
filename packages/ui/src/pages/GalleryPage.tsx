@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { Link, useSearchParams } from "react-router"
 import { Chip, EmptyState, ErrorState, ScoreMeter, Skeleton } from "../components/primitives.tsx"
@@ -29,7 +29,7 @@ export default function GalleryPage() {
   const [term, setTerm] = useState(query.q ?? "")
   useEffect(() => setTerm(query.q ?? ""), [query.q])
 
-  const { data, isPending, isError, error, refetch, isFetching } = useQuery({ queryKey: ["skills", query], queryFn: () => getSkills(query) })
+  const { data, isPending, isError, error, refetch, isFetching } = useQuery({ queryKey: ["skills", query], queryFn: () => getSkills(query), placeholderData: keepPreviousData })
 
   const update = (patch: Record<string, string | undefined>, resetPage = true) => {
     const next = new URLSearchParams(params)
@@ -147,7 +147,7 @@ function SkillCardView({ card }: { card: SkillCard }) {
         <Chip tone="muted">{categoryLabel(card.category)}</Chip>
         <Chip tone={card.risk}>{card.risk}</Chip>
         {card.active ? <Chip tone="accent">Active</Chip> : card.installed ? <Chip tone="info">Installed</Chip> : null}
-        {card.status !== "candidate" ? <Chip tone={card.status === "quarantined" ? "critical" : "neutral"}>{statusLabel(card.status)}</Chip> : null}
+        {card.status !== "candidate" && card.status !== "active" ? <Chip tone={card.status === "quarantined" ? "critical" : "neutral"}>{statusLabel(card.status)}</Chip> : null}
         {card.updateAvailable ? <Chip tone="medium">Update</Chip> : null}
       </span>
     </Link>
