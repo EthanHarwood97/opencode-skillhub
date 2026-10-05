@@ -4,6 +4,7 @@ import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 import { ensureDirs, layout, resolveHome } from "../src/paths.ts"
 import { readLockfile, upsertEntry, writeLockfile } from "../src/lockfile.ts"
+import { importCatalog, readCatalogIndex } from "../src/catalog-cache.ts"
 
 const tmp = () => mkdtempSync(join(tmpdir(), "skillhub-foundation-"))
 
@@ -44,5 +45,40 @@ describe("lockfile", () => {
     writeLockfile(l.lockfilePath, lock)
     const raw = JSON.parse(readFileSync(l.lockfilePath, "utf8"))
     expect(Object.keys(raw.skills)).toEqual(["acme/aaa", "acme/demo"])
+    expect(readFileSync(l.lockfilePath, "utf8").endsWith("\n")).toBe(true)
+  })
+})
+
+describe("catalog cache", () => {
+  it("throws when no catalog is present", () => {
+    expect(() => readCatalogIndex(tmp())).toThrow(/no catalog found/)
+  })
+
+  it("throws when an artifact is missing", () => {
+    const src = tmp()
+    writeFileSync(join(src, "index.json"), "{}")
+    expect(() => importCatalog(src, layout(tmp()))).toThrow(/artifact missing/)
+  })
+
+  it("imports all three artifacts and reads the index back", () => {
+    const src = tmp()
+    const l = layout(tmp())
+    ensureDirs(l)
+    const index = {
+      version: 1 as const,
+      generatedAt: "2026-10-05T00:00:00.000Z",
+      counts: { total: 0, byStatus: {}, byCategory: {} },
+      skills: [],
+    }
+    writeFileSync(join(src, "index.json"), JSON.stringify(index))
+    writeFileSync(join(src, "clusters.json"), "{}")
+    writeFileSync(join(src, "search.db"), "")
+    importCatalog(src, l)
+    expect(existsSync(join(l.catalogDir, "index.json"))).toBe(true)
+    expect(existsSync(join(l.catalogDir, "clusters.json"))).toBe(true)
+    expect(existsSync(join(l.catalogDir, "search.db"))).toBe(true)
+    const parsed = readCatalogIndex(l.catalogDir)
+    expect(parsed.version).toBe(1)
+    expect(parsed.skills).toEqual([])
   })
 })
