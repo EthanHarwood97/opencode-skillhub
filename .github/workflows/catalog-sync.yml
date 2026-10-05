@@ -15,6 +15,9 @@ on:
     - cron: "17 4 * * *"
 permissions:
   contents: write
+concurrency:
+  group: catalog-sync
+  cancel-in-progress: false
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -43,13 +46,13 @@ jobs:
           git add catalog
           git diff --cached --quiet || git commit -m "chore(catalog): sync $(date -u +%F)"
           git push
+      - uses: actions/upload-artifact@v4
+        with:
+          name: catalog
+          path: "catalog/*.json"
       - name: Publish search.db as a release asset
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release view catalog-latest >/dev/null 2>&1 || gh release create catalog-latest --title "SkillHub catalog (rolling)" --notes "search.db from the latest sync."
           gh release upload catalog-latest catalog/search.db --clobber
-      - uses: actions/upload-artifact@v4
-        with:
-          name: catalog
-          path: "catalog/*.json"
