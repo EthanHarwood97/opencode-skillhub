@@ -1,6 +1,8 @@
 export class RateLimitError extends Error {
-  constructor(readonly resetAt: string | null) {
+  readonly resetAt: string | null
+  constructor(resetAt: string | null) {
     super(resetAt ? `rate limited until ${resetAt}` : "rate limited")
+    this.resetAt = resetAt
   }
 }
 

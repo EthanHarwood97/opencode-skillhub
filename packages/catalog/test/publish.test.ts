@@ -49,4 +49,14 @@ describe("writeCatalog", () => {
     writeCatalog(records, b, now)
     expect(readFileSync(join(a, "index.json"), "utf8")).toBe(readFileSync(join(b, "index.json"), "utf8"))
   })
+
+  it("stores cluster and requires columns in search.db", () => {
+    const out = mkdtempSync(join(tmpdir(), "skillhub-publish-cols-"))
+    writeCatalog([makeRecord({ id: "acme/good", clusterId: "c-1234", requires: { runtime: ["python"], scripts: [], mcp: [], env: ["KEY"], services: [] } })], out, now)
+    const db = new DatabaseSync(join(out, "search.db"))
+    const row = db.prepare("SELECT cluster, requires FROM skills WHERE id = ?").get("acme/good") as { cluster: string; requires: string }
+    expect(row.cluster).toBe("c-1234")
+    expect(JSON.parse(row.requires).env).toEqual(["KEY"])
+    db.close()
+  })
 })

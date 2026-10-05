@@ -8,6 +8,7 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "catalog:build": "node packages/catalog/src/bin.ts",
+    "catalog:sync": "node packages/catalog/src/sync-bin.ts",
     "skillhub": "node packages/cli/src/bin.ts"
   },
   "devDependencies": {

@@ -4,8 +4,10 @@ export type LlmResult = { text: string; usage: LlmUsage; model: string }
 export type LlmClient = { complete: (messages: ChatMessage[]) => Promise<LlmResult> }
 
 export class LlmError extends Error {
-  constructor(message: string, readonly status?: number) {
+  readonly status?: number
+  constructor(message: string, status?: number) {
     super(message)
+    this.status = status
   }
 }
 

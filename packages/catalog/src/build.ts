@@ -10,17 +10,16 @@ export type BuildSummary = {
   rejected: { name: string; reason: string }[]
 }
 
-export function buildCatalog(opts: { candidates: Candidate[]; outDir: string; now?: Date }): {
-  summary: BuildSummary
-  index: CatalogIndex
-} {
-  const now = opts.now ?? new Date()
+export function normalizeAll(
+  candidates: Candidate[],
+  opts: { now: Date; maxIdleMonths?: number },
+): { records: SkillRecord[]; rejected: BuildSummary["rejected"]; bodies: Map<string, string> } {
   const records: SkillRecord[] = []
   const rejected: BuildSummary["rejected"] = []
+  const bodies = new Map<string, string>()
   const seen = new Set<string>()
-
-  for (const candidate of opts.candidates) {
-    const result = normalizeCandidate(candidate, { now })
+  for (const candidate of candidates) {
+    const result = normalizeCandidate(candidate, { now: opts.now, maxIdleMonths: opts.maxIdleMonths })
     if (result.record) {
       if (seen.has(result.record.id)) {
         rejected.push({ name: candidate.name, reason: `duplicate id ${result.record.id}` })
@@ -28,9 +27,20 @@ export function buildCatalog(opts: { candidates: Candidate[]; outDir: string; no
       }
       seen.add(result.record.id)
       records.push(result.record)
-    } else if (result.rejected) rejected.push({ name: candidate.name, reason: result.rejected.reason })
+      if (result.body !== undefined) bodies.set(result.record.id, result.body)
+    } else if (result.rejected) {
+      rejected.push({ name: candidate.name, reason: result.rejected.reason })
+    }
   }
+  return { records, rejected, bodies }
+}
 
+export function buildCatalog(opts: { candidates: Candidate[]; outDir: string; now?: Date }): {
+  summary: BuildSummary
+  index: CatalogIndex
+} {
+  const now = opts.now ?? new Date()
+  const { records, rejected } = normalizeAll(opts.candidates, { now })
   const index = writeCatalog(records, opts.outDir, now).index
   return {
     summary: {
