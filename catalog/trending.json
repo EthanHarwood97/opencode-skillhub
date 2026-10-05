@@ -1,6 +1,13 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-05T16:04:48.939Z",
+  "generatedAt": "2026-10-05T21:44:12.667Z",
   "topVelocity": [],
-  "newThisMonth": []
+  "newThisMonth": [
+    {
+      "id": "coldteadotai-abide/abide-compile",
+      "repo": "coldteadotai/abide",
+      "createdAt": "2026-09-18T10:41:48Z",
+      "stars": 547
+    }
+  ]
 }

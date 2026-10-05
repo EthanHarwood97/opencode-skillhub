@@ -1,13 +1,216 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-05T16:04:48.939Z",
+  "generatedAt": "2026-10-05T21:44:12.667Z",
   "clusters": [
     {
-      "id": "c-2196b96b",
-      "label": ".Agents",
+      "id": "c-0ec676cd",
+      "label": "Skills",
       "category": "engineering",
-      "top": "tt-a1i-archify/archify-review",
-      "alternatives": []
+      "top": "nexu-io-open-design/clinical-case-report",
+      "alternatives": [
+        "konglong87-superpm/pm-clarify",
+        "datit309-supergraph/diagnose"
+      ]
+    },
+    {
+      "id": "c-1896526b",
+      "label": "Skills",
+      "category": "engineering",
+      "top": "phuryn-pm-skills/ab-test-analysis",
+      "alternatives": [
+        "weizhena-deep-research-skills/research-report",
+        "datit309-supergraph/caveman"
+      ]
+    },
+    {
+      "id": "c-1dc9bd73",
+      "label": "Skills",
+      "category": "engineering",
+      "top": "cherryhq-cherry-studio/create-skill",
+      "alternatives": [
+        "cherryhq-cherry-studio/gh-create-issue",
+        "reactive-resume-reactive-resume/resume-builder"
+      ]
+    },
+    {
+      "id": "c-281f8486",
+      "label": "Skills",
+      "category": "engineering",
+      "top": "googleworkspace-cli/gws-calendar-agenda",
+      "alternatives": [
+        "googleworkspace-cli/gws-drive-upload",
+        "googleworkspace-cli/gws-admin-reports"
+      ]
+    },
+    {
+      "id": "c-2bc9bf7a",
+      "label": ".Cursor",
+      "category": "engineering",
+      "top": "kkkkhazix-khazix-skills/hv-analysis",
+      "alternatives": [
+        "ayghri-i-have-adhd/i-have-adhd",
+        "kkkkhazix-khazix-skills/khazix-writer"
+      ]
+    },
+    {
+      "id": "c-2bdec9cc",
+      "label": "Skills",
+      "category": "engineering",
+      "top": "thedotmack-claude-mem/mem-setup",
+      "alternatives": [
+        "thedotmack-claude-mem/install",
+        "thedotmack-claude-mem/mem-search"
+      ]
+    },
+    {
+      "id": "c-3b0fad4c",
+      "label": "Skills",
+      "category": "engineering",
+      "top": "nanocoai-nanoclaw/dial-cli",
+      "alternatives": [
+        "pascalorg-editor/open-pr",
+        "phuryn-pm-skills/job-stories"
+      ]
+    },
+    {
+      "id": "c-4d1481bf",
+      "label": "Skills",
+      "category": "engineering",
+      "top": "phuryn-pm-skills/cohort-analysis",
+      "alternatives": [
+        "av-skills/boost-modules",
+        "jeffallan-claude-skills/angular-architect"
+      ]
+    },
+    {
+      "id": "c-4d1d3c76",
+      "label": "Skills",
+      "category": "engineering",
+      "top": "phuryn-pm-skills/sql-queries",
+      "alternatives": [
+        "nexu-io-open-design/dating-web",
+        "charlieviettq-awesome-agent-skill/algo-ad-bidding"
+      ]
+    },
+    {
+      "id": "c-5e0dfafc",
+      "label": "Skills",
+      "category": "engineering",
+      "top": "egonex-ai-understand-anything/understand-chat",
+      "alternatives": [
+        "egonex-ai-understand-anything/understand-diff",
+        "egonex-ai-understand-anything/understand-onboard"
+      ]
+    },
+    {
+      "id": "c-6be8b2ba",
+      "label": "Api-And-Integration",
+      "category": "engineering",
+      "top": "nexu-io-open-design/critique",
+      "alternatives": [
+        "nexu-io-open-design/contact-widget",
+        "h4vzz-awesome-ai-agent-skills/model-deployment"
+      ]
+    },
+    {
+      "id": "c-71715719",
+      "label": "Skills",
+      "category": "engineering",
+      "top": "nexu-io-html-anything/article-sketchnote-editorial",
+      "alternatives": [
+        "nexu-io-html-anything/blog-post",
+        "nexu-io-html-anything/deck-blueprint"
+      ]
+    },
+    {
+      "id": "c-99caa1d2",
+      "label": "Skills",
+      "category": "engineering",
+      "top": "jeffallan-claude-skills/code-reviewer",
+      "alternatives": [
+        "phuryn-pm-skills/brainstorm-okrs",
+        "alibaba-open-code-review/open-code-review-delegate"
+      ]
+    },
+    {
+      "id": "c-b1f4e64a",
+      "label": "Skills",
+      "category": "engineering",
+      "top": "zenstory-ai-oh-story-claudecode/story-import",
+      "alternatives": [
+        "zenstory-ai-oh-story-claudecode/story-long-scan",
+        "zenstory-ai-oh-story-claudecode/story-short-analyze"
+      ]
+    },
+    {
+      "id": "c-b34e6e47",
+      "label": "Coding",
+      "category": "engineering",
+      "top": "jeffallan-claude-skills/atlassian-mcp",
+      "alternatives": [
+        "orchestra-research-ai-research-skills/rwkv",
+        "h4vzz-awesome-ai-agent-skills/data-labeling"
+      ]
+    },
+    {
+      "id": "c-b4bca3b8",
+      "label": ".Openclaw",
+      "category": "engineering",
+      "top": "dietrichgebert-ponytail/ponytail-gain",
+      "alternatives": [
+        "dietrichgebert-ponytail/ponytail-help",
+        "dietrichgebert-ponytail/ponytail-debt"
+      ]
+    },
+    {
+      "id": "c-b98ecc89",
+      "label": "Skills",
+      "category": "engineering",
+      "top": "fabricioctelles-skills/ard",
+      "alternatives": [
+        "sickn33-agentic-awesome-skills/360-feedback-system",
+        "cherryhq-cherry-studio/cherry-assistant-guide"
+      ]
+    },
+    {
+      "id": "c-bb37ffcf",
+      "label": "Skills",
+      "category": "engineering",
+      "top": "github-awesome-copilot/add-educational-comments",
+      "alternatives": [
+        "github-awesome-copilot/create-canvas-extension",
+        "weizhena-deep-research-skills/research"
+      ]
+    },
+    {
+      "id": "c-c72fa1b5",
+      "label": "Skills",
+      "category": "engineering",
+      "top": "jimliu-baoyu-skills/baoyu-danger-x-to-markdown",
+      "alternatives": [
+        "jimliu-baoyu-skills/baoyu-compress-image",
+        "jimliu-baoyu-skills/baoyu-format-markdown"
+      ]
+    },
+    {
+      "id": "c-d1306acd",
+      "label": "Golden",
+      "category": "engineering",
+      "top": "av-skills/agent-integration-testing",
+      "alternatives": [
+        "yusufkaraaslan-skill-seekers/chat",
+        "yusufkaraaslan-skill-seekers/chat-empty"
+      ]
+    },
+    {
+      "id": "c-fac393cd",
+      "label": "Skills",
+      "category": "engineering",
+      "top": "phuryn-pm-skills/dummy-dataset",
+      "alternatives": [
+        "jimliu-baoyu-skills/baoyu-danger-gemini-web",
+        "nexu-io-open-design/dcf-valuation"
+      ]
     }
   ]
 }
