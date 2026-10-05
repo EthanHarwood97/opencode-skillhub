@@ -29,4 +29,12 @@ describe("scanSkill", () => {
     })
     expect(risk.level).toBe("high")
   })
+
+  it("flags writes to Windows paths with single backslashes", () => {
+    const risk = scanSkill("> C:\\Windows\\System32\\temp.txt\n")
+    expect(risk.findings).toContainEqual(
+      expect.objectContaining({ rule: "fs.write-outside-skill", severity: "medium" }),
+    )
+    expect(risk.level).toBe("medium")
+  })
 })

@@ -18,7 +18,7 @@ export const SCAN_RULES: ScanRule[] = [
   { rule: "shell.rm-rf-root", category: "shell", severity: "critical", re: /\brm\s+-rf\s+\/(?!tmp\b)/i },
   { rule: "shell.powershell-encoded", category: "shell", severity: "high", re: /powershell(\.exe)?[^\n]*-e(nc|ncodedcommand)/i },
   { rule: "obfuscation.base64-decode", category: "obfuscation", severity: "medium", re: /(base64\s+(-d|--decode)|atob\s*\()/i },
-  { rule: "fs.write-outside-skill", category: "filesystem", severity: "medium", re: /(>>?|writeFile(Sync)?\s*\()[^\n]{0,40}(~\/|\/etc\/|C:\\\\Windows)/i },
+  { rule: "fs.write-outside-skill", category: "filesystem", severity: "medium", re: /(>>?|writeFile(Sync)?\s*\()[^\n]{0,40}(~\/|\/etc\/|C:\\Windows)/i },
 ]
 
 export function scanSkill(body: string, opts: { extraRules?: ScanRule[] } = {}): Risk {
