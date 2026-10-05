@@ -1,8 +1,9 @@
-import { useEffect, useRef, type ReactNode } from "react"
+import { useEffect, useId, useRef, type ReactNode } from "react"
 import styles from "./Modal.module.css"
 
 export function Modal({ open, title, onClose, children, footer }: { open: boolean; title: string; onClose: () => void; children: ReactNode; footer?: ReactNode }) {
   const ref = useRef<HTMLDialogElement>(null)
+  const titleId = useId()
 
   useEffect(() => {
     const dialog = ref.current
@@ -12,9 +13,9 @@ export function Modal({ open, title, onClose, children, footer }: { open: boolea
   }, [open])
 
   return (
-    <dialog ref={ref} className={styles.dialog} onClose={onClose} aria-labelledby="modal-title">
+    <dialog ref={ref} className={styles.dialog} onClose={onClose} aria-labelledby={titleId}>
       <div className={styles.head}>
-        <h2 id="modal-title" className={styles.title}>{title}</h2>
+        <h2 id={titleId} className={styles.title}>{title}</h2>
         <button type="button" className={styles.close} onClick={onClose} aria-label="Close dialog">×</button>
       </div>
       <div className={styles.body}>{children}</div>

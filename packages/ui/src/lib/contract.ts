@@ -51,6 +51,7 @@ export type SkillCard = {
 
 export type SkillDetail = SkillCard & {
   scores: ScoresLike
+  riskFindings: { rule: string; severity: string; line: number; match: string }[]
   requires: RequiresLike
   files: { path: string; size: number }[]
   relations: RelationsLike

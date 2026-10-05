@@ -92,6 +92,7 @@ export function toDetail(record: SkillRecord, lock: Lockfile): SkillDetail {
   return {
     ...toCard(record, lock),
     scores: record.scores,
+    riskFindings: record.risk.findings.map((finding) => ({ rule: finding.rule, severity: finding.severity, line: finding.line, match: finding.match })),
     requires: record.requires,
     files: record.files.map((file) => ({ path: file.path, size: file.size })),
     relations: record.relations,
