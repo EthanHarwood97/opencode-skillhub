@@ -2,6 +2,8 @@ import { tool } from "@opencode-ai/plugin"
 import type { SearchRow } from "./search-core.ts"
 import { formatHits, ROUTER_DESCRIPTION } from "./search-core.ts"
 
+export { makeLoadTool } from "./load-core.ts"
+
 export type RouterDeps = { search: (query: string, limit?: number) => Promise<SearchRow[]> }
 
 export function makeRouterTool(deps: RouterDeps) {
