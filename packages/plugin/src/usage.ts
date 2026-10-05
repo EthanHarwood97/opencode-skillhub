@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto"
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
+import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs"
 import { dirname, join } from "node:path"
 
 export type Usage = { version: 1; loads: Record<string, { count: number; lastAt: string }>; searches: number }
@@ -9,14 +9,26 @@ export function usageFileFor(root: string, projectDir: string): string {
   return join(root, "projects", hash, "usage.json")
 }
 
+const emptyUsage = (): Usage => ({ version: 1, loads: {}, searches: 0 })
+
 export function readUsage(file: string): Usage {
-  if (!existsSync(file)) return { version: 1, loads: {}, searches: 0 }
-  return JSON.parse(readFileSync(file, "utf8")) as Usage
+  if (!existsSync(file)) return emptyUsage()
+  try {
+    const parsed = JSON.parse(readFileSync(file, "utf8")) as Usage
+    if (!parsed || parsed.version !== 1 || typeof parsed.loads !== "object" || parsed.loads === null || Array.isArray(parsed.loads)) {
+      return emptyUsage()
+    }
+    return { version: 1, loads: parsed.loads, searches: typeof parsed.searches === "number" ? parsed.searches : 0 }
+  } catch {
+    return emptyUsage()
+  }
 }
 
 const write = (file: string, usage: Usage): Usage => {
   mkdirSync(dirname(file), { recursive: true })
-  writeFileSync(file, JSON.stringify(usage, null, 2) + "\n")
+  const tmp = `${file}.${process.pid}.${Math.random().toString(36).slice(2)}.tmp`
+  writeFileSync(tmp, JSON.stringify(usage, null, 2) + "\n")
+  renameSync(tmp, file)
   return usage
 }
 

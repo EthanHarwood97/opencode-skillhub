@@ -43,4 +43,15 @@ describe("readers", () => {
     const lock = readLock(root())
     expect(lock).toEqual({ version: 1, skills: {} })
   })
+
+  it("defaults corrupt or malformed state files instead of throwing", () => {
+    const r = root()
+    mkdirSync(join(r, "catalog"), { recursive: true })
+    writeFileSync(join(r, "catalog", "index.json"), "{not json")
+    writeFileSync(join(r, "lockfile.json"), "{not json")
+    expect(readCatalogIndex(r)).toBeUndefined()
+    expect(readLock(r)).toEqual({ version: 1, skills: {} })
+    writeFileSync(join(r, "lockfile.json"), "null")
+    expect(readLock(r)).toEqual({ version: 1, skills: {} })
+  })
 })

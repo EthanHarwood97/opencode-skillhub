@@ -27,9 +27,11 @@ export const SkillHubPlugin: Plugin = async ({ client, directory }) => {
     tool: {
       skillhub_search: makeRouterTool({
         search: async (q, limit) => {
-          const usageFile = usageFileFor(root, directory)
-          recordSearch(usageFile, new Date())
-          return searchRuntime(root, q, limit)
+          const rows = await searchRuntime(root, q, limit)
+          try {
+            recordSearch(usageFileFor(root, directory), new Date())
+          } catch {}
+          return rows
         },
       }),
       skillhub_load: makeLoadTool({

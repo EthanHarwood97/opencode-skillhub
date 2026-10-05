@@ -1,6 +1,6 @@
-import { mkdtempSync } from "node:fs"
+import { mkdirSync, mkdtempSync, readdirSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
-import { join } from "node:path"
+import { dirname, join } from "node:path"
 import { describe, expect, it } from "vitest"
 import { enforceBudget, estimateAdvertisedTokens, promotionCandidates, readUsage, recordLoad, recordSearch, usageFileFor } from "../src/manage-core.ts"
 
@@ -16,6 +16,18 @@ describe("usage", () => {
     expect(u1.searches).toBe(1)
     const u2 = readUsage(file)
     expect(u2.loads["a/one"]?.count).toBe(1)
+  })
+
+  it("recovers from corrupt usage files and writes atomically", () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-usage-"))
+    const file = usageFileFor(root, "C:/projects/beta")
+    mkdirSync(dirname(file), { recursive: true })
+    writeFileSync(file, "{not json")
+    expect(readUsage(file)).toEqual({ version: 1, loads: {}, searches: 0 })
+    const u = recordSearch(file, new Date("2026-10-05T00:00:00Z"))
+    expect(u.searches).toBe(1)
+    expect(readUsage(file).searches).toBe(1)
+    expect(readdirSync(dirname(file))).toEqual(["usage.json"])
   })
 })
 

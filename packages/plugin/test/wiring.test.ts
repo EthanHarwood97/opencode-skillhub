@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { dirname, join } from "node:path"
 import { describe, expect, it } from "vitest"
-import { usageFileFor } from "../src/manage-core.ts"
+import { readUsage, usageFileFor } from "../src/manage-core.ts"
 import { renderStatus } from "../src/status-core.ts"
 import { collectStatus, listManagedAdverts } from "../src/wiring.ts"
 import { SkillHubPlugin } from "../src/plugin.ts"
@@ -122,5 +122,19 @@ describe("SkillHubPlugin", () => {
     } as any
     const hooks = await SkillHubPlugin(input)
     expect(Object.keys(hooks.tool!)).toEqual(["skillhub_search", "skillhub_load"])
+  })
+
+  it("does not record a search when the runtime query fails", async () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-wire-"))
+    const prev = process.env.SKILLHUB_HOME
+    process.env.SKILLHUB_HOME = root
+    try {
+      const hooks = await SkillHubPlugin({ client: { tui: { showToast: async () => ({}) } }, directory: "C:/proj" } as any)
+      await expect((hooks.tool!.skillhub_search as any).execute({ query: "anything" })).rejects.toThrow(/bun:sqlite/)
+      expect(readUsage(usageFileFor(root, "C:/proj")).searches).toBe(0)
+    } finally {
+      if (prev === undefined) delete process.env.SKILLHUB_HOME
+      else process.env.SKILLHUB_HOME = prev
+    }
   })
 })
