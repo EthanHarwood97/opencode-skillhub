@@ -4,13 +4,13 @@ on:
     inputs:
       topics:
         description: Comma-separated GitHub topics
-        default: "claude-skills,agent-skills,opencode-skills"
+        default: "claude-skills,agent-skills,opencode-skills,claude-code-skills,ai-agent-skills"
       max_repos:
         description: Repos per topic
-        default: "30"
+        default: "40"
       max_skills:
         description: Skills per repo
-        default: "10"
+        default: "20"
   schedule:
     - cron: "17 4 * * *"
 permissions:
@@ -32,11 +32,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: >-
           npm run catalog:sync --
-          --topics "${{ inputs.topics || 'claude-skills,agent-skills,opencode-skills' }}"
-          --max-repos "${{ inputs.max_repos || '30' }}"
-          --max-skills "${{ inputs.max_skills || '10' }}"
+          --topics "${{ inputs.topics || 'claude-skills,agent-skills,opencode-skills,claude-code-skills,ai-agent-skills' }}"
+          --max-repos "${{ inputs.max_repos || '40' }}"
+          --max-skills "${{ inputs.max_skills || '20' }}"
+          --pages 2
+          --min-stars 5
+          --seeds seed-repos.json
           --agentskills https://agentskills.codes
-          --agentskills-limit 100
+          --agentskills-limit 200
           --out catalog
           --state catalog/state
       - name: Commit refreshed artifacts

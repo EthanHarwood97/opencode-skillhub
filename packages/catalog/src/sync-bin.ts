@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs"
+import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 import { parseArgs } from "node:util"
 import { readCalibration } from "./calibrate.ts"
@@ -8,9 +8,11 @@ import { makeRubricEvaluator } from "./rubric.ts"
 import { fetchAgentskills } from "./sources/agentskills.ts"
 import { loadFixtureCandidates } from "./sources/fixtures.ts"
 import { fetchRepoSkills, searchReposByTopic } from "./sources/github.ts"
+import { fetchSeedRepos, type SeedRepo } from "./sources/seeds.ts"
 import type { Candidate, FetchLike } from "./sources/types.ts"
 import { RateLimitError } from "./sources/util.ts"
 import { syncCatalog, type SyncSource } from "./sync.ts"
+import { TOPIC_HINTS } from "./taxonomy.ts"
 
 const { values } = parseArgs({
   options: {
@@ -18,6 +20,10 @@ const { values } = parseArgs({
     topics: { type: "string" },
     "max-repos": { type: "string", default: "25" },
     "max-skills": { type: "string", default: "20" },
+    pages: { type: "string", default: "1" },
+    "min-stars": { type: "string", default: "0" },
+    seeds: { type: "string" },
+    "seed-limit": { type: "string", default: "0" },
     agentskills: { type: "string" },
     "agentskills-limit": { type: "string", default: "50" },
     out: { type: "string", default: "catalog" },
@@ -25,18 +31,21 @@ const { values } = parseArgs({
     llm: { type: "boolean", default: false },
     "max-evals": { type: "string", default: "0" },
     "max-usd": { type: "string", default: "0" },
+    "cost-per-eval": { type: "string", default: "0.002" },
     "llm-model": { type: "string" },
     "llm-base-url": { type: "string" },
     "no-vectors": { type: "boolean", default: false },
   },
 })
 
-if (!values.fixtures && !values.topics && !values.agentskills) {
-  console.error("usage: catalog:sync [--fixtures <dir>] [--topics a,b] [--agentskills <baseUrl>] [--llm --max-usd <usd> [--max-evals <n>]]")
+if (!values.fixtures && !values.topics && !values.agentskills && !values.seeds) {
+  console.error("usage: catalog:sync [--fixtures <dir>] [--topics a,b] [--seeds <file>] [--agentskills <baseUrl>] [--llm --max-usd <usd> [--max-evals <n>]]")
   process.exit(2)
 }
 
-const fetchImpl = fetch as unknown as FetchLike
+const fetchWithTimeout = (input: string | URL | Request, init?: RequestInit): Promise<Response> =>
+  fetch(input, { ...init, signal: AbortSignal.timeout(45_000) })
+const fetchImpl = fetchWithTimeout as unknown as FetchLike
 const stateDir = values.state ?? join(values.out, "state")
 
 let vectors: { embedder: EmbeddingProvider } | undefined
@@ -48,7 +57,7 @@ else if (vectorKey) {
   console.log(`vectors: ${embedder.model} @ ${embedder.dim} dims`)
 } else console.log("vectors: skipped (no GOOGLE_API_KEY/GEMINI_API_KEY)")
 
-let evaluation: { evaluate: ReturnType<typeof makeRubricEvaluator>; maxEvals?: number; maxUsd: number } | undefined
+let evaluation: { evaluate: ReturnType<typeof makeRubricEvaluator>; maxEvals?: number; maxUsd: number; costPerEvalUsd?: number } | undefined
 if (values.llm) {
   const maxUsd = Number(values["max-usd"])
   if (!(maxUsd > 0)) {
@@ -63,7 +72,7 @@ if (values.llm) {
   const baseUrl = values["llm-base-url"] ?? process.env.SKILLHUB_LLM_BASE_URL ?? "https://api.deepseek.com/v1"
   const model = values["llm-model"] ?? process.env.SKILLHUB_LLM_MODEL ?? "deepseek-chat"
   console.log(`llm: ${model} via ${baseUrl}; cap $${maxUsd}${values["max-evals"] !== "0" ? `, ${values["max-evals"]} evals` : ""}`)
-  evaluation = { evaluate: makeRubricEvaluator(makeOpenAiCompatClient({ baseUrl, apiKey, model })), maxEvals: Number(values["max-evals"]) || undefined, maxUsd }
+  evaluation = { evaluate: makeRubricEvaluator(makeOpenAiCompatClient({ baseUrl, apiKey, model })), maxEvals: Number(values["max-evals"]) || undefined, maxUsd, costPerEvalUsd: Number(values["cost-per-eval"]) || undefined }
 }
 
 const sources: SyncSource[] = []
@@ -75,17 +84,20 @@ if (values.fixtures) {
 
 if (values.topics) {
   const token = process.env.GITHUB_TOKEN
+  const pages = Math.max(1, Number(values.pages) || 1)
+  const minStars = Math.max(0, Number(values["min-stars"]) || 0)
   for (const topic of values.topics.split(",").map((t) => t.trim()).filter(Boolean)) {
+    const categoryHint = TOPIC_HINTS[topic]
     sources.push({
       name: `github:${topic}`,
       load: async () => {
-        const hits = await searchReposByTopic({ topic, token, fetchImpl, limit: Number(values["max-repos"]) })
+        const hits = await searchReposByTopic({ topic, token, fetchImpl, limit: Number(values["max-repos"]), pages, minStars })
         const out: Candidate[] = []
         const warnings: string[] = []
         for (const hit of hits) {
           if (hit.archived) continue
           try {
-            out.push(...(await fetchRepoSkills({ repo: hit.repo, ref: hit.defaultBranch, token, fetchImpl, license: hit.license, signals: hit.signals, maxSkills: Number(values["max-skills"]) })))
+            out.push(...(await fetchRepoSkills({ repo: hit.repo, ref: hit.defaultBranch, token, fetchImpl, license: hit.license, signals: hit.signals, maxSkills: Number(values["max-skills"]), categoryHint })))
           } catch (error) {
             if (error instanceof RateLimitError) throw error
             warnings.push(`repo ${hit.repo}: ${error instanceof Error ? error.message : String(error)}`)
@@ -95,6 +107,25 @@ if (values.topics) {
       },
     })
   }
+}
+
+if (values.seeds) {
+  const seedPath = values.seeds
+  if (!existsSync(seedPath)) {
+    console.error(`--seeds file not found: ${seedPath}`)
+    process.exit(2)
+  }
+  const allSeeds = JSON.parse(readFileSync(seedPath, "utf8")) as SeedRepo[]
+  const seedLimit = Math.max(0, Number(values["seed-limit"]) || 0)
+  const seeds = seedLimit > 0 ? allSeeds.slice(0, seedLimit) : allSeeds
+  console.log(`seeds: ${seeds.length}${seedLimit > 0 ? ` of ${allSeeds.length}` : ""} from ${seedPath}`)
+  sources.push({
+    name: "seeds",
+    load: async () => {
+      const result = await fetchSeedRepos({ seeds, token: process.env.GITHUB_TOKEN, fetchImpl, maxSkills: Number(values["max-skills"]) })
+      return result.warnings.length > 0 ? { candidates: result.candidates, warnings: result.warnings } : result.candidates
+    },
+  })
 }
 
 if (values.agentskills) {
@@ -109,6 +140,11 @@ console.log(`sync: ${sources.length} source(s) -> ${values.out} (state ${stateDi
 const result = await syncCatalog({ sources, outDir: values.out, stateDir, weights, evaluation, vectors })
 const summary = result.summary
 console.log(`sync: ${summary.candidates} candidate(s) -> ${summary.published} published, ${summary.quarantined} quarantined, ${summary.rejected} rejected`)
+const spread = Object.entries(result.index.counts.byCategory).sort((a, b) => b[1] - a[1])
+console.log(`  categories: ${spread.map(([category, count]) => `${category}:${count}`).join(", ")}`)
+if (summary.topRejections.length > 0) {
+  console.log(`  rejected: ${summary.topRejections.map((entry) => `${entry.reason} x${entry.count}`).join(", ")}`)
+}
 const failedNote = summary.failed > 0 ? `, failed ${summary.failed}` : ""
 console.log(`  evaluated ${summary.evaluated} (cached ${summary.cached}, budget-skipped ${summary.skippedBudget}${failedNote}, spend $${summary.spentUsd.toFixed(4)}), duplicates ${summary.duplicates}`)
 console.log(`  added ${result.reconciliation.totals.added.length}, removed ${result.reconciliation.totals.removed.length}, changed ${result.reconciliation.totals.changed.length}`)

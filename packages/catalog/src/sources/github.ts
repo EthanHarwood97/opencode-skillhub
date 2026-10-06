@@ -29,17 +29,60 @@ export async function searchReposByTopic(opts: {
   fetchImpl: FetchLike
   limit?: number
   page?: number
+  pages?: number
+  minStars?: number
+  pushedAfter?: string
 }): Promise<RepoSearchHit[]> {
   const limit = opts.limit ?? 50
-  const page = opts.page ?? 1
-  const url = `https://api.github.com/search/repositories?q=topic:${encodeURIComponent(opts.topic)}&per_page=${Math.min(100, limit)}&page=${page}&sort=stars&order=desc`
-  const res = await (opts.fetchImpl as unknown as typeof fetch)(url, { headers: headers(opts.token) })
+  const firstPage = opts.page ?? 1
+  const pages = Math.max(1, opts.pages ?? 1)
+  const qualifiers = [`topic:${opts.topic}`]
+  if (opts.minStars && opts.minStars > 0) qualifiers.push(`stars:>=${opts.minStars}`)
+  if (opts.pushedAfter) qualifiers.push(`pushed:>=${opts.pushedAfter}`)
+  const query = qualifiers.join(" ")
+
+  const hits: RepoSearchHit[] = []
+  const seen = new Set<string>()
+  for (let page = firstPage; page < firstPage + pages && hits.length < limit; page++) {
+    const url = `https://api.github.com/search/repositories?q=${encodeURIComponent(query)}&per_page=${Math.min(100, limit)}&page=${page}&sort=stars&order=desc`
+    const res = await (opts.fetchImpl as unknown as typeof fetch)(url, { headers: headers(opts.token) })
+    checkRateLimit(res)
+    if (!res.ok) throw new Error(`github search failed: ${res.status}`)
+    const body = (await res.json()) as { items: any[] }
+    if (body.items.length === 0) break
+    for (const item of body.items) {
+      if (seen.has(item.full_name)) continue
+      seen.add(item.full_name)
+      hits.push({
+        repo: item.full_name as string,
+        defaultBranch: (item.default_branch as string | undefined) ?? "HEAD",
+        signals: {
+          stars: item.stargazers_count ?? 0,
+          forks: item.forks_count ?? 0,
+          pushedAt: item.pushed_at ?? null,
+          createdAt: item.created_at ?? null,
+          archived: Boolean(item.archived),
+        },
+        license: item.license?.spdx_id && item.license.spdx_id !== "NOASSERTION" ? item.license.spdx_id : undefined,
+        archived: Boolean(item.archived),
+      })
+    }
+  }
+  return hits.slice(0, limit)
+}
+
+export type RepoInfo = { repo: string; defaultBranch: string; license?: string; archived: boolean; signals: Partial<Signals> }
+
+export async function fetchRepo(opts: { repo: string; token?: string; fetchImpl: FetchLike }): Promise<RepoInfo> {
+  const res = await (opts.fetchImpl as unknown as typeof fetch)(`https://api.github.com/repos/${opts.repo}`, { headers: headers(opts.token) })
   checkRateLimit(res)
-  if (!res.ok) throw new Error(`github search failed: ${res.status}`)
-  const body = (await res.json()) as { items: any[] }
-  return body.items.slice(0, limit).map((item) => ({
+  if (!res.ok) throw new Error(`github repo lookup failed: ${res.status}`)
+  const item = (await res.json()) as any
+  return {
     repo: item.full_name as string,
     defaultBranch: (item.default_branch as string | undefined) ?? "HEAD",
+    license: item.license?.spdx_id && item.license.spdx_id !== "NOASSERTION" ? item.license.spdx_id : undefined,
+    archived: Boolean(item.archived),
     signals: {
       stars: item.stargazers_count ?? 0,
       forks: item.forks_count ?? 0,
@@ -47,9 +90,7 @@ export async function searchReposByTopic(opts: {
       createdAt: item.created_at ?? null,
       archived: Boolean(item.archived),
     },
-    license: item.license?.spdx_id && item.license.spdx_id !== "NOASSERTION" ? item.license.spdx_id : undefined,
-    archived: Boolean(item.archived),
-  }))
+  }
 }
 
 export async function fetchRepoSkills(opts: {
@@ -62,6 +103,8 @@ export async function fetchRepoSkills(opts: {
   maxSkills?: number
   maxFileBytes?: number
   concurrency?: number
+  categoryHint?: string
+  labelHints?: string[]
 }): Promise<Candidate[]> {
   const api = async <T>(url: string): Promise<T> => {
     const res = await (opts.fetchImpl as unknown as typeof fetch)(url, { headers: headers(opts.token) })
@@ -83,16 +126,16 @@ export async function fetchRepoSkills(opts: {
   const results = await mapLimit(dirs, concurrency, async (dir): Promise<Candidate | undefined> => {
     const paths = tree.tree.filter((node) => node.type === "blob" && node.path.startsWith(`${dir}/`)).map((node) => node.path)
     if (paths.length > 50) return undefined
-    const files: CandidateFile[] = []
-    for (const path of paths) {
+    const fetched = await mapLimit(paths, 4, async (path): Promise<CandidateFile | undefined> => {
       const res = await (opts.fetchImpl as unknown as typeof fetch)(`https://raw.githubusercontent.com/${opts.repo}/${tree.sha}/${path}`, {
         headers: headers(opts.token),
       })
       if (!res.ok) throw new Error(`raw fetch failed for ${path}`)
       const bytes = new Uint8Array(await res.arrayBuffer())
-      if (bytes.byteLength > maxBytes) continue
-      files.push({ path, bytes, content: new TextDecoder().decode(bytes), size: bytes.byteLength })
-    }
+      if (bytes.byteLength > maxBytes) return undefined
+      return { path, bytes, content: new TextDecoder().decode(bytes), size: bytes.byteLength }
+    })
+    const files = fetched.filter((file): file is CandidateFile => file !== undefined)
     if (!files.some((file) => file.path.endsWith("SKILL.md") && file.content)) return undefined
     return {
       source: { kind: "github", repo: opts.repo, path: `${dir}/SKILL.md`, ref: tree.sha, license: opts.license, licenseFlags: [] },
@@ -101,6 +144,8 @@ export async function fetchRepoSkills(opts: {
       tags: dir.split("/").slice(0, -1).slice(-2),
       signals: opts.signals ?? {},
       files,
+      ...(opts.categoryHint ? { categoryHint: opts.categoryHint } : {}),
+      ...(opts.labelHints ? { labelHints: opts.labelHints } : {}),
     }
   })
   return results.filter((candidate): candidate is Candidate => candidate !== undefined)

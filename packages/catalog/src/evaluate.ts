@@ -1,6 +1,7 @@
 import { evalKey, type EvalCache, type EvalCacheEntry } from "./eval-cache.ts"
 import { RUBRIC_VERSION, type RubricEvaluation } from "./rubric.ts"
 import { rescoreWithQuality, type ScoreWeights } from "./score.ts"
+import { mapLimit } from "./sources/util.ts"
 import type { SkillRecord } from "./types.ts"
 
 export type EvaluateInput = { id: string; name: string; description: string; body: string }
@@ -37,7 +38,7 @@ const markBudgetSkip = (record: SkillRecord): SkillRecord => ({
   scores: { ...record.scores, reasons: [...record.scores.reasons, "quality: heuristic fallback (evaluation budget reached)"] },
 })
 
-/** Delta-only, budget-capped rubric evaluation. Only candidate-status records are evaluated. */
+/** Delta-only, budget-capped rubric evaluation. Only candidate-status records are evaluated. Output order matches input order. */
 export async function evaluateRecords(
   records: SkillRecord[],
   opts: {
@@ -47,6 +48,7 @@ export async function evaluateRecords(
     maxEvals?: number
     maxUsd?: number
     costPerEvalUsd?: number
+    concurrency?: number
     weights?: ScoreWeights
     now: Date
   },
@@ -54,62 +56,88 @@ export async function evaluateRecords(
   const maxEvals = opts.maxEvals ?? Number.POSITIVE_INFINITY
   const maxUsd = opts.maxUsd ?? Number.POSITIVE_INFINITY
   const costPerEvalUsd = opts.costPerEvalUsd ?? 0.01
+  const concurrency = Math.max(1, opts.concurrency ?? 4)
   const entries = { ...opts.cache.entries }
   const stats: EvaluateStats = { evaluated: 0, failed: 0, cached: 0, skippedBudget: 0, skippedQuarantined: 0, skippedNoBody: 0, spentUsd: 0 }
-  const out: SkillRecord[] = []
+
+  type Plan = { kind: "record"; record: SkillRecord } | { kind: "pending"; record: SkillRecord; body: string }
+  const plan: Plan[] = []
 
   for (const record of records) {
     if (record.status !== "candidate") {
       stats.skippedQuarantined++
-      out.push(record)
+      plan.push({ kind: "record", record })
       continue
     }
     const key = evalKey(record.contentHash, RUBRIC_VERSION)
     const hit = entries[key]
     if (hit) {
       stats.cached++
-      out.push(applyEntry(record, hit, opts.weights))
+      plan.push({ kind: "record", record: applyEntry(record, hit, opts.weights) })
       continue
     }
     const body = opts.bodies.get(record.id)
     if (body === undefined) {
       stats.skippedNoBody++
-      out.push(record)
+      plan.push({ kind: "record", record })
       continue
     }
-    if (stats.evaluated >= maxEvals || stats.spentUsd + costPerEvalUsd > maxUsd) {
-      stats.skippedBudget++
-      out.push(markBudgetSkip(record))
-      continue
-    }
-    let evaluation: RubricEvaluation
+    plan.push({ kind: "pending", record, body })
+  }
+
+  const pendingIndexes = plan.map((entry, index) => (entry.kind === "pending" ? index : -1)).filter((index) => index >= 0)
+  const budgetSlots = Number.isFinite(maxUsd) ? Math.max(0, Math.floor((maxUsd - stats.spentUsd) / costPerEvalUsd + 1e-9)) : Number.POSITIVE_INFINITY
+  const evalSlots = Number.isFinite(maxEvals) ? Math.max(0, maxEvals - stats.evaluated) : Number.POSITIVE_INFINITY
+  const runnableCount = Math.min(budgetSlots, evalSlots, pendingIndexes.length)
+  const runIndexes = pendingIndexes.slice(0, runnableCount)
+  const skipIndexes = pendingIndexes.slice(runnableCount)
+
+  for (const index of skipIndexes) {
+    stats.skippedBudget++
+    const pending = plan[index] as { kind: "pending"; record: SkillRecord }
+    plan[index] = { kind: "record", record: markBudgetSkip(pending.record) }
+  }
+
+  const results = await mapLimit(runIndexes, concurrency, async (index) => {
+    const pending = plan[index] as { kind: "pending"; record: SkillRecord; body: string }
     try {
-      evaluation = await opts.evaluate({ id: record.id, name: record.name, description: record.description, body })
+      const evaluation = await opts.evaluate({ id: pending.record.id, name: pending.record.name, description: pending.record.description, body: pending.body })
+      return { index, evaluation, error: undefined }
     } catch (error) {
+      return { index, evaluation: undefined, error }
+    }
+  })
+
+  for (const result of results) {
+    const pending = plan[result.index] as { kind: "pending"; record: SkillRecord; body: string }
+    if (result.error !== undefined || result.evaluation === undefined) {
       stats.failed++
-      const message = error instanceof Error ? error.message : String(error)
-      out.push({
-        ...record,
-        scores: { ...record.scores, reasons: [...record.scores.reasons, `quality: evaluation failed (${message.slice(0, 200)})`] },
-      })
+      const message = result.error instanceof Error ? result.error.message : String(result.error)
+      plan[result.index] = {
+        kind: "record",
+        record: {
+          ...pending.record,
+          scores: { ...pending.record.scores, reasons: [...pending.record.scores.reasons, `quality: evaluation failed (${message.slice(0, 200)})`] },
+        },
+      }
       continue
     }
     stats.evaluated++
-    stats.spentUsd = Math.round((stats.spentUsd + evaluation.costUsd) * 1e6) / 1e6
+    stats.spentUsd = Math.round((stats.spentUsd + result.evaluation.costUsd) * 1e6) / 1e6
     const entry: EvalCacheEntry = {
-      contentHash: record.contentHash,
+      contentHash: pending.record.contentHash,
       rubricVersion: RUBRIC_VERSION,
-      score: evaluation.result.score,
-      dimensions: evaluation.result.dimensions,
-      reasoning: evaluation.result.reasoning,
-      flags: evaluation.result.flags,
-      model: evaluation.model,
-      costUsd: evaluation.costUsd,
+      score: result.evaluation.result.score,
+      dimensions: result.evaluation.result.dimensions,
+      reasoning: result.evaluation.result.reasoning,
+      flags: result.evaluation.result.flags,
+      model: result.evaluation.model,
+      costUsd: result.evaluation.costUsd,
       evaluatedAt: opts.now.toISOString(),
     }
-    entries[key] = entry
-    out.push(applyEntry(record, entry, opts.weights))
+    entries[evalKey(pending.record.contentHash, RUBRIC_VERSION)] = entry
+    plan[result.index] = { kind: "record", record: applyEntry(pending.record, entry, opts.weights) }
   }
 
-  return { records: out, cache: { version: 1, entries }, stats }
+  return { records: plan.map((entry) => entry.record), cache: { version: 1, entries }, stats }
 }

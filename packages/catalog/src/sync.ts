@@ -29,6 +29,7 @@ export type SyncSummary = {
   skippedBudget: number
   spentUsd: number
   duplicates: number
+  topRejections: { reason: string; count: number }[]
 }
 
 export type SyncResult = {
@@ -88,6 +89,15 @@ export async function syncCatalog(opts: {
   }
 
   const { records, rejected, bodies } = normalizeAll(candidates, { now })
+  const rejectionCounts = new Map<string, number>()
+  for (const entry of rejected) {
+    const reason = (entry.reason.split(";")[0] ?? entry.reason).split(":").slice(0, 1).join(":").trim().slice(0, 80)
+    rejectionCounts.set(reason, (rejectionCounts.get(reason) ?? 0) + 1)
+  }
+  const topRejections = [...rejectionCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([reason, count]) => ({ reason, count }))
 
   let evaluated: SkillRecord[] = records
   let evalStats: EvaluateStats | undefined
@@ -151,6 +161,7 @@ export async function syncCatalog(opts: {
       skippedBudget: evalStats?.skippedBudget ?? 0,
       spentUsd: evalStats?.spentUsd ?? 0,
       duplicates: refined.duplicates.length,
+      topRejections,
     },
     index,
     trending,

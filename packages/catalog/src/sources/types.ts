@@ -21,4 +21,5 @@ export type Candidate = {
   files: CandidateFile[]
   signals: Partial<Signals>
   categoryHint?: string
+  labelHints?: string[]
 }

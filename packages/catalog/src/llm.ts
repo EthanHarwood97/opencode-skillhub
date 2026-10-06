@@ -46,6 +46,7 @@ export function makeOpenAiCompatClient(opts: {
             authorization: `Bearer ${opts.apiKey}`,
           },
           body: payload,
+          signal: AbortSignal.timeout(90_000),
         })
         if (res.ok) {
           const json = (await res.json()) as {
