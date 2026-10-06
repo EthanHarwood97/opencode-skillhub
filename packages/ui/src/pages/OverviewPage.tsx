@@ -4,8 +4,8 @@ import { Link } from "react-router"
 import { Modal } from "../components/Modal.tsx"
 import { Button, Chip, ErrorState, Skeleton, StatTile } from "../components/primitives.tsx"
 import { useToast } from "../components/toast.tsx"
-import { getStatus, installSkillAction, isLive } from "../lib/api.ts"
-import type { CoverageGapDto } from "../lib/contract.ts"
+import { getStatus, installBestAction, installSkillAction, isLive } from "../lib/api.ts"
+import type { CoverageGapDto, InstallBestResultDto } from "../lib/contract.ts"
 import { formatNumber, relativeTime } from "../lib/format.ts"
 import styles from "./OverviewPage.module.css"
 
@@ -16,6 +16,48 @@ export default function OverviewPage() {
   const [installGap, setInstallGap] = useState<CoverageGapDto | null>(null)
   const [checked, setChecked] = useState<Set<string>>(new Set())
   const [installing, setInstalling] = useState(false)
+  const [bestOpen, setBestOpen] = useState(false)
+  const [bestPreview, setBestPreview] = useState<InstallBestResultDto | null>(null)
+  const [bestBusy, setBestBusy] = useState(false)
+
+  const openBest = async () => {
+    if (bestBusy) return
+    setBestOpen(true)
+    setBestPreview(null)
+    setBestBusy(true)
+    try {
+      setBestPreview(await installBestAction({ perCategory: 1, dryRun: true, activate: false }))
+    } catch (failure) {
+      toast(failure instanceof Error ? failure.message : "Couldn't preview the picks.", "error")
+      setBestOpen(false)
+    } finally {
+      setBestBusy(false)
+    }
+  }
+
+  const installBest = async () => {
+    if (bestBusy) return
+    setBestBusy(true)
+    try {
+      const result = await installBestAction({ perCategory: 1, dryRun: false, activate: true })
+      const activated = result.picks.filter((pick) => pick.outcome === "activated").length
+      const failed = result.picks.filter((pick) => pick.outcome === "failed").length
+      toast(
+        `Installed and activated ${activated} skill${activated === 1 ? "" : "s"}${failed > 0 ? `, ${failed} failed` : ""}.`,
+        activated > 0 ? "success" : "error",
+      )
+      setBestOpen(false)
+      setBestPreview(null)
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["status"] }),
+        queryClient.invalidateQueries({ queryKey: ["skills"] }),
+      ])
+    } catch (failure) {
+      toast(failure instanceof Error ? failure.message : "Couldn't install the picks.", "error")
+    } finally {
+      setBestBusy(false)
+    }
+  }
 
   const openInstall = (gap: CoverageGapDto) => {
     setInstallGap(gap)
@@ -121,7 +163,12 @@ export default function OverviewPage() {
       </section>
 
       <section className={styles.panel}>
-        <h2>Coverage</h2>
+        <div className={styles.panelHead}>
+          <h2>Coverage</h2>
+          {isLive() ? (
+            <Button onClick={() => void openBest()} disabled={bestBusy}>{bestBusy && bestOpen ? "Finding picks…" : "Install best per category"}</Button>
+          ) : null}
+        </div>
         <p className="pageHint">What each goal profile needs, measured against the catalog.</p>
         {data.counts.total === 0 && data.coverage.every((profile) => profile.coverage === 0) ? (
           <p className="pageHint">No skills yet — run a sync to populate the catalog.</p>
@@ -162,6 +209,41 @@ export default function OverviewPage() {
       </section>
 
       <p><Link to="/review">Open the review queue</Link></p>
+
+      <Modal
+        open={bestOpen}
+        title="Install the best skill per category"
+        dismissible={!bestBusy}
+        onClose={() => { if (!bestBusy) setBestOpen(false) }}
+        footer={
+          <>
+            <Button onClick={() => setBestOpen(false)} disabled={bestBusy}>Cancel</Button>
+            <Button tone="primary" disabled={bestBusy || !bestPreview || bestPreview.picks.length === 0} onClick={() => void installBest()}>
+              {bestBusy && bestPreview ? "Installing…" : `Install + activate ${bestPreview?.picks.length ?? 0}`}
+            </Button>
+          </>
+        }
+      >
+        {bestPreview === null ? (
+          <p className="pageHint">Finding the best skill for each category…</p>
+        ) : bestPreview.picks.length === 0 ? (
+          <p className="pageHint">Every category already has its best skill installed.</p>
+        ) : (
+          <>
+            <p className="pageHint">
+              Top-scoring, gate-passed candidate for each of the {bestPreview.picks.length} category slots not yet covered. They are activated on install so your agent can use them.
+              {bestPreview.covered.length > 0 ? ` ${bestPreview.covered.length} categories are already covered.` : ""}
+            </p>
+            <ul className={styles.installList}>
+              {bestPreview.picks.map((pick) => (
+                <li key={pick.id}>
+                  <span>{pick.category} — {pick.name} <span className="mono">(score {pick.total}, risk {pick.risk})</span></span>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </Modal>
 
       <Modal
         open={installGap !== null}

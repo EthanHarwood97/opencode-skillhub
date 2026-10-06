@@ -1,9 +1,10 @@
 import type { CatalogIndex } from "../../../catalog/src/publish.ts"
-import type { InstallResultDto, UpdateReviewDto } from "../../../ui/src/lib/contract.ts"
+import type { InstallBestResultDto, InstallResultDto, UpdateReviewDto } from "../../../ui/src/lib/contract.ts"
 import { activateSkill, deactivateSkill } from "../activate.ts"
 import { applyUpdate, findingRules, planUpdate, reviewSkill } from "../commands/write.ts"
 import { HashMismatchError, installSkill, MissingSourceError } from "../installer.ts"
 import { readLockfile, upsertEntry, writeLockfile } from "../lockfile.ts"
+import { pickBestPerCategory } from "../pick.ts"
 import type { StoreLayout } from "../paths.ts"
 
 export type EngineContext = {
@@ -45,6 +46,43 @@ export async function handleInstall(ctx: EngineContext, id: string, dryRun: bool
   } catch (error) {
     return engineError(error)
   }
+}
+
+/** Install (and optionally activate) the best candidate per category, topping each up to `perCategory`. */
+export async function handleInstallBest(
+  ctx: EngineContext,
+  opts: { perCategory: number; dryRun: boolean; activate: boolean },
+): Promise<InstallBestResultDto> {
+  const lock = readLockfile(ctx.l.lockfilePath)
+  const { perCategory, picks, covered } = pickBestPerCategory(ctx.index, lock, { perCategory: opts.perCategory })
+  const results: InstallBestResultDto["picks"] = []
+  let failed = 0
+  for (const pick of picks) {
+    if (opts.dryRun) {
+      results.push({ ...pick, outcome: "planned" })
+      continue
+    }
+    const record = ctx.index.skills.find((skill) => skill.id === pick.id)
+    if (!record || record.status !== "candidate") {
+      failed += 1
+      results.push({ ...pick, outcome: "failed", error: `no installable record for ${pick.id}` })
+      continue
+    }
+    try {
+      const entry = await installSkill({ record, l: ctx.l, fetchImpl: ctx.fetchImpl, rawBase: ctx.rawBase, now: ctx.now?.() })
+      writeLockfile(ctx.l.lockfilePath, upsertEntry(readLockfile(ctx.l.lockfilePath), entry))
+      if (opts.activate) {
+        activateSkill(ctx.l, pick.id)
+        results.push({ ...pick, outcome: "activated" })
+      } else {
+        results.push({ ...pick, outcome: "installed" })
+      }
+    } catch (error) {
+      failed += 1
+      results.push({ ...pick, outcome: "failed", error: error instanceof Error ? error.message : String(error) })
+    }
+  }
+  return { perCategory, picks: results, covered: covered.map((entry) => entry.category), failed }
 }
 
 export function handleActivate(ctx: EngineContext, id: string, active: boolean): { status: "active" | "inactive" } {

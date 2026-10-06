@@ -5,6 +5,7 @@ import { readCatalog, findRecord, whyLines, formatHit } from "./commands/read.ts
 import { importCatalog } from "./catalog-cache.ts"
 import { searchSkills } from "./search.ts"
 import { installSkill } from "./installer.ts"
+import { pickBestPerCategory } from "./pick.ts"
 import { readLockfile, upsertEntry, writeLockfile } from "./lockfile.ts"
 import { activateSkill, deactivateSkill, planUpdate, applyUpdate, reviewSkill, findingRules } from "./write-helpers.ts"
 import { applyCalibration, formatTrending, readTrending, runCalibrate, runLabelExport, runLabelImport } from "./commands/depth.ts"
@@ -65,12 +66,51 @@ program
 
 program
   .command("install")
-  .argument("<id>")
+  .argument("[id]")
   .option("--dry-run")
   .option("--activate")
-  .action(async (id: string, opts: { dryRun?: boolean; activate?: boolean }) => {
+  .option("--best", "install the best candidate for each category")
+  .option("--per-category <n>", "skills per category with --best", "1")
+  .action(async (id: string | undefined, opts: { dryRun?: boolean; activate?: boolean; best?: boolean; perCategory: string }) => {
     const l = store()
     const index = readCatalog(l)
+
+    if (opts.best) {
+      const lock = readLockfile(l.lockfilePath)
+      const result = pickBestPerCategory(index, lock, { perCategory: Number(opts.perCategory) || 1 })
+      if (result.picks.length === 0) {
+        console.log(`every category already has ${result.perCategory} installed skill${result.perCategory === 1 ? "" : "s"}`)
+        return
+      }
+      let installed = 0
+      let failed = 0
+      for (const pick of result.picks) {
+        const record = findRecord(index, pick.id)
+        if (!record) {
+          failed += 1
+          console.error(`failed ${pick.id} [${pick.category}]: not in catalog`)
+          continue
+        }
+        try {
+          const entry = await installSkill({ record, l, rawBase: process.env.SKILLHUB_RAW_BASE, dryRun: opts.dryRun })
+          if (!opts.dryRun) {
+            writeLockfile(l.lockfilePath, upsertEntry(readLockfile(l.lockfilePath), entry))
+            if (opts.activate) activateSkill(l, pick.id)
+            installed += 1
+          }
+          console.log(`${opts.dryRun ? "would install" : opts.activate ? "installed + activated" : "installed"} ${pick.id} [${pick.category}] score ${pick.total}`)
+        } catch (error) {
+          failed += 1
+          console.error(`failed ${pick.id} [${pick.category}]: ${error instanceof Error ? error.message : String(error)}`)
+        }
+      }
+      if (!opts.dryRun) {
+        console.log(`best-per-category: installed ${installed} across ${new Set(result.picks.map((pick) => pick.category)).size} categories, ${failed} failed${result.covered.length > 0 ? `, ${result.covered.length} already covered` : ""}`)
+      }
+      return
+    }
+
+    if (!id) throw new Error("usage: skillhub install <id> | skillhub install --best [--activate]")
     const record = findRecord(index, id)
     if (!record) throw new Error(`skill not found in catalog: ${id}`)
     if (record.status !== "candidate") throw new Error(`refusing to install ${record.status} skill: ${id}`)

@@ -123,4 +123,58 @@ describe("ui mutations", () => {
     expect((await post(`${handle.url}api/skills/acme%2Fzip-skill/update/apply`, handle.token, {})).status).toBe(400)
     expect((await post(`${handle.url}api/skills/acme%2Fnope/install`, handle.token, { dryRun: true })).status).toBe(404)
   })
+
+  it("previews, then installs and activates the best candidate per category", async () => {
+    const root = mkdtempSync(join(tmpdir(), "skillhub-ui-best-"))
+    const l = layout(root)
+    mkdirSync(l.catalogDir, { recursive: true })
+    const body = skillBody("best")
+    const base = {
+      description: "A marketplace fixture. Use when testing installs.",
+      tags: ["fixture"],
+      clusterId: "c-1",
+      clusterLabel: "Fixture",
+      source: { kind: "marketplace", path: "SKILL.md", url: "https://fixtures.test/skill.zip", licenseFlags: ["unknown-license"] },
+      files: [{ path: "SKILL.md", sha256: sha(body), size: Buffer.byteLength(body) }],
+      requires: { runtime: [], scripts: [], mcp: [], env: [], services: [] },
+      risk: { level: "low", findings: [] },
+      signals: {},
+      provenanceTier: "content-hash-pinned",
+      status: "candidate",
+      relations: { supersedes: [], duplicates: [], alternatives: [] },
+    }
+    const record = (id: string, category: string, total: number) => ({
+      ...base,
+      id,
+      name: id.split("/").at(-1),
+      category,
+      contentHash: `content-${id}`,
+      scores: { total, quality: total, trust: total, freshness: total, compatibility: total, adoption: total, reasons: [], rubricVersion: "heuristic-v0", evaluatedAt: "2026-10-05T00:00:00.000Z" },
+    })
+    writeFileSync(
+      join(l.catalogDir, "index.json"),
+      JSON.stringify({ version: 1, generatedAt: "2026-10-05T00:00:00.000Z", counts: { total: 2, byStatus: { candidate: 2 }, byCategory: { games: 1, writing: 1 } }, skills: [record("acme/zip-skill", "games", 90), record("acme/write-skill", "writing", 80)] }),
+    )
+    handle = await startUiServer({ root, uiDist: join(root, "dist"), port: 0, fetchImpl: fetchImpl("best") })
+
+    const preview = await post(`${handle.url}api/install-best`, handle.token, { dryRun: true })
+    expect(preview.status).toBe(200)
+    const previewBody = await preview.json()
+    expect(previewBody.picks.map((pick: { id: string; outcome: string }) => [pick.id, pick.outcome])).toEqual([
+      ["acme/zip-skill", "planned"],
+      ["acme/write-skill", "planned"],
+    ])
+    expect(existsSync(l.lockfilePath)).toBe(false)
+
+    const applied = await post(`${handle.url}api/install-best`, handle.token, { dryRun: false, activate: true })
+    const appliedBody = await applied.json()
+    expect(appliedBody.picks.map((pick: { outcome: string }) => pick.outcome)).toEqual(["activated", "activated"])
+    const lock = JSON.parse(readFileSync(l.lockfilePath, "utf8"))
+    expect(Object.keys(lock.skills).sort()).toEqual(["acme/write-skill", "acme/zip-skill"])
+    expect(lock.skills["acme/zip-skill"].active).toBe(true)
+    expect(readFileSync(join(l.managedDir, "acme/zip-skill", "SKILL.md"), "utf8")).toContain("best")
+
+    const after = await post(`${handle.url}api/install-best`, handle.token, { dryRun: true })
+    expect((await after.json()).picks).toEqual([])
+  })
 })

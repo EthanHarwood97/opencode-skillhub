@@ -114,6 +114,22 @@ export type SkillsPageDto = { total: number; page: number; pageSize: number; ite
 
 export type InstallResultDto = { status: "verified" | "installed"; entry: { id: string; contentHash: string; provenanceTier: string; riskLevel: string; total: number } }
 
+export type InstallBestPickDto = {
+  category: string
+  id: string
+  name: string
+  total: number
+  risk: string
+  outcome: "planned" | "installed" | "activated" | "failed"
+  error?: string
+}
+export type InstallBestResultDto = {
+  perCategory: number
+  picks: InstallBestPickDto[]
+  covered: string[]
+  failed: number
+}
+
 export type UpdateReviewDto = {
   kind: "update" | "up-to-date" | "not-installed" | "blocked"
   changes?: { path: string; status: string; patch?: string }[]

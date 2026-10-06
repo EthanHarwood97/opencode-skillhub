@@ -1,5 +1,6 @@
 import type {
   ClustersDto,
+  InstallBestResultDto,
   InstallResultDto,
   ReviewDto,
   SkillDetail,
@@ -94,6 +95,11 @@ export const getReview = (): Promise<ReviewDto> => (isLive() ? request("/api/rev
 export async function installSkillAction(id: string, dryRun: boolean): Promise<InstallResultDto> {
   requireLive()
   return request(`/api/skills/${encodeURIComponent(id)}/install`, { method: "POST", headers: mutationHeaders(), body: JSON.stringify({ dryRun }) })
+}
+
+export async function installBestAction(body: { perCategory: number; dryRun: boolean; activate: boolean }): Promise<InstallBestResultDto> {
+  requireLive()
+  return request("/api/install-best", { method: "POST", headers: mutationHeaders(), body: JSON.stringify(body) })
 }
 
 export async function setActive(id: string, active: boolean): Promise<{ status: string }> {

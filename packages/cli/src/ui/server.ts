@@ -5,7 +5,7 @@ import { extname, join, resolve, sep } from "node:path"
 import type { SkillsQuery } from "../../../ui/src/lib/contract.ts"
 import { layout } from "../paths.ts"
 import { buildClusters, buildDetail, buildReview, buildSkills, buildStatus, buildTrending, loadSnapshot, type UiSnapshot } from "./data.ts"
-import { handleActivate, handleInstall, handleUpdateApply, handleUpdateReview, UiActionError, type EngineContext } from "./mutations.ts"
+import { handleActivate, handleInstall, handleInstallBest, handleUpdateApply, handleUpdateReview, UiActionError, type EngineContext } from "./mutations.ts"
 
 export type UiServerOptions = {
   root: string
@@ -202,6 +202,13 @@ export function startUiServer(opts: UiServerOptions): Promise<UiServerHandle> {
       if (req.method === "GET" || req.method === "HEAD") {
         if (serveStatic(res, pathname)) return
         return sendError(res, 404, "not_found", `no file for ${pathname}`)
+      }
+
+      if (pathname === "/api/install-best" && req.method === "POST") {
+        guardMutation(req)
+        const body = (await readBody(req)) as Record<string, unknown>
+        const perCategory = typeof body.perCategory === "number" && Number.isFinite(body.perCategory) ? Math.max(1, Math.floor(body.perCategory)) : 1
+        return sendJson(res, 200, await handleInstallBest(engineContext(), { perCategory, dryRun: body.dryRun === true, activate: body.activate === true }))
       }
 
       if (pathname.startsWith("/api/skills/") && req.method === "POST") {
