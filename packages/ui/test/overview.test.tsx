@@ -157,6 +157,34 @@ describe("overview", () => {
     expect(screen.queryByRole("button", { name: "Review for install" })).not.toBeInTheDocument()
   })
 
+  it("lists every category with counts and gallery links", async () => {
+    ;(globalThis as { __SKILLHUB__?: unknown }).__SKILLHUB__ = { mode: "live", token: "t" }
+    server.use(
+      http.get("/api/status", () =>
+        HttpResponse.json({
+          generatedAt: "2026-10-05T00:00:00.000Z",
+          counts: { total: 5, byStatus: { candidate: 5 }, byCategory: { engineering: 3, games: 2 } },
+          installed: 0,
+          active: 0,
+          updates: 0,
+          reviewQueue: 0,
+          gaps: [],
+          sources: [],
+          coverage: [],
+        }),
+      ),
+    )
+    renderPage(<OverviewPage />)
+
+    expect(await screen.findByRole("heading", { name: "Categories" })).toBeInTheDocument()
+    expect(screen.getByText("24 domains — every skill lives in exactly one")).toBeInTheDocument()
+    const engineering = screen.getByRole("link", { name: /Engineering/ })
+    expect(engineering).toHaveAttribute("href", "/gallery?category=engineering")
+    expect(engineering).toHaveTextContent("3")
+    expect(screen.getByRole("link", { name: /Games/ })).toHaveTextContent("2")
+    expect(screen.getByRole("link", { name: /IoT & Hardware/ })).toHaveTextContent("0")
+  })
+
   it("shows the nightly brief when present", async () => {
     ;(globalThis as { __SKILLHUB__?: unknown }).__SKILLHUB__ = { mode: "live", token: "t" }
     server.use(

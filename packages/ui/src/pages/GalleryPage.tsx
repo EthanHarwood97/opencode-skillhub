@@ -4,10 +4,10 @@ import { Link, useSearchParams } from "react-router"
 import { Chip, EmptyState, ErrorState, ScoreMeter, Skeleton } from "../components/primitives.tsx"
 import { getSkills } from "../lib/api.ts"
 import type { SkillCard, SkillsQuery } from "../lib/contract.ts"
-import { categoryLabel, clampText, statusLabel } from "../lib/format.ts"
+import { CATEGORY_ORDER, categoryLabel, clampText, statusLabel } from "../lib/format.ts"
 import styles from "./GalleryPage.module.css"
 
-const CATEGORIES = ["engineering", "testing", "infrastructure-devops", "security", "data", "ai", "design-ui", "art-creative", "media", "writing", "docs-productivity", "marketing-growth", "business-ops", "product", "communication", "research", "education", "integrations", "automation", "mobile", "games", "web3", "iot-hardware", "lifestyle"]
+const CATEGORIES = CATEGORY_ORDER
 const STATUSES = ["candidate", "quarantined", "active"]
 const RISKS = ["low", "medium", "high", "critical"]
 const SORTS: { value: NonNullable<SkillsQuery["sort"]>; label: string }[] = [

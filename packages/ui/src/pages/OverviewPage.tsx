@@ -6,7 +6,7 @@ import { Button, Chip, ErrorState, Skeleton, StatTile } from "../components/prim
 import { useToast } from "../components/toast.tsx"
 import { getBrief, getStatus, installBestAction, installSkillAction, isLive } from "../lib/api.ts"
 import type { CoverageGapDto, InstallBestResultDto } from "../lib/contract.ts"
-import { categoryLabel, formatNumber, relativeTime } from "../lib/format.ts"
+import { CATEGORY_ORDER, categoryLabel, formatNumber, relativeTime } from "../lib/format.ts"
 import styles from "./OverviewPage.module.css"
 
 export default function OverviewPage() {
@@ -161,6 +161,21 @@ export default function OverviewPage() {
             {data.sources.flatMap((source) => (source.warnings ?? []).map((warning) => <li key={`${source.source}:${warning}`}>{source.source} — {warning}</li>))}
           </ul>
         ) : null}
+      </section>
+
+      <section className={styles.panel}>
+        <div className={styles.panelHead}>
+          <h2>Categories</h2>
+          <span className="pageHint">{CATEGORY_ORDER.length} domains — every skill lives in exactly one</span>
+        </div>
+        <div className={styles.categories}>
+          {CATEGORY_ORDER.map((category) => (
+            <Link key={category} to={`/gallery?category=${encodeURIComponent(category)}`} className={styles.categoryLink}>
+              <Chip tone="muted">{categoryLabel(category)}</Chip>
+              <span className="mono">{data.counts.byCategory[category] ?? 0}</span>
+            </Link>
+          ))}
+        </div>
       </section>
 
       <section className={styles.panel}>

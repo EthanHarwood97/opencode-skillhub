@@ -1,6 +1,9 @@
 .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--space-3); }
 .panel { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-4); background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-md); }
 .panelHead { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
+.categories { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.categoryLink { display: inline-flex; align-items: center; gap: var(--space-2); text-decoration: none; color: var(--text-muted); }
+.categoryLink:hover { color: var(--text); }
 .table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
 .table th { text-align: left; color: var(--text-faint); font-weight: 500; text-transform: uppercase; font-size: var(--text-xs); letter-spacing: 0.06em; padding: var(--space-2); border-bottom: 1px solid var(--line); }
 .table td { padding: var(--space-2); border-bottom: 1px solid var(--line); }

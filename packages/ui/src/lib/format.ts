@@ -59,6 +59,8 @@ export function categoryLabel(category: string): string {
   return CATEGORY_LABELS[category] ?? category.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
+export const CATEGORY_ORDER: string[] = Object.keys(CATEGORY_LABELS)
+
 export function labelName(label: string): string {
   return label.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
 }
