@@ -44,7 +44,7 @@ export function copySkillToManaged(l: StoreLayout, id: string): void {
   const source = join(l.storeDir, id)
   if (!existsSync(source)) throw new Error(`not installed: ${id}`)
   rmSync(join(l.managedDir, id), { recursive: true, force: true })
-  cpSync(source, join(l.managedDir, id), { recursive: true })
+  cpSync(source, join(l.managedDir, id), { recursive: true, dereference: true })
   normalizeManagedSkillName(join(l.managedDir, id), id.split("/").at(-1) ?? id)
 }
 

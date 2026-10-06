@@ -221,6 +221,18 @@ describe("runAutopilot", () => {
     expect(report.actions.every((action) => action.id !== "a/pinned" || action.kind === "skip")).toBe(true)
   })
 
+  it("never installs a candidate whose name collides with an installed skill", async () => {
+    const old = makeRecord("a/old", "games", 70)
+    const sameName = makeRecord("b/old", "games", 99)
+    const l = makeStore([old, sameName], { [old.id]: lockEntry(old) })
+    const bodies = new Map([[sameName.source.url, bodyFor(sameName.id)]])
+
+    const report = await runAutopilot({ l, index: JSON.parse(readFileSync(join(l.catalogDir, "index.json"), "utf8")), fetchImpl: fetchImpl(bodies) })
+
+    expect(readLock(l)["b/old"]).toBeUndefined()
+    expect(report.actions.some((action) => action.id === "b/old")).toBe(false)
+  })
+
   it("changes nothing on a dry run", async () => {
     const record = makeRecord("a/games", "games", 90)
     const l = makeStore([record])

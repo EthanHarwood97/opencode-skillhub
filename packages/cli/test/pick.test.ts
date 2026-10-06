@@ -59,4 +59,12 @@ describe("pickBestPerCategory", () => {
     expect(result.picks).toEqual([])
     expect(result.covered).toEqual([{ category: "games", installed: 1 }])
   })
+
+  it("never suggests a skill whose name is already taken by an installed skill", () => {
+    const result = pickBestPerCategory(
+      index([makeRecord({ id: "a/x" }), makeRecord({ id: "b/x", category: "games", scores: { ...makeRecord({ id: "t" }).scores, total: 99 } })]),
+      lock(["a/x"]),
+    )
+    expect(result.picks).toEqual([])
+  })
 })

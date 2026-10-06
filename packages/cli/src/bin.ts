@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { Command } from "commander"
 import { writeFileSync } from "node:fs"
+import { resolve } from "node:path"
 import { layout, resolveHome } from "./paths.ts"
 import { readCatalog, findRecord, whyLines, formatHit } from "./commands/read.ts"
 import { importCatalog } from "./catalog-cache.ts"
@@ -8,6 +9,7 @@ import { searchSkills } from "./search.ts"
 import { installSkill } from "./installer.ts"
 import { pickBestPerCategory } from "./pick.ts"
 import { runAutopilot } from "./autopilot.ts"
+import { adoptTree } from "./adopt.ts"
 import { readLockfile, upsertEntry, writeLockfile } from "./lockfile.ts"
 import { activateSkill, deactivateSkill, planUpdate, applyUpdate, reviewSkill, findingRules } from "./write-helpers.ts"
 import { applyCalibration, formatTrending, readTrending, runCalibrate, runLabelExport, runLabelImport } from "./commands/depth.ts"
@@ -120,6 +122,18 @@ program
     if (!opts.dryRun) writeLockfile(l.lockfilePath, upsertEntry(readLockfile(l.lockfilePath), entry))
     if (opts.activate) activateSkill(l, id)
     console.log(`${opts.dryRun ? "verified" : "installed"} ${id} (${entry.provenanceTier}, risk ${entry.riskLevel})`)
+  })
+
+program
+  .command("adopt")
+  .description("import local skill folders into SkillHub (stored, activated, pinned)")
+  .argument("<path>", "skill folder, or a folder of skill folders")
+  .action((path: string) => {
+    const l = store()
+    const result = adoptTree(l, resolve(path))
+    for (const entry of result.adopted) console.log(`adopted ${entry.name} -> ${entry.id}`)
+    for (const entry of result.skipped) console.log(`skipped ${entry.name} (${entry.reason})`)
+    console.log(`adopt: ${result.adopted.length} adopted, ${result.skipped.length} skipped`)
   })
 
 program

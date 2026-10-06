@@ -17,11 +17,14 @@ const RISK_ORDER: Record<string, number> = { low: 0, medium: 1, high: 2, critica
  */
 export function pickBestPerCategory(index: CatalogIndex, lock: Lockfile, opts: { perCategory?: number } = {}): BestPickResult {
   const perCategory = Math.max(1, Math.floor(opts.perCategory ?? 1))
+  // Never suggest a skill whose name is already installed under any id (opencode dedupes by
+  // name and would warn/skip; this also protects locally adopted skills).
+  const takenNames = new Set(Object.keys(lock.skills).map((id) => id.split("/").at(-1) ?? id))
   const categories = new Map<string, { installed: number; candidates: SkillRecord[] }>()
   for (const record of index.skills) {
     const entry = categories.get(record.category) ?? { installed: 0, candidates: [] }
     if (lock.skills[record.id]) entry.installed += 1
-    else if (record.status === "candidate") entry.candidates.push(record)
+    else if (record.status === "candidate" && !takenNames.has(record.name)) entry.candidates.push(record)
     categories.set(record.category, entry)
   }
 

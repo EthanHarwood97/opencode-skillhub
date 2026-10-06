@@ -59,12 +59,13 @@ export async function runAutopilot(opts: {
   let lock = readLockfile(opts.l.lockfilePath)
 
   const groups = new Map<string, { installed: InstalledRef[]; candidates: SkillRecord[] }>()
+  const takenNames = new Set(Object.keys(lock.skills).map((id) => id.split("/").at(-1) ?? id))
   for (const record of opts.index.skills) {
     if (record.status !== "candidate") continue
     const group = groups.get(record.category) ?? { installed: [], candidates: [] }
     const entry = lock.skills[record.id]
     if (entry) group.installed.push({ record, entry })
-    else group.candidates.push(record)
+    else if (!takenNames.has(record.name)) group.candidates.push(record)
     groups.set(record.category, group)
   }
   for (const group of groups.values()) {
