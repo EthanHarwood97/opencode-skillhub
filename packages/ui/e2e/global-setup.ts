@@ -52,6 +52,21 @@ export default function globalSetup() {
   writeCatalog(records, join(root, "catalog"), now)
 
   const installed = records.find((record) => record.name === "pdf-tool")!
+  writeFileSync(
+    join(root, "catalog", "curation.json"),
+    JSON.stringify(
+      {
+        version: 1,
+        generatedAt: now.toISOString(),
+        totals: { scanned: records.length, curated: 1, cached: records.length - 1, skippedBudget: 0, skippedNoBody: 0, failed: 0, corrected: 1, flagged: 0, spentUsd: 0.0012 },
+        corrections: [{ id: installed.id, name: "pdf-tool", from: "engineering", to: "docs-productivity", reason: "Fixture correction for e2e coverage." }],
+        highlights: [],
+        summary: "Curated 1 new skill (fixture).",
+      },
+      null,
+      2,
+    ) + "\n",
+  )
   const installedContent = normal[0]!.files[0]!.content as string
   mkdirSync(join(root, "store", installed.id), { recursive: true })
   writeFileSync(join(root, "store", installed.id, "SKILL.md"), installedContent)

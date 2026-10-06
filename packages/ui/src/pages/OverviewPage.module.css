@@ -8,6 +8,7 @@
 .table th { text-align: left; color: var(--text-faint); font-weight: 500; text-transform: uppercase; font-size: var(--text-xs); letter-spacing: 0.06em; padding: var(--space-2); border-bottom: 1px solid var(--line); }
 .table td { padding: var(--space-2); border-bottom: 1px solid var(--line); }
 .notes { list-style: none; display: flex; flex-direction: column; gap: var(--space-1); color: var(--text-muted); font-size: var(--text-sm); }
+.notes a { text-decoration: underline; }
 .coverage { list-style: none; display: flex; flex-direction: column; gap: var(--space-2); }
 .coverageRow { display: grid; grid-template-columns: minmax(90px, 140px) 44px 80px 1fr; align-items: center; gap: var(--space-3); font-size: var(--text-sm); }
 .coverageProfile { color: var(--text-muted); }

@@ -3,6 +3,7 @@ import { expect, test } from "@playwright/test"
 test("walks the sections and searches the gallery", async ({ page }) => {
   await page.goto("/")
   await expect(page.getByRole("heading", { level: 1, name: "Status" })).toBeVisible()
+  await expect(page.getByRole("heading", { level: 2, name: "Nightly brief" })).toBeVisible()
 
   await page.getByRole("link", { name: "Gallery" }).click()
   await expect(page.getByRole("heading", { level: 1, name: "Gallery" })).toBeVisible()
