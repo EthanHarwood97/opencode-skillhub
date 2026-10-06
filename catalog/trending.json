@@ -1,13 +1,67 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-06T11:20:01.119Z",
+  "generatedAt": "2026-10-06T21:51:04.715Z",
   "topVelocity": [],
   "newThisMonth": [
     {
-      "id": "coldteadotai-abide/abide-compile",
-      "repo": "coldteadotai/abide",
-      "createdAt": "2026-09-18T10:41:48Z",
-      "stars": 547
+      "id": "qingyuna-answer-me-with-html/answer-me-with-html",
+      "repo": "QingYunA/answer-me-with-html",
+      "createdAt": "2026-10-02T09:57:40Z",
+      "stars": 1751
+    },
+    {
+      "id": "jakeschincariol-linkedin-agent-skill/li-audit",
+      "repo": "Jakeschincariol/linkedin-agent-skill",
+      "createdAt": "2026-09-07T22:58:16Z",
+      "stars": 1396
+    },
+    {
+      "id": "jakeschincariol-linkedin-agent-skill/li-carousel",
+      "repo": "Jakeschincariol/linkedin-agent-skill",
+      "createdAt": "2026-09-07T22:58:16Z",
+      "stars": 1396
+    },
+    {
+      "id": "jakeschincariol-linkedin-agent-skill/li-comment",
+      "repo": "Jakeschincariol/linkedin-agent-skill",
+      "createdAt": "2026-09-07T22:58:16Z",
+      "stars": 1396
+    },
+    {
+      "id": "jakeschincariol-linkedin-agent-skill/li-dm",
+      "repo": "Jakeschincariol/linkedin-agent-skill",
+      "createdAt": "2026-09-07T22:58:16Z",
+      "stars": 1396
+    },
+    {
+      "id": "jakeschincariol-linkedin-agent-skill/li-human",
+      "repo": "Jakeschincariol/linkedin-agent-skill",
+      "createdAt": "2026-09-07T22:58:16Z",
+      "stars": 1396
+    },
+    {
+      "id": "jakeschincariol-linkedin-agent-skill/li-inbox",
+      "repo": "Jakeschincariol/linkedin-agent-skill",
+      "createdAt": "2026-09-07T22:58:16Z",
+      "stars": 1396
+    },
+    {
+      "id": "jakeschincariol-linkedin-agent-skill/li-plan",
+      "repo": "Jakeschincariol/linkedin-agent-skill",
+      "createdAt": "2026-09-07T22:58:16Z",
+      "stars": 1396
+    },
+    {
+      "id": "jakeschincariol-linkedin-agent-skill/li-post",
+      "repo": "Jakeschincariol/linkedin-agent-skill",
+      "createdAt": "2026-09-07T22:58:16Z",
+      "stars": 1396
+    },
+    {
+      "id": "jakeschincariol-linkedin-agent-skill/li-profile",
+      "repo": "Jakeschincariol/linkedin-agent-skill",
+      "createdAt": "2026-09-07T22:58:16Z",
+      "stars": 1396
     }
   ]
 }
