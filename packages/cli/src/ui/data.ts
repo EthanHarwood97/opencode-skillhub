@@ -74,6 +74,7 @@ export function toCard(record: SkillRecord, lock: Lockfile): SkillCard {
     name: record.name,
     description: record.description,
     category: record.category,
+    labels: record.labels ?? [],
     tags: record.tags,
     clusterId: record.clusterId,
     clusterLabel: record.clusterLabel,

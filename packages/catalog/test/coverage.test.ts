@@ -14,7 +14,7 @@ describe("GOAL_PROFILES", () => {
       expect(Math.abs(sum - 1)).toBeLessThan(1e-9)
       for (const category of Object.keys(profile.weights)) expect(CATEGORIES).toContain(category)
     }
-    expect(GOAL_PROFILES.map((p) => p.id)).toEqual(["coding", "content", "research", "business-ops", "design-creative"])
+    expect(GOAL_PROFILES.map((p) => p.id)).toEqual(["coding", "content", "research", "business-ops", "design-creative", "ai-builder", "game-dev"])
   })
 })
 
@@ -41,7 +41,7 @@ describe("computeCoverage", () => {
     expect(() => computeCoverage([], "nope")).toThrow(/unknown profile/)
     const records = [rec("a/1", "engineering", 50)]
     expect(computeCoverage(records, "coding").coverage).toBe(0)
-    expect(computeCoverage(records, "coding", { bar: 50, min: 1 }).coverage).toBe(30)
+    expect(computeCoverage(records, "coding", { bar: 50, min: 1 }).coverage).toBe(28)
   })
 
   it("reports 100 and no gaps when every weighted category meets the minimum", () => {

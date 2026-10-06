@@ -5,6 +5,7 @@ export const card = (id: string, over: Partial<SkillCard> = {}): SkillCard => ({
   name: id.split("/").at(-1) ?? id,
   description: "does a thing",
   category: "engineering",
+  labels: [],
   tags: ["test"],
   clusterId: "c-1",
   clusterLabel: "Fixture",

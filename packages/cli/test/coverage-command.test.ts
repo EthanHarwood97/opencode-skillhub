@@ -15,12 +15,12 @@ const rec = (id: string, category: string, total: number) =>
   makeRecord({ id, category, scores: { ...makeRecord({ id }).scores, total } })
 
 describe("coverage command", () => {
-  it("lists all five profiles and reports an honest gap", () => {
+  it("lists all seven profiles and reports an honest gap", () => {
     const l = layout(mkdtempSync(join(tmpdir(), "skillhub-cli-coverage-")))
     writeIndex(l, [rec("a/1", "engineering", 70), rec("a/2", "engineering", 80), rec("a/3", "engineering", 90)])
 
     const results = runCoverage(l)
-    expect(results.map((result) => result.profile)).toEqual(["coding", "content", "research", "business-ops", "design-creative"])
+    expect(results.map((result) => result.profile)).toEqual(["coding", "content", "research", "business-ops", "design-creative", "ai-builder", "game-dev"])
     const coding = results.find((result) => result.profile === "coding")!
     expect(coding.gaps.map((gap) => gap.category)).toContain("testing")
 

@@ -1,4 +1,6 @@
 import { deriveDescription, parseSkillMd, sha256, normalizeText, slugId, SkillParseError } from "./parse.ts"
+import { classifySkill } from "./labels.ts"
+import { tryMapCategory } from "./taxonomy.ts"
 import { runGates } from "./gates.ts"
 import { scanSkill } from "./scan.ts"
 import { scoreRecord } from "./score.ts"
@@ -71,15 +73,26 @@ export function normalizeCandidate(candidate: Candidate, opts: { now: Date; maxI
   const presentPaths = new Set(relativePaths)
   const missingScripts = requires.scripts.filter((s) => !presentPaths.has(s)).length
 
+  const classification = classifySkill({
+    name: parsed.name,
+    description: parsed.description ?? "",
+    tags: [...candidate.tags, ...parsed.tags],
+    body: parsed.body,
+    categoryHint: tryMapCategory(parsed.category) ?? candidate.categoryHint,
+    labelHints: candidate.labelHints,
+  })
+
   const scores = scoreRecord({ parsed, risk, signals, filesPresent: [true], source: candidate.source, now: opts.now, missingScripts })
-  const cluster = assignCluster({ category: candidate.categoryHint ?? "engineering", tags: candidate.tags })
+  const cluster = assignCluster({ category: classification.category, tags: candidate.tags })
 
   const record: SkillRecord = {
     id: slugId(candidate.source.repo, candidate.name),
     name: parsed.name,
     description: parsed.description ?? "",
     ...(summaryDerived !== undefined ? { summaryDerived } : {}),
-    category: candidate.categoryHint ?? "engineering",
+    category: classification.category,
+    labels: classification.labels,
+    labelConfidence: classification.confidence,
     tags: candidate.tags,
     clusterId: cluster.clusterId,
     clusterLabel: cluster.clusterLabel,

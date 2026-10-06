@@ -13,7 +13,7 @@ describe("mapCategory", () => {
     expect(mapCategory("nonsense", "research")).toBe("research")
   })
   it("exposes exactly the canonical categories", () => {
-    expect(CATEGORIES).toHaveLength(12)
-    expect(new Set(CATEGORIES).size).toBe(12)
+    expect(CATEGORIES).toHaveLength(24)
+    expect(new Set(CATEGORIES).size).toBe(24)
   })
 })

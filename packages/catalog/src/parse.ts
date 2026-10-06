@@ -3,7 +3,7 @@ import matter from "gray-matter"
 
 export class SkillParseError extends Error {}
 
-export type ParsedSkill = { name: string; description?: string; body: string; raw: string }
+export type ParsedSkill = { name: string; description?: string; body: string; raw: string; category?: string; tags: string[] }
 
 export const sha256 = (data: string | Uint8Array): string =>
   createHash("sha256").update(data).digest("hex")
@@ -26,7 +26,9 @@ export function parseSkillMd(raw: string): ParsedSkill {
     throw new SkillParseError("missing name in frontmatter")
   }
   const description = typeof data.description === "string" && data.description.length > 0 ? data.description : undefined
-  return { name, description, body: normalizeText(body), raw }
+  const category = typeof data.category === "string" && data.category.length > 0 ? data.category : undefined
+  const tags = Array.isArray(data.tags) ? data.tags.filter((tag): tag is string => typeof tag === "string" && tag.length > 0) : []
+  return { name, description, body: normalizeText(body), raw, category, tags }
 }
 
 export function deriveDescription(body: string): string | undefined {

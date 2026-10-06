@@ -3,7 +3,7 @@ import { runGates } from "../src/gates.ts"
 import { SignalsSchema, SourceSchema } from "../src/types.ts"
 import type { ParsedSkill } from "../src/parse.ts"
 
-const parsed: ParsedSkill = { name: "x", description: "d", body: "# x\n", raw: "" }
+const parsed: ParsedSkill = { name: "x", description: "d", body: "# x\n", raw: "", tags: [] }
 const now = new Date("2026-10-05T00:00:00Z")
 
 const base = {

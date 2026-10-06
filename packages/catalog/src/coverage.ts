@@ -7,31 +7,43 @@ export const GOAL_PROFILES: GoalProfile[] = [
     id: "coding",
     bar: 60,
     min: 3,
-    weights: { engineering: 0.3, testing: 0.15, "infrastructure-devops": 0.15, security: 0.1, "docs-productivity": 0.1, data: 0.1, research: 0.1 },
+    weights: { engineering: 0.28, testing: 0.15, "infrastructure-devops": 0.15, security: 0.1, ai: 0.1, data: 0.1, "docs-productivity": 0.07, research: 0.05 },
   },
   {
     id: "content",
     bar: 60,
     min: 3,
-    weights: { writing: 0.35, "marketing-growth": 0.25, "design-ui": 0.15, "media-creative": 0.15, research: 0.1 },
+    weights: { writing: 0.3, "marketing-growth": 0.2, "design-ui": 0.15, media: 0.15, "art-creative": 0.1, research: 0.1 },
   },
   {
     id: "research",
     bar: 60,
     min: 3,
-    weights: { research: 0.4, data: 0.25, writing: 0.15, "docs-productivity": 0.1, engineering: 0.1 },
+    weights: { research: 0.35, data: 0.2, ai: 0.15, writing: 0.15, "docs-productivity": 0.1, engineering: 0.05 },
   },
   {
     id: "business-ops",
     bar: 60,
     min: 3,
-    weights: { "business-finance": 0.45, "marketing-growth": 0.2, "docs-productivity": 0.15, data: 0.1, writing: 0.1 },
+    weights: { "business-ops": 0.45, "marketing-growth": 0.2, product: 0.1, data: 0.1, "docs-productivity": 0.1, communication: 0.05 },
   },
   {
     id: "design-creative",
     bar: 60,
     min: 3,
-    weights: { "design-ui": 0.45, "media-creative": 0.25, writing: 0.15, engineering: 0.15 },
+    weights: { "design-ui": 0.4, "art-creative": 0.25, media: 0.2, writing: 0.1, engineering: 0.05 },
+  },
+  {
+    id: "ai-builder",
+    bar: 60,
+    min: 3,
+    weights: { ai: 0.4, engineering: 0.2, data: 0.15, integrations: 0.1, testing: 0.1, security: 0.05 },
+  },
+  {
+    id: "game-dev",
+    bar: 60,
+    min: 3,
+    weights: { games: 0.5, "art-creative": 0.15, engineering: 0.15, media: 0.1, writing: 0.1 },
   },
 ]
 

@@ -14,6 +14,7 @@ const detail = (over: Partial<SkillDetail> = {}): SkillDetail => ({
   name: "PDF Tool",
   description: "Extract text from PDF files.",
   category: "writing",
+  labels: [],
   tags: ["pdf"],
   clusterId: "c-1",
   clusterLabel: "Pdf",
@@ -46,10 +47,11 @@ const renderDetail = () => renderRoute("/skills/*", "/skills/acme/one", <DetailP
 describe("skill detail", () => {
   it("renders the record: scores, reasons, requirements and source", async () => {
     ;(globalThis as { __SKILLHUB__?: unknown }).__SKILLHUB__ = { mode: "live", token: "t" }
-    server.use(http.get("/api/skills/:id", () => HttpResponse.json(detail())))
+    server.use(http.get("/api/skills/:id", () => HttpResponse.json(detail({ labels: ["pdf", "documentation"] }))))
     renderDetail()
 
     expect(await screen.findByRole("heading", { level: 1, name: "PDF Tool" })).toBeInTheDocument()
+    expect(screen.getByText("Documentation")).toBeInTheDocument()
     expect(screen.getByText("Why this score")).toBeInTheDocument()
     expect(screen.getByText(/clear workflow/)).toBeInTheDocument()
     expect(screen.getByText("OPENAI_API_KEY")).toBeInTheDocument()

@@ -61,7 +61,7 @@ export function buildSearchDb(records: SkillRecord[], dbPath: string): void {
       record.id, record.name, record.description, record.category, record.scores.total, record.risk.level,
       record.provenanceTier, record.status, record.clusterId, JSON.stringify(record.requires),
     )
-    insertFts.run(record.id, record.name, record.description, record.tags.join(" "))
+    insertFts.run(record.id, record.name, record.description, [...record.tags, ...record.labels].join(" "))
   }
   db.close()
 }

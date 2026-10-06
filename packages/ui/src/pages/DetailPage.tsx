@@ -6,7 +6,7 @@ import { UpdateReviewModal } from "../components/UpdateReviewModal.tsx"
 import { Button, Chip, ErrorState, ScoreMeter, Skeleton } from "../components/primitives.tsx"
 import { useToast } from "../components/toast.tsx"
 import { installSkillAction, isLive, getSkill, setActive } from "../lib/api.ts"
-import { categoryLabel, formatBytes, formatNumber, relativeTime, statusLabel } from "../lib/format.ts"
+import { categoryLabel, formatBytes, formatNumber, labelName, relativeTime, statusLabel } from "../lib/format.ts"
 import styles from "./DetailPage.module.css"
 
 const SCORE_PARTS = ["quality", "trust", "freshness", "compatibility", "adoption"] as const
@@ -97,6 +97,14 @@ export default function DetailPage() {
       </header>
 
       <p className={styles.description}>{skill.description}</p>
+
+      {skill.labels.length > 0 ? (
+        <div className={styles.labels}>
+          {skill.labels.map((label) => (
+            <Chip key={label} tone="muted">{labelName(label)}</Chip>
+          ))}
+        </div>
+      ) : null}
 
       <section className={styles.panel}>
         <h2>Why this score</h2>

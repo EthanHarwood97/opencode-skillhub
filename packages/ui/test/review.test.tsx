@@ -14,6 +14,7 @@ const card = (id: string, over: Partial<SkillCard> = {}): SkillCard => ({
   name: id.split("/").at(-1) ?? id,
   description: "does a thing",
   category: "engineering",
+  labels: [],
   tags: [],
   clusterId: "c-1",
   clusterLabel: "Fixture",

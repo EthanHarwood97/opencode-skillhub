@@ -69,6 +69,8 @@ export const SkillRecordSchema = z.object({
   description: z.string(),
   summaryDerived: z.string().optional(),
   category: z.string(),
+  labels: z.array(z.string()).default([]),
+  labelConfidence: z.number().min(0).max(1).default(0),
   tags: z.array(z.string()),
   clusterId: z.string(),
   clusterLabel: z.string(),

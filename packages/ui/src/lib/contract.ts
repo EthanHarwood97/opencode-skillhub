@@ -34,6 +34,7 @@ export type SkillCard = {
   name: string
   description: string
   category: string
+  labels: string[]
   tags: string[]
   clusterId: string
   clusterLabel: string

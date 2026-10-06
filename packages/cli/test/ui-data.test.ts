@@ -55,9 +55,9 @@ describe("builders", () => {
 
   it("includes per-profile coverage in the status summary", () => {
     const status = buildStatus(snapshot())
-    expect(status.coverage.map((profile) => profile.profile)).toEqual(["coding", "content", "research", "business-ops", "design-creative"])
+    expect(status.coverage.map((profile) => profile.profile)).toEqual(["coding", "content", "research", "business-ops", "design-creative", "ai-builder", "game-dev"])
     const coding = status.coverage.find((profile) => profile.profile === "coding")!
-    expect(coding.coverage).toBe(10)
+    expect(coding.coverage).toBe(9)
     const engineering = coding.gaps.find((gap) => gap.category === "engineering")!
     expect(engineering).toMatchObject({ supply: 1, min: 3 })
     expect(engineering.top).toEqual([{ id: "a/three", name: "three", total: 60 }])
@@ -80,7 +80,7 @@ describe("builders", () => {
       warnings: [],
     }
     const status = buildStatus(empty)
-    expect(status.coverage).toHaveLength(5)
+    expect(status.coverage).toHaveLength(7)
     expect(status.coverage.every((profile) => profile.coverage === 0)).toBe(true)
   })
 

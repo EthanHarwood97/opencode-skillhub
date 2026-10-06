@@ -31,20 +31,36 @@ export function relativeTime(iso: string | null, now: Date): string {
 const CATEGORY_LABELS: Record<string, string> = {
   engineering: "Engineering",
   testing: "Testing",
-  "design-ui": "Design & UI",
-  writing: "Writing",
-  data: "Data",
-  research: "Research",
-  "marketing-growth": "Marketing & Growth",
-  "business-finance": "Business & Finance",
-  "docs-productivity": "Docs & Productivity",
-  security: "Security",
-  "media-creative": "Media & Creative",
   "infrastructure-devops": "Infrastructure & DevOps",
+  security: "Security",
+  data: "Data",
+  ai: "AI & Agents",
+  "design-ui": "Design & UI",
+  "art-creative": "Art & Creative",
+  media: "Media",
+  writing: "Writing",
+  "docs-productivity": "Docs & Productivity",
+  "marketing-growth": "Marketing & Growth",
+  "business-ops": "Business & Ops",
+  product: "Product",
+  communication: "Communication",
+  research: "Research",
+  education: "Education",
+  integrations: "Integrations",
+  automation: "Automation",
+  mobile: "Mobile",
+  games: "Games",
+  web3: "Web3",
+  "iot-hardware": "IoT & Hardware",
+  lifestyle: "Lifestyle",
 }
 
 export function categoryLabel(category: string): string {
   return CATEGORY_LABELS[category] ?? category.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+}
+
+export function labelName(label: string): string {
+  return label.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
 const STATUS_LABELS: Record<string, string> = {
