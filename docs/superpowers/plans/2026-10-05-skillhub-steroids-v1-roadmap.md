@@ -51,6 +51,8 @@
 
 **Slice 8 status (2026-10-06): done.** Nightly curator shipped: after the 03:00 sync, new/changed skills (contentHash delta, score-sorted) get one LLM review each — category + confidence + quality flags (`spam`, `low-effort`, `off-topic`, `duplicate-risk`, `broken`, `thin`) + one-line summary. Only **high-confidence corrections** are applied (ledgered with reasons); everything else lands in `curation.json` + `brief.md` and the dashboard's **Nightly brief** panel. Cache re-applies corrections on every sync so heuristic re-classification can't wipe them. Hard caps: 60 items + $0.25/night (`--curate-max-items/--curate-max-usd`), soft-fails like vectors. First pass (125 items, top-scored first): 55 corrections, 0 flags, **$0.0966**; catalog now 1,218 skills. Install-best-per-category shipped alongside (`install --best` + dashboard action) — 24 skills installed and active, one per category.
 
+**Autopilot (2026-10-06): done.** `skillhub autopilot` runs after every sync in the 03:00 task: it keeps exactly one best-scoring skill **installed and active per category** — fills empty categories, updates changed content in place, swaps only when a challenger beats the incumbent by ≥3 points without a worse risk level, and deactivates extras beyond the target (files are never deleted; everything stays installed). First live run: 1 swap, 5 trims, 0 errors; **24/24 categories covered, 30 installed / 24 active**. The loop is now closed end-to-end: fetch → gate → score → curate → autopilot → dashboard brief, no human input required.
+
 ## Open items carried
 
 - Final public repo name (working title only) + trademark glance before launch.

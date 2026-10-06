@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 import { Command } from "commander"
+import { writeFileSync } from "node:fs"
 import { layout, resolveHome } from "./paths.ts"
 import { readCatalog, findRecord, whyLines, formatHit } from "./commands/read.ts"
 import { importCatalog } from "./catalog-cache.ts"
 import { searchSkills } from "./search.ts"
 import { installSkill } from "./installer.ts"
 import { pickBestPerCategory } from "./pick.ts"
+import { runAutopilot } from "./autopilot.ts"
 import { readLockfile, upsertEntry, writeLockfile } from "./lockfile.ts"
 import { activateSkill, deactivateSkill, planUpdate, applyUpdate, reviewSkill, findingRules } from "./write-helpers.ts"
 import { applyCalibration, formatTrending, readTrending, runCalibrate, runLabelExport, runLabelImport } from "./commands/depth.ts"
@@ -118,6 +120,35 @@ program
     if (!opts.dryRun) writeLockfile(l.lockfilePath, upsertEntry(readLockfile(l.lockfilePath), entry))
     if (opts.activate) activateSkill(l, id)
     console.log(`${opts.dryRun ? "verified" : "installed"} ${id} (${entry.provenanceTier}, risk ${entry.riskLevel})`)
+  })
+
+program
+  .command("autopilot")
+  .description("keep the best-scoring skill installed and active per category (used by the nightly task)")
+  .option("--dry-run")
+  .option("--per-category <n>", "skills to keep active per category", "1")
+  .option("--margin <n>", "score margin required to swap an incumbent", "3")
+  .option("--no-activate")
+  .action(async (opts: { dryRun?: boolean; perCategory: string; margin: string; activate?: boolean }) => {
+    const l = store()
+    const index = readCatalog(l)
+    const report = await runAutopilot({
+      l,
+      index,
+      perCategory: Number(opts.perCategory) || 1,
+      margin: Number(opts.margin) || 2,
+      dryRun: opts.dryRun,
+      activate: opts.activate !== false,
+    })
+    for (const action of report.actions) {
+      if (action.kind === "install") console.log(`installed ${action.id} [${action.category}] score ${action.score}`)
+      else if (action.kind === "swap") console.log(`swapped ${action.replaced} -> ${action.id} [${action.category}] score ${action.score}`)
+      else if (action.kind === "update") console.log(`updated ${action.id} [${action.category}]`)
+      else if (action.kind === "deactivate") console.log(`deactivated ${action.id} [${action.category}] (${action.reason})`)
+      else console.log(`skipped ${action.id} [${action.category}]: ${action.reason}`)
+    }
+    console.log(`autopilot: ${report.actions.filter((action) => action.kind !== "skip").length} action(s), ${report.installed} installed, ${report.active} active, ${report.errors} error(s)${report.dryRun ? " (dry-run)" : ""}`)
+    if (!report.dryRun) writeFileSync(join(l.root, "autopilot.json"), JSON.stringify(report, null, 2) + "\n")
   })
 
 program

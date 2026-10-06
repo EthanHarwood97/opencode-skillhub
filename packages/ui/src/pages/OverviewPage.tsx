@@ -128,7 +128,7 @@ export default function OverviewPage() {
 
       <div className={styles.tiles}>
         <StatTile label="Library" value={formatNumber(data.counts.total)} hint={`${data.counts.byStatus.candidate ?? 0} published`} />
-        <StatTile label="Installed" value={data.installed} hint={`${data.active} active`} />
+        <StatTile label="Installed" value={data.installed} hint={`${data.active} active · auto-pilot`} />
         <StatTile label="Updates" value={data.updates} hint="awaiting review" />
         <StatTile label="Review queue" value={data.reviewQueue} hint="new candidates" />
       </div>

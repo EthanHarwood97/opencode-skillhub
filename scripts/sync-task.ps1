@@ -43,5 +43,9 @@ if ($llmKey) {
 $code = $LASTEXITCODE
 "[{0}] sync exit {1}" -f (Get-Date -Format o), $code | Add-Content $log
 
+# Keep exactly the best skill per category installed and active (files fetched from source; no LLM spend).
+& node (Join-Path $RepoRoot "packages\cli\src\bin.ts") autopilot --per-category 1 --margin 3 *>> $log
+"[{0}] autopilot exit {1}" -f (Get-Date -Format o), $LASTEXITCODE | Add-Content $log
+
 Get-ChildItem $logdir -Filter "sync-*.log" | Sort-Object LastWriteTime -Descending | Select-Object -Skip 14 | Remove-Item -Force -ErrorAction SilentlyContinue
 exit $code
