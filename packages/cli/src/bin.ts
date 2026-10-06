@@ -123,6 +123,21 @@ program
   })
 
 program
+  .command("pin")
+  .description("keep an installed skill active; autopilot will never trim or swap it")
+  .argument("<id>")
+  .option("--off", "unpin")
+  .action((id: string, opts: { off?: boolean }) => {
+    const l = store()
+    const lock = readLockfile(l.lockfilePath)
+    const entry = lock.skills[id]
+    if (!entry) throw new Error(`not installed: ${id}`)
+    lock.skills[id] = { ...entry, pinned: !opts.off }
+    writeLockfile(l.lockfilePath, lock)
+    console.log(`${opts.off ? "unpinned" : "pinned"} ${id}`)
+  })
+
+program
   .command("autopilot")
   .description("keep the best-scoring skill installed and active per category (used by the nightly task)")
   .option("--dry-run")

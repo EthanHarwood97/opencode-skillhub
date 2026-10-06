@@ -197,6 +197,30 @@ describe("runAutopilot", () => {
     expect(report.active).toBe(1)
   })
 
+  it("never trims or swaps pinned skills and still manages the unpinned slot", async () => {
+    const pinned = makeRecord("a/pinned", "games", 60)
+    const low = makeRecord("a/low", "games", 80)
+    const high = makeRecord("a/high", "games", 90)
+    const better = makeRecord("a/better", "games", 99)
+    const l = makeStore([pinned, low, high, better], {
+      [pinned.id]: { ...lockEntry(pinned), pinned: true },
+      [low.id]: lockEntry(low),
+      [high.id]: lockEntry(high),
+    })
+    const bodies = new Map([[better.source.url, bodyFor(better.id)]])
+
+    const report = await runAutopilot({ l, index: JSON.parse(readFileSync(join(l.catalogDir, "index.json"), "utf8")), fetchImpl: fetchImpl(bodies) })
+
+    const lock = readLock(l)
+    expect(lock["a/pinned"].active).toBe(true)
+    expect(lock["a/better"].active).toBe(true)
+    expect(lock["a/low"].active).toBe(false)
+    expect(lock["a/high"].active).toBe(false)
+    expect(report.active).toBe(2)
+    expect(report.actions.some((action) => action.kind === "swap" && action.id === "a/better")).toBe(true)
+    expect(report.actions.every((action) => action.id !== "a/pinned" || action.kind === "skip")).toBe(true)
+  })
+
   it("changes nothing on a dry run", async () => {
     const record = makeRecord("a/games", "games", 90)
     const l = makeStore([record])

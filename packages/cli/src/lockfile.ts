@@ -9,6 +9,7 @@ export type LockEntry = {
   installedAt: string
   files: FileEntry[]
   active: boolean
+  pinned?: boolean
   riskLevel: string
   total: number
 }

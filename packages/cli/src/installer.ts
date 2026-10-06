@@ -11,6 +11,23 @@ export class MissingSourceError extends Error {}
 
 export type FetchedFiles = Map<string, Uint8Array>
 
+const RETRY_ATTEMPTS = 3
+const sleep = (ms: number) => new Promise((resolvePromise) => setTimeout(resolvePromise, ms))
+
+/** Network fetches retry with backoff + a timeout; the daily sync path already does the same. */
+const fetchWithRetry = async (fetchImpl: typeof fetch, url: string): Promise<Response> => {
+  let lastError: unknown
+  for (let attempt = 0; attempt < RETRY_ATTEMPTS; attempt++) {
+    try {
+      return await fetchImpl(url, { signal: AbortSignal.timeout(60_000) })
+    } catch (error) {
+      lastError = error
+      if (attempt < RETRY_ATTEMPTS - 1) await sleep(500 * (attempt + 1))
+    }
+  }
+  throw lastError
+}
+
 export async function fetchRecordFiles(
   record: SkillRecord,
   opts: { fetchImpl?: typeof fetch; rawBase?: string } = {},
@@ -22,7 +39,7 @@ export async function fetchRecordFiles(
     if (!record.source.repo || !record.source.ref) throw new MissingSourceError(`github record ${record.id} lacks repo/ref`)
     const rawBase = opts.rawBase ?? "https://raw.githubusercontent.com"
     for (const file of record.files) {
-      const res = await fetchImpl(`${rawBase}/${record.source.repo}/${record.source.ref}/${file.path}`)
+      const res = await fetchWithRetry(fetchImpl, `${rawBase}/${record.source.repo}/${record.source.ref}/${file.path}`)
       if (!res.ok) throw new MissingSourceError(`fetch failed (${res.status}): ${file.path}`)
       files.set(file.path, new Uint8Array(await res.arrayBuffer()))
     }
@@ -31,7 +48,7 @@ export async function fetchRecordFiles(
 
   if (record.source.kind === "marketplace") {
     if (!record.source.url) throw new MissingSourceError(`marketplace record ${record.id} lacks url`)
-    const res = await fetchImpl(record.source.url)
+    const res = await fetchWithRetry(fetchImpl, record.source.url)
     if (!res.ok) throw new MissingSourceError(`zip fetch failed (${res.status})`)
     const zip = unzipSync(new Uint8Array(await res.arrayBuffer()))
     for (const file of record.files) {

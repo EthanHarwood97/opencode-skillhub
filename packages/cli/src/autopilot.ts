@@ -138,19 +138,24 @@ export async function runAutopilot(opts: {
     }
   }
 
-  // 2. Trim extras beyond perCategory (keep the best-ranked, deactivate the rest) and make
-  // sure the kept entries are actually active.
+  // 2. Trim extras beyond perCategory (keep the best-ranked unpinned, deactivate the rest).
+  // Pinned skills are never trimmed: they stay active in addition to the per-category pick.
   for (const group of groups.values()) {
-    if (group.installed.length <= perCategory) continue
-    const ranked = [...group.installed].sort((a, b) => b.record.scores.total - a.record.scores.total || a.record.id.localeCompare(b.record.id))
-    const extras = ranked.slice(perCategory)
-    for (const extra of extras) deactivate(extra.record, "trimmed to per-category target")
-    group.installed = ranked.slice(0, perCategory)
+    const pinned = group.installed.filter((ref) => lock.skills[ref.record.id]?.pinned)
+    const unpinned = group.installed.filter((ref) => !lock.skills[ref.record.id]?.pinned)
+    if (unpinned.length > perCategory) {
+      unpinned.sort((a, b) => b.record.scores.total - a.record.scores.total || a.record.id.localeCompare(b.record.id))
+      for (const extra of unpinned.slice(perCategory)) {
+        if (!lock.skills[extra.record.id]?.active) continue
+        deactivate(extra.record, "trimmed to per-category target")
+      }
+      group.installed = [...pinned, ...unpinned.slice(0, perCategory)]
+    }
   }
   for (const group of groups.values()) {
     for (const ref of group.installed) {
       if (lock.skills[ref.record.id]?.active) continue
-      actions.push({ kind: "activate", category: ref.record.category, id: ref.record.id, score: ref.record.scores.total, reason: "kept as category best" })
+      actions.push({ kind: "activate", category: ref.record.category, id: ref.record.id, score: ref.record.scores.total, reason: lock.skills[ref.record.id]?.pinned ? "pinned" : "kept as category best" })
       if (!dryRun) {
         try {
           copySkillToManaged(opts.l, ref.record.id)
@@ -164,9 +169,10 @@ export async function runAutopilot(opts: {
     }
   }
 
-  // 3. Fill missing slots.
+  // 3. Fill missing slots (unpinned count vs target).
+  const unpinnedCount = (group: { installed: InstalledRef[] }) => group.installed.filter((ref) => !lock.skills[ref.record.id]?.pinned).length
   for (const group of groups.values()) {
-    while (group.installed.length < perCategory && group.candidates.length > 0) {
+    while (unpinnedCount(group) < perCategory && group.candidates.length > 0) {
       const record = group.candidates.shift()!
       if (await install(record, "install")) {
         group.installed.push({ record, entry: lock.skills[record.id] ?? { id: record.id, contentHash: record.contentHash, provenanceTier: record.provenanceTier, installedAt: now.toISOString(), files: record.files, active: activate, riskLevel: record.risk.level, total: record.scores.total } })
@@ -174,11 +180,13 @@ export async function runAutopilot(opts: {
     }
   }
 
-  // 4. Swap the weakest incumbent when a challenger clearly beats it.
+  // 4. Swap the weakest unpinned incumbent when a challenger clearly beats it.
   for (const group of groups.values()) {
-    while (group.installed.length > 0 && group.candidates.length > 0) {
-      let weakest = group.installed[0]!
-      for (const ref of group.installed) if (ref.record.scores.total < weakest.record.scores.total) weakest = ref
+    while (group.candidates.length > 0) {
+      const pool = group.installed.filter((ref) => !lock.skills[ref.record.id]?.pinned)
+      if (pool.length === 0) break
+      let weakest = pool[0]!
+      for (const ref of pool) if (ref.record.scores.total < weakest.record.scores.total) weakest = ref
       const challenger = group.candidates[0]!
       const clearlyBetter =
         challenger.scores.total > weakest.record.scores.total + margin &&

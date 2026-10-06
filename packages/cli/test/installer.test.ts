@@ -48,6 +48,21 @@ describe("installSkill (github, sha-pinned)", () => {
     expect(() => readdirSync(join(l.storeDir, record.id))).toThrow()
   })
 
+  it("retries transient network failures before giving up", async () => {
+    const record = recordFrom("good-skill")
+    const content = new TextEncoder().encode(readFileSync(join(fixtures, "good-skill", "SKILL.md"), "utf8"))
+    let calls = 0
+    const fetchImpl = (async () => {
+      calls++
+      if (calls === 1) throw new TypeError("fetch failed")
+      return new Response(content, { status: 200 })
+    }) as unknown as typeof fetch
+    const l = layout(mkdtempSync(join(tmpdir(), "skillhub-install-retry-")))
+    const entry = await installSkill({ record, l, fetchImpl, rawBase: "https://raw.example.test" })
+    expect(entry.id).toBe(record.id)
+    expect(calls).toBe(2)
+  })
+
   it("verifies and materializes raw bytes when the decoded text carries a BOM", async () => {
     const raw = new Uint8Array([0xef, 0xbb, 0xbf, ...new TextEncoder().encode(readFileSync(join(fixtures, "good-skill", "SKILL.md"), "utf8"))])
     const record = normalizeCandidate(
