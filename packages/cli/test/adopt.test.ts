@@ -70,6 +70,9 @@ describe("adopt", () => {
     const entry = adoptSkillDirectory(l, source)
 
     expect(entry.files.map((file) => file.path)).toContain("refs/asset.md")
+    const storedRefs = join(l.storeDir, "local/linked-skill", "refs")
+    expect(lstatSync(storedRefs).isSymbolicLink()).toBe(false)
+    expect(readFileSync(join(storedRefs, "asset.md"), "utf8")).toContain("# Asset")
     const managedRefs = join(l.managedDir, "local/linked-skill", "refs")
     expect(lstatSync(managedRefs).isSymbolicLink()).toBe(false)
     expect(readFileSync(join(managedRefs, "asset.md"), "utf8")).toContain("# Asset")

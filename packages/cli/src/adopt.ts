@@ -1,8 +1,9 @@
-import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, rmSync, statSync, writeFileSync } from "node:fs"
+import { existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, rmSync, statSync, writeFileSync } from "node:fs"
 import { basename, dirname, join, relative, sep } from "node:path"
 import { parseSkillMd, sha256 } from "../../catalog/src/parse.ts"
 import type { FileEntry } from "../../catalog/src/types.ts"
 import { copySkillToManaged } from "./activate.ts"
+import { copyTreeDeref } from "./copy.ts"
 import { readLockfile, upsertEntry, writeLockfile, type LockEntry } from "./lockfile.ts"
 import type { StoreLayout } from "./paths.ts"
 
@@ -92,7 +93,7 @@ export function adoptSkillDirectory(l: StoreLayout, skillDir: string, opts: { no
   const target = join(l.storeDir, id)
   rmSync(target, { recursive: true, force: true })
   mkdirSync(dirname(target), { recursive: true })
-  cpSync(realDir, target, { recursive: true, dereference: true })
+  copyTreeDeref(realDir, target)
   const entry: LockEntry = {
     id,
     contentHash,

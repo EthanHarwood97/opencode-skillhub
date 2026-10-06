@@ -1,5 +1,6 @@
-import { cpSync, existsSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs"
+import { existsSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs"
 import { basename, dirname, join } from "node:path"
+import { copyTreeDeref } from "./copy.ts"
 import { readLockfile, writeLockfile } from "./lockfile.ts"
 import type { StoreLayout } from "./paths.ts"
 
@@ -44,7 +45,7 @@ export function copySkillToManaged(l: StoreLayout, id: string): void {
   const source = join(l.storeDir, id)
   if (!existsSync(source)) throw new Error(`not installed: ${id}`)
   rmSync(join(l.managedDir, id), { recursive: true, force: true })
-  cpSync(source, join(l.managedDir, id), { recursive: true, dereference: true })
+  copyTreeDeref(source, join(l.managedDir, id))
   normalizeManagedSkillName(join(l.managedDir, id), id.split("/").at(-1) ?? id)
 }
 
