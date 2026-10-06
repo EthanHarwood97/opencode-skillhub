@@ -144,6 +144,7 @@ program
       if (action.kind === "install") console.log(`installed ${action.id} [${action.category}] score ${action.score}`)
       else if (action.kind === "swap") console.log(`swapped ${action.replaced} -> ${action.id} [${action.category}] score ${action.score}`)
       else if (action.kind === "update") console.log(`updated ${action.id} [${action.category}]`)
+      else if (action.kind === "activate") console.log(`activated ${action.id} [${action.category}] (${action.reason})`)
       else if (action.kind === "deactivate") console.log(`deactivated ${action.id} [${action.category}] (${action.reason})`)
       else console.log(`skipped ${action.id} [${action.category}]: ${action.reason}`)
     }

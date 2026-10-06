@@ -1,6 +1,6 @@
 import type { CatalogIndex } from "../../catalog/src/publish.ts"
 import type { SkillRecord } from "../../catalog/src/types.ts"
-import { activateSkill, deactivateSkill } from "./activate.ts"
+import { copySkillToManaged, removeSkillFromManaged } from "./activate.ts"
 import { applyUpdate, planUpdate } from "./commands/write.ts"
 import { installSkill } from "./installer.ts"
 import { readLockfile, upsertEntry, writeLockfile, type LockEntry, type Lockfile } from "./lockfile.ts"
@@ -10,7 +10,7 @@ const RISK_ORDER: Record<string, number> = { low: 0, medium: 1, high: 2, critica
 const riskRank = (level: string): number => RISK_ORDER[level] ?? 9
 
 export type AutopilotAction = {
-  kind: "install" | "swap" | "update" | "deactivate" | "skip"
+  kind: "install" | "swap" | "update" | "deactivate" | "activate" | "skip"
   category: string
   id: string
   score?: number
@@ -73,6 +73,14 @@ export async function runAutopilot(opts: {
     )
   }
 
+  // Lock state is owned by this function: filesystem helpers never touch the lockfile,
+  // and every lock mutation is persisted immediately so phases cannot clobber each other.
+  const persist = () => writeLockfile(opts.l.lockfilePath, lock)
+  const setActiveFlag = (id: string, active: boolean): void => {
+    const entry = lock.skills[id]
+    if (entry) lock.skills[id] = { ...entry, active }
+  }
+
   const install = async (record: SkillRecord, kind: "install" | "swap", replaced?: string): Promise<boolean> => {
     if (dryRun) {
       actions.push({ kind, category: record.category, id: record.id, score: record.scores.total, ...(replaced ? { replaced } : {}) })
@@ -80,18 +88,28 @@ export async function runAutopilot(opts: {
     }
     try {
       const entry = await installSkill({ record, l: opts.l, fetchImpl: opts.fetchImpl, rawBase: opts.rawBase, now })
-      lock = upsertEntry(lock, entry)
-      writeLockfile(opts.l.lockfilePath, lock)
-      if (activate) {
-        activateSkill(opts.l, record.id)
-        lock = readLockfile(opts.l.lockfilePath)
-      }
+      lock = upsertEntry(lock, { ...entry, active: activate })
+      persist()
+      if (activate) copySkillToManaged(opts.l, record.id)
       actions.push({ kind, category: record.category, id: record.id, score: record.scores.total, ...(replaced ? { replaced } : {}) })
       return true
     } catch (error) {
       errors++
       actions.push({ kind: "skip", category: record.category, id: record.id, reason: `install failed: ${error instanceof Error ? error.message : String(error)}` })
       return false
+    }
+  }
+
+  const deactivate = (record: SkillRecord, reason: string): void => {
+    actions.push({ kind: "deactivate", category: record.category, id: record.id, score: record.scores.total, reason })
+    if (dryRun) return
+    try {
+      removeSkillFromManaged(opts.l, record.id)
+      setActiveFlag(record.id, false)
+      persist()
+    } catch (error) {
+      errors++
+      actions.push({ kind: "skip", category: record.category, id: record.id, reason: `deactivate failed: ${error instanceof Error ? error.message : String(error)}` })
     }
   }
 
@@ -111,6 +129,7 @@ export async function runAutopilot(opts: {
       }
       try {
         await applyUpdate({ plan: plan.plan, l: opts.l, fetchImpl: opts.fetchImpl, rawBase: opts.rawBase, now })
+        lock = readLockfile(opts.l.lockfilePath)
         actions.push({ kind: "update", category: record.category, id: record.id, score: record.scores.total })
       } catch (error) {
         errors++
@@ -118,19 +137,46 @@ export async function runAutopilot(opts: {
       }
     }
   }
-  if (!dryRun) lock = readLockfile(opts.l.lockfilePath)
 
-  // 2. Fill missing slots.
+  // 2. Trim extras beyond perCategory (keep the best-ranked, deactivate the rest) and make
+  // sure the kept entries are actually active.
   for (const group of groups.values()) {
-    while (group.installed.length < perCategory && group.candidates.length > 0) {
-      const record = group.candidates.shift()!
-      if (await install(record, "install")) group.installed.push({ record, entry: lock.skills[record.id] ?? { id: record.id, contentHash: record.contentHash, provenanceTier: record.provenanceTier, installedAt: now.toISOString(), files: record.files, active: activate, riskLevel: record.risk.level, total: record.scores.total } })
+    if (group.installed.length <= perCategory) continue
+    const ranked = [...group.installed].sort((a, b) => b.record.scores.total - a.record.scores.total || a.record.id.localeCompare(b.record.id))
+    const extras = ranked.slice(perCategory)
+    for (const extra of extras) deactivate(extra.record, "trimmed to per-category target")
+    group.installed = ranked.slice(0, perCategory)
+  }
+  for (const group of groups.values()) {
+    for (const ref of group.installed) {
+      if (lock.skills[ref.record.id]?.active) continue
+      actions.push({ kind: "activate", category: ref.record.category, id: ref.record.id, score: ref.record.scores.total, reason: "kept as category best" })
+      if (!dryRun) {
+        try {
+          copySkillToManaged(opts.l, ref.record.id)
+          setActiveFlag(ref.record.id, true)
+          persist()
+        } catch (error) {
+          errors++
+          actions.push({ kind: "skip", category: ref.record.category, id: ref.record.id, reason: `activate failed: ${error instanceof Error ? error.message : String(error)}` })
+        }
+      }
     }
   }
 
-  // 3. Swap the weakest incumbent when a challenger clearly beats it.
+  // 3. Fill missing slots.
   for (const group of groups.values()) {
-    while (group.candidates.length > 0) {
+    while (group.installed.length < perCategory && group.candidates.length > 0) {
+      const record = group.candidates.shift()!
+      if (await install(record, "install")) {
+        group.installed.push({ record, entry: lock.skills[record.id] ?? { id: record.id, contentHash: record.contentHash, provenanceTier: record.provenanceTier, installedAt: now.toISOString(), files: record.files, active: activate, riskLevel: record.risk.level, total: record.scores.total } })
+      }
+    }
+  }
+
+  // 4. Swap the weakest incumbent when a challenger clearly beats it.
+  for (const group of groups.values()) {
+    while (group.installed.length > 0 && group.candidates.length > 0) {
       let weakest = group.installed[0]!
       for (const ref of group.installed) if (ref.record.scores.total < weakest.record.scores.total) weakest = ref
       const challenger = group.candidates[0]!
@@ -140,34 +186,9 @@ export async function runAutopilot(opts: {
       if (!clearlyBetter) break
       group.candidates.shift()
       if (await install(challenger, "swap", weakest.record.id)) {
+        deactivate(weakest.record, `swapped for ${challenger.id}`)
         group.installed = group.installed.filter((ref) => ref.record.id !== weakest.record.id)
-        if (!dryRun && weakest.entry.active) {
-          try {
-            deactivateSkill(opts.l, weakest.record.id)
-          } catch (error) {
-            errors++
-            actions.push({ kind: "skip", category: weakest.record.category, id: weakest.record.id, reason: `deactivate failed: ${error instanceof Error ? error.message : String(error)}` })
-          }
-        }
         group.installed.push({ record: challenger, entry: lock.skills[challenger.id] ?? weakest.entry })
-      }
-    }
-  }
-
-  // 4. Trim extras beyond perCategory (lowest-scoring first).
-  for (const group of groups.values()) {
-    if (group.installed.length <= perCategory) continue
-    const ranked = [...group.installed].sort((a, b) => b.record.scores.total - a.record.scores.total || a.record.id.localeCompare(b.record.id))
-    for (const extra of ranked.slice(perCategory)) {
-      if (!extra.entry.active) continue
-      actions.push({ kind: "deactivate", category: extra.record.category, id: extra.record.id, score: extra.record.scores.total, reason: "trimmed to per-category target" })
-      if (!dryRun) {
-        try {
-          deactivateSkill(opts.l, extra.record.id)
-        } catch (error) {
-          errors++
-          actions.push({ kind: "skip", category: extra.record.category, id: extra.record.id, reason: `deactivate failed: ${error instanceof Error ? error.message : String(error)}` })
-        }
       }
     }
   }

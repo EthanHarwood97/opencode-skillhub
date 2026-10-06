@@ -106,7 +106,8 @@ describe("runAutopilot", () => {
 
     const report = await runAutopilot({ l, index: JSON.parse(readFileSync(join(l.catalogDir, "index.json"), "utf8")), fetchImpl: fetchImpl(bodies) })
 
-    expect(report.actions.map((action) => action.kind)).toEqual(["swap"])
+    expect(report.actions.map((action) => action.kind)).toEqual(["swap", "deactivate"])
+    expect(report.actions[1]?.reason).toContain("swapped for")
     const lock = readLock(l)
     expect(lock["a/new"].active).toBe(true)
     expect(lock["a/old"].active).toBe(false)
@@ -149,6 +150,51 @@ describe("runAutopilot", () => {
     const lock = readLock(l)
     expect(lock["a/best"].active).toBe(true)
     expect(lock["a/worse"].active).toBe(false)
+  })
+
+  it("trims before swapping so deactivations are never resurrected", async () => {
+    const low = makeRecord("a/low", "games", 70)
+    const mid = makeRecord("a/mid", "games", 80)
+    const high = makeRecord("a/high", "games", 90)
+    const best = makeRecord("a/best", "games", 96)
+    const l = makeStore([low, mid, high, best], { [low.id]: lockEntry(low), [mid.id]: lockEntry(mid), [high.id]: lockEntry(high) })
+    const bodies = new Map([
+      [low.source.url, bodyFor(low.id)],
+      [mid.source.url, bodyFor(mid.id)],
+      [high.source.url, bodyFor(high.id)],
+      [best.source.url, bodyFor(best.id)],
+    ])
+
+    const report = await runAutopilot({ l, index: JSON.parse(readFileSync(join(l.catalogDir, "index.json"), "utf8")), fetchImpl: fetchImpl(bodies) })
+
+    const lock = readLock(l)
+    expect(lock["a/best"].active).toBe(true)
+    expect(lock["a/low"].active).toBe(false)
+    expect(lock["a/mid"].active).toBe(false)
+    expect(lock["a/high"].active).toBe(false)
+    expect(Object.values(lock).filter((entry: any) => entry.active)).toHaveLength(1)
+    expect(existsSync(join(l.managedDir, "a/best"))).toBe(true)
+    expect(existsSync(join(l.managedDir, "a/high"))).toBe(false)
+    expect(report.active).toBe(1)
+  })
+
+  it("activates the kept best skill when it was inactive and trims the active extra", async () => {
+    const best = makeRecord("a/best", "games", 95)
+    const worse = makeRecord("a/worse", "games", 80)
+    const l = makeStore([best, worse], { [best.id]: lockEntry(best, { active: false }), [worse.id]: lockEntry(worse, { active: true }) })
+    mkdirSync(join(l.storeDir, "a/best"), { recursive: true })
+    writeFileSync(join(l.storeDir, "a/best", "SKILL.md"), bodyFor("a/best"))
+    mkdirSync(join(l.storeDir, "a/worse"), { recursive: true })
+    writeFileSync(join(l.storeDir, "a/worse", "SKILL.md"), bodyFor("a/worse"))
+
+    const report = await runAutopilot({ l, index: JSON.parse(readFileSync(join(l.catalogDir, "index.json"), "utf8")) })
+
+    expect(report.actions.map((action) => action.kind)).toEqual(["deactivate", "activate"])
+    const lock = readLock(l)
+    expect(lock["a/best"].active).toBe(true)
+    expect(lock["a/worse"].active).toBe(false)
+    expect(existsSync(join(l.managedDir, "a/best", "SKILL.md"))).toBe(true)
+    expect(report.active).toBe(1)
   })
 
   it("changes nothing on a dry run", async () => {

@@ -150,4 +150,18 @@ describe("activate / deactivate", () => {
     deactivateSkill(l, record.id)
     expect(readLockfile(l.lockfilePath).skills[record.id]?.active).toBe(false)
   })
+
+  it("normalizes a mismatched frontmatter name in the managed copy only", async () => {
+    const { l, record } = await prepared()
+    const storeFile = join(l.storeDir, record.id, "good-skill", "SKILL.md")
+    const body = readFileSync(storeFile, "utf8")
+    writeFileSync(storeFile, body.replace(/^name:.*$/m, "name: good-skill-alias"))
+
+    activateSkill(l, record.id)
+
+    const managed = readFileSync(join(l.managedDir, record.id, "good-skill", "SKILL.md"), "utf8")
+    expect(managed).toContain("name: good-skill")
+    expect(managed).not.toContain("good-skill-alias")
+    expect(readFileSync(storeFile, "utf8")).toContain("good-skill-alias")
+  })
 })
