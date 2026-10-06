@@ -9,6 +9,7 @@ import { makeRubricEvaluator } from "./rubric.ts"
 import { fetchAgentskills } from "./sources/agentskills.ts"
 import { loadFixtureCandidates } from "./sources/fixtures.ts"
 import { fetchRepoSkills, searchReposByTopic } from "./sources/github.ts"
+import { loadLocalSkills } from "./sources/local.ts"
 import { fetchSeedRepos, type SeedRepo } from "./sources/seeds.ts"
 import type { Candidate, FetchLike } from "./sources/types.ts"
 import { RateLimitError } from "./sources/util.ts"
@@ -25,6 +26,7 @@ const { values } = parseArgs({
     "min-stars": { type: "string", default: "0" },
     seeds: { type: "string" },
     "seed-limit": { type: "string", default: "0" },
+    local: { type: "string" },
     agentskills: { type: "string" },
     "agentskills-limit": { type: "string", default: "50" },
     out: { type: "string", default: "catalog" },
@@ -44,8 +46,8 @@ const { values } = parseArgs({
   },
 })
 
-if (!values.fixtures && !values.topics && !values.agentskills && !values.seeds) {
-  console.error("usage: catalog:sync [--fixtures <dir>] [--topics a,b] [--seeds <file>] [--agentskills <baseUrl>] [--llm --max-usd <usd> [--max-evals <n>]]")
+if (!values.fixtures && !values.topics && !values.agentskills && !values.seeds && !values.local) {
+  console.error("usage: catalog:sync [--fixtures <dir>] [--topics a,b] [--seeds <file>] [--local <dir>] [--agentskills <baseUrl>] [--llm --max-usd <usd> [--max-evals <n>]]")
   process.exit(2)
 }
 
@@ -154,6 +156,12 @@ if (values.seeds) {
       return result.warnings.length > 0 ? { candidates: result.candidates, warnings: result.warnings } : result.candidates
     },
   })
+}
+
+if (values.local) {
+  const localDir = values.local
+  console.log(`local: ${localDir}`)
+  sources.push({ name: "local", load: async () => loadLocalSkills(localDir) })
 }
 
 if (values.agentskills) {

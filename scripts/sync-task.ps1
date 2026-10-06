@@ -40,6 +40,7 @@ if ($llmKey) {
   --topics "claude-skills,agent-skills,opencode-skills,claude-code-skills,ai-agent-skills" `
   --max-repos 30 --max-skills 15 --pages 2 `
   --seeds (Join-Path $RepoRoot "seed-repos.json") `
+  --local (Join-Path $skillhome "store\local") `
   --agentskills "https://agentskills.codes" --agentskills-limit 50 `
   @llmArgs `
   @curateArgs `

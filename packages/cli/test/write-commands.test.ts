@@ -65,6 +65,12 @@ describe("update plan", () => {
     expect(planUpdate(l, index, readLockfile(l.lockfilePath), "acme-skills/other").kind).toBe("not-installed")
   })
 
+  it("treats locally adopted skills as always up-to-date", async () => {
+    const { l, index, record } = await prepared()
+    const local = { ...record, source: { kind: "local" as const, path: "good-skill/SKILL.md", licenseFlags: ["unknown-license"] }, contentHash: "f".repeat(64) }
+    expect(planUpdate(l, { ...index, skills: [local] }, readLockfile(l.lockfilePath), record.id).kind).toBe("up-to-date")
+  })
+
   it("blocks an update whose catalog record is not a candidate", async () => {
     const { l, index, record } = await prepared()
     const quarantined = {

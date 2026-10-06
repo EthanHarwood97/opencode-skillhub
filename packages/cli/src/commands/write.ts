@@ -27,6 +27,8 @@ export function planUpdate(l: StoreLayout, index: CatalogIndex, lock: Lockfile, 
   const to = index.skills.find((s) => s.id === id)
   if (!from) return { kind: "not-installed" }
   if (!to) return { kind: "up-to-date" }
+  // Locally adopted skills are managed by `skillhub adopt`; the manager owns their files.
+  if (to.source.kind === "local") return { kind: "up-to-date" }
   if (to.status !== "candidate") return { kind: "blocked", record: to }
   if (from.contentHash === to.contentHash) return { kind: "up-to-date" }
 
