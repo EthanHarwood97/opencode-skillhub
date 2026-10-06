@@ -2,7 +2,8 @@ import { existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, statSync, 
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
-import { adoptSkillDirectory, adoptTree, slugSkillName } from "../src/adopt.ts"
+import { adoptSkillDirectory, adoptTree, repairLocalSkills, slugSkillName } from "../src/adopt.ts"
+import { parseSkillMd } from "../../catalog/src/parse.ts"
 import { readLockfile } from "../src/lockfile.ts"
 import { layout, type StoreLayout } from "../src/paths.ts"
 
@@ -98,5 +99,29 @@ describe("adopt", () => {
     expect(result.skipped).toEqual([{ name: "taken-skill", reason: "name already installed" }])
     expect(existsSync(join(l.managedDir, "local/taken-skill"))).toBe(true)
     expect(source).toBeTruthy()
+  })
+
+  it("repairs malformed frontmatter and refreshes the managed copy", () => {
+    const l = makeLayout()
+    const source = makeSkill(l.root, "broken-skill")
+    writeFileSync(join(source, "SKILL.md"), `---\nname: broken-skill\ndescription: Triggers on: "convert to pdf", "make a pdf" and more.\n---\n\n# Broken\n`)
+    adoptSkillDirectory(l, source)
+    const before = readLockfile(l.lockfilePath).skills["local/broken-skill"]!.contentHash
+
+    const results = repairLocalSkills(l)
+
+    expect(results).toEqual([{ name: "broken-skill", changed: true, reason: "repaired frontmatter" }])
+    const fixed = readFileSync(join(l.storeDir, "local/broken-skill", "SKILL.md"), "utf8")
+    expect(() => parseSkillMd(fixed)).not.toThrow()
+    expect(fixed).toContain("name: broken-skill")
+    expect(fixed).toContain('# Broken')
+    expect(readLockfile(l.lockfilePath).skills["local/broken-skill"]!.contentHash).not.toBe(before)
+    expect(readFileSync(join(l.managedDir, "local/broken-skill", "SKILL.md"), "utf8")).toContain("description: 'Triggers on: \"convert to pdf\"")
+  })
+
+  it("leaves healthy local skills untouched", () => {
+    const l = makeLayout()
+    adoptSkillDirectory(l, makeSkill(l.root, "healthy-skill"))
+    expect(repairLocalSkills(l)).toEqual([{ name: "healthy-skill", changed: false }])
   })
 })

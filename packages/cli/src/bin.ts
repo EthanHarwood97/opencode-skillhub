@@ -9,7 +9,7 @@ import { searchSkills } from "./search.ts"
 import { installSkill } from "./installer.ts"
 import { pickBestPerCategory } from "./pick.ts"
 import { runAutopilot } from "./autopilot.ts"
-import { adoptTree } from "./adopt.ts"
+import { adoptTree, repairLocalSkills } from "./adopt.ts"
 import { readLockfile, upsertEntry, writeLockfile } from "./lockfile.ts"
 import { activateSkill, deactivateSkill, planUpdate, applyUpdate, reviewSkill, findingRules } from "./write-helpers.ts"
 import { applyCalibration, formatTrending, readTrending, runCalibrate, runLabelExport, runLabelImport } from "./commands/depth.ts"
@@ -134,6 +134,16 @@ program
     for (const entry of result.adopted) console.log(`adopted ${entry.name} -> ${entry.id}`)
     for (const entry of result.skipped) console.log(`skipped ${entry.name} (${entry.reason})`)
     console.log(`adopt: ${result.adopted.length} adopted, ${result.skipped.length} skipped`)
+  })
+
+program
+  .command("repair-local")
+  .description("fix malformed frontmatter in locally adopted skills so they enter the catalog pipeline")
+  .action(() => {
+    const l = store()
+    const results = repairLocalSkills(l)
+    for (const result of results) console.log(`${result.changed ? "repaired" : "ok"} ${result.name}${result.reason ? ` (${result.reason})` : ""}`)
+    console.log(`repair-local: ${results.filter((result) => result.changed).length} repaired of ${results.length}`)
   })
 
 program
