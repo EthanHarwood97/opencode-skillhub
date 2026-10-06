@@ -41,6 +41,12 @@ Run them as `npm run skillhub -- <command>` from a checkout.
 | `info <id>` / `why <id>` | The full record, or the score breakdown with reasons. |
 | `list [--category]` | Browse the catalog. |
 | `install <id> [--dry-run] [--activate]` | Fetch, verify, and copy the pinned files. |
+| `install --best [--activate] [--per-category <n>]` | Install the best-ranked candidate per category. |
+| `adopt <path>` | Import local skill folders into SkillHub (stored, activated, pinned). |
+| `pin <id> [--off]` | Keep an installed skill active — autopilot never trims or swaps a pinned skill. |
+| `repair-local` | Fix malformed frontmatter in adopted local skills so they enter the pipeline. |
+| `autopilot [--dry-run] [--per-category <n>] [--margin <n>]` | Keep the best skill per category installed and active (the nightly task runs this). |
+| `coverage [--profile <id>]` | Goal-profile coverage of the catalog, with gaps. |
 | `review <id>` | Show the diff, risk delta, and score delta for an update. |
 | `update [id] --apply` | Apply a reviewed update. |
 | `activate <id>` / `deactivate <id>` | Move a skill in or out of the advertised set. |
@@ -66,6 +72,12 @@ Every prompt is matched against the catalog before the model answers. The plugin
 - `auto` (opt-in) additionally inlines one matching skill body above a high confidence bar, and counts as a load in the usage ledger.
 - Retrieval always fails open: if embeddings are unavailable it falls back to keyword matching, and if everything fails the turn proceeds without the block.
 - When retrieval is on, **your prompt text is sent to Google's embeddings endpoint** (Gemini). Prefer not? Set `retrieval.embed` to `off` in `<skillhub home>/settings.json` for keyword-only matching, or `retrieval.mode` to `off` for no retrieval. Cost is pennies: roughly $0.15 per million tokens, about 9 cents a month at 100 prompts a day.
+
+## Local skills & the nightly loop
+
+- `skillhub adopt <path>` imports your own skill folders (a skill folder, or a folder of them) as `local/<name>`: copied into the store, activated, and pinned so autopilot never trims them. `repair-local` fixes malformed frontmatter so adopted skills enter the catalog pipeline.
+- The 03:00 task runs: full catalog sync (GitHub token via `gh`, the local store included) → delta-only rubric backfill + nightly curator (hard-capped: 60 items / $0.25 per run) → `autopilot`, which keeps one best-scoring skill installed and **active** per category, swaps only on a ≥3-point win, and never deletes files.
+- After updating this checkout, refresh the scheduled task so it uses the current sync script: `pwsh ./scripts/register-sync-task.ps1`.
 
 ## Calibration
 
