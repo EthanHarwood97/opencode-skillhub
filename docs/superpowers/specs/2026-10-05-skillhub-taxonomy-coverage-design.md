@@ -1,6 +1,8 @@
 # SkillHub — Taxonomy & Coverage Design (Slice 0)
 
-Date: 2026-10-05. Status: design of record for Slice 4. Authority: user direction ("10s or even 100s of categories from UI, Art, Finance, Business"; coverage must answer "what team of skills covers everything").
+> **Superseded 2026-10-05** on the category model: the user approved Taxonomy v2 — 24 categories + ~210 labels (see `2026-10-05-skillhub-capability-labels.md`). The label layer replaces "coarse categories only"; emergent clusters remain. The rest of this document (coverage mechanics, goal-profile design) still applies.
+
+Date: 2026-10-05. Status: design of record for Slice 4 (superseded on category model). Authority: user direction ("10s or even 100s of categories from UI, Art, Finance, Business"; coverage must answer "what team of skills covers everything").
 
 ## Decision: two levels, one demand layer
 
