@@ -54,6 +54,25 @@ describe("classifySkill basics", () => {
     expect(result.labels).not.toContain("ai")
     expect(result.labels).toContain("email-comms")
   })
+
+  it("decides the category from declared evidence, not body-text drift", () => {
+    const result = classifySkill({
+      name: "gh-create-issue",
+      description: "Use when the user wants to create a GitHub issue for the current repository.",
+      body: "This skill uses tool use and the agent loop so agents can drive tool use across agents. ".repeat(6),
+    })
+    expect(result.category).toBe("integrations")
+    expect(result.labels).toContain("github-integrations")
+  })
+
+  it("does not vote web3 for a body-only liquidity mention", () => {
+    const result = classifySkill({
+      name: "cold-start-problem",
+      description: "Start and scale networked products using the Cold Start Problem framework.",
+      body: "Liquidity, yield, swap and liquidity effects appear in this market discussion. ".repeat(4),
+    })
+    expect(result.category).not.toBe("web3")
+  })
 })
 
 type GoldenCase = { name: string; description: string; expected: string }

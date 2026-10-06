@@ -139,8 +139,7 @@ export async function syncCatalog(opts: {
   let vectors: { embedded: number; reused: number; warnings: string[] } | undefined
   if (opts.vectors) {
     try {
-      const stats = await writeVectors(refined.records, opts.outDir, { embedder: opts.vectors.embedder, now })
-      vectors = { ...stats, warnings: [] }
+      vectors = await writeVectors(refined.records, opts.outDir, { embedder: opts.vectors.embedder, now })
     } catch (error) {
       removeVectors(opts.outDir)
       vectors = { embedded: 0, reused: refined.records.length, warnings: [error instanceof Error ? error.message : String(error)] }

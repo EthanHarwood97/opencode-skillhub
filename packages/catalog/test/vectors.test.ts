@@ -35,7 +35,8 @@ describe("writeVectors/readVectors", () => {
     const dir = mkdtempSync(join(tmpdir(), "skillhub-vec-"))
     const embedder = fakeEmbedder()
     const result = await writeVectors(records, dir, { embedder, now: new Date("2026-10-05T00:00:00Z") })
-    expect(result).toEqual({ embedded: 2, reused: 0 })
+    expect(result).toMatchObject({ embedded: 2, reused: 0 })
+    expect(result.warnings).toEqual([])
     const loaded = readVectors(dir)!
     expect(loaded.meta).toMatchObject({ version: 1, provider: "fake", model: "fake-1", dim: 3 })
     expect(loaded.meta.ids.map((entry) => entry.id)).toEqual(["a/one", "a/two"])
@@ -49,7 +50,7 @@ describe("writeVectors/readVectors", () => {
     await writeVectors(records, dir, { embedder: fakeEmbedder(), now: new Date("2026-10-05T00:00:00Z") })
     const second = fakeEmbedder()
     const result = await writeVectors(records, dir, { embedder: second, now: new Date("2026-10-06T00:00:00Z") })
-    expect(result).toEqual({ embedded: 0, reused: 2 })
+    expect(result).toMatchObject({ embedded: 0, reused: 2 })
     expect(second.calls).toBe(0)
   })
 
@@ -59,7 +60,7 @@ describe("writeVectors/readVectors", () => {
     const changed = [records[0]!, makeRecord({ ...records[1]!, contentHash: "h2b" })]
     const second = fakeEmbedder()
     const result = await writeVectors(changed, dir, { embedder: second, now: new Date("2026-10-06T00:00:00Z") })
-    expect(result).toEqual({ embedded: 1, reused: 1 })
+    expect(result).toMatchObject({ embedded: 1, reused: 1 })
     expect(second.calls).toBe(1)
     const other = { ...fakeEmbedder(), model: "fake-2" }
     const third = await writeVectors(changed, dir, { embedder: other, now: new Date("2026-10-07T00:00:00Z") })
@@ -98,8 +99,19 @@ describe("writeVectors/readVectors", () => {
     patchMeta(dir, { version: 999 })
     const second = fakeEmbedder()
     const result = await writeVectors(records, dir, { embedder: second, now: new Date("2026-10-06T00:00:00Z") })
-    expect(result).toEqual({ embedded: records.length, reused: 0 })
+    expect(result).toMatchObject({ embedded: records.length, reused: 0 })
     expect(second.calls).toBe(records.length)
+  })
+
+  it("keeps reused vectors and warns instead of failing when new embeddings error", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "skillhub-vec9-"))
+    await writeVectors(records, dir, { embedder: fakeEmbedder(), now: new Date("2026-10-05T00:00:00Z") })
+    const changed = [records[0]!, makeRecord({ ...records[1]!, contentHash: "h2b" })]
+    const failing: EmbeddingProvider = { name: "fake", model: "fake-1", dim: 3, embed: async () => { throw new Error("fetch failed") } }
+    const result = await writeVectors(changed, dir, { embedder: failing, now: new Date("2026-10-06T00:00:00Z") })
+    expect(result).toMatchObject({ embedded: 0, reused: 2 })
+    expect(result.warnings[0]).toContain("fetch failed")
+    expect(readVectors(dir)).toBeDefined()
   })
 
   it("throws when a provider returns vectors of the wrong dimension", async () => {

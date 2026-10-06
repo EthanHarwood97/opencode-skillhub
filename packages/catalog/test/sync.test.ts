@@ -124,10 +124,11 @@ describe("syncCatalog", () => {
       vectors: { embedder: failing },
     })
     expect(bad.vectors?.warnings.join(" ")).toContain("api down")
+    expect(bad.vectors).toMatchObject({ embedded: 0, reused: 1 })
     expect(bad.index.skills.length).toBeGreaterThan(0)
     expect(existsSync(join(root, "catalog2", "index.json"))).toBe(true)
-    expect(existsSync(join(root, "catalog2", "vectors.json"))).toBe(false)
-    expect(existsSync(join(root, "catalog2", "vectors.bin"))).toBe(false)
+    expect(existsSync(join(root, "catalog2", "vectors.json"))).toBe(true)
+    expect(existsSync(join(root, "catalog2", "vectors.bin"))).toBe(true)
   })
 
   it("removes stale vector artifacts when a later sync runs without vectors", async () => {

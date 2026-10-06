@@ -41,7 +41,7 @@ export const LABEL_DEFS: LabelDef[] = [
   { id: "containers", category: "infrastructure-devops", terms: ["docker", "dockerfile", "compose", "container", "oci"] },
   { id: "kubernetes", category: "infrastructure-devops", terms: ["kubernetes", "k8s", "helm", "pod", "cluster"] },
   { id: "iac", category: "infrastructure-devops", terms: ["terraform", "pulumi", "cloudformation", "iac"] },
-  { id: "ci-cd", category: "infrastructure-devops", terms: ["ci/cd", "github actions", "pipeline", "continuous integration", "continuous deployment"] },
+  { id: "ci-cd", category: "infrastructure-devops", terms: ["ci/cd", "github actions", "continuous integration", "continuous deployment"] },
   { id: "observability", category: "infrastructure-devops", terms: ["observability", "logging", "metrics", "traces", "grafana", "prometheus"] },
   { id: "sre-incident", category: "infrastructure-devops", terms: ["sre", "incident", "on-call", "postmortem", "runbook"] },
   { id: "serverless-edge", category: "infrastructure-devops", terms: ["serverless", "workers", "edge functions", "faas"] },
@@ -57,7 +57,7 @@ export const LABEL_DEFS: LabelDef[] = [
   { id: "secrets-keys", category: "security", terms: ["secret", "kms", "vault", "encryption", "key rotation"] },
   { id: "reverse-engineering", category: "security", terms: ["reverse engineering", "decompile", "jadx", "ghidra", "disassembly"] },
   // data
-  { id: "data-engineering", category: "data", terms: ["etl", "pipeline", "ingestion", "dbt", "airflow"] },
+  { id: "data-engineering", category: "data", terms: ["etl", "data pipeline", "ingestion", "dbt", "airflow"] },
   { id: "sql", category: "data", terms: ["sql", "query", "join", "postgres", "mysql"] },
   { id: "databases", category: "data", terms: ["database", "schema", "migration", "nosql"] },
   { id: "analytics", category: "data", terms: ["analytics", "cohort", "funnel", "kpi", "metrics"] },
@@ -214,14 +214,14 @@ export const LABEL_DEFS: LabelDef[] = [
   { id: "unreal", category: "games", terms: ["unreal", "blueprint", "ue5"] },
   { id: "2d-games", category: "games", terms: ["2d game", "sprite game", "platformer"] },
   { id: "3d-game-assets", category: "games", terms: ["3d asset", "level art", "rigging", "texture game"] },
-  { id: "npc-writing", category: "games", terms: ["npc", "dialogue tree", "quest", "lore"] },
+  { id: "npc-writing", category: "games", terms: ["npc", "dialogue tree", "quest design", "game lore"] },
   // web3
   { id: "blockchain", category: "web3", terms: ["blockchain", "ledger", "consensus mechanism", "validator"] },
   { id: "smart-contracts", category: "web3", terms: ["smart contract", "solidity", "anchor framework", "evm"] },
-  { id: "defi", category: "web3", terms: ["defi", "swap", "liquidity", "yield farming"] },
+  { id: "defi", category: "web3", terms: ["defi", "liquidity pool", "yield farming", "token swap", "automated market maker"] },
   { id: "nft", category: "web3", terms: ["nft", "mint", "token metadata"] },
   { id: "wallets", category: "web3", terms: ["wallet", "seed phrase", "private key", "custody"] },
-  { id: "tokenomics", category: "web3", terms: ["tokenomics", "token design", "dao", "governance"] },
+  { id: "tokenomics", category: "web3", terms: ["tokenomics", "token design", "dao governance", "governance token"] },
   // iot-hardware
   { id: "embedded", category: "iot-hardware", terms: ["arduino", "esp32", "firmware", "microcontroller", "rtos"] },
   { id: "robotics", category: "iot-hardware", terms: ["robot", "ros", "drone", "servo", "actuator"] },
@@ -307,23 +307,28 @@ const scoreLabel = (label: LabelDef, hay: Haystack): { score: number; meta: numb
 }
 
 export function classifySkill(input: ClassifyInput): ClassifyResult {
+  const tags = (input.tags ?? []).filter(
+    (tag) => !tag.startsWith(".") && tag.length <= 24 && !tag.toLowerCase().includes("awesome"),
+  )
   const hay: Haystack = {
     name: normalizeText(input.name ?? ""),
-    tags: normalizeText((input.tags ?? []).join(" ")),
+    tags: normalizeText(tags.join(" ")),
     description: normalizeText(input.description ?? ""),
     body: normalizeText((input.body ?? "").slice(0, 24_000)),
   }
 
-  const scored: { label: LabelDef; score: number }[] = []
+  const scored: { label: LabelDef; score: number; meta: number }[] = []
   const categoryScores = new Map<Category, number>()
   for (const label of LABEL_DEFS) {
     const { score, meta } = scoreLabel(label, hay)
     if (score < SCORE_THRESHOLD && meta < META_THRESHOLD) continue
-    scored.push({ label, score: score + (score < SCORE_THRESHOLD ? META_THRESHOLD : 0) })
-    if (label.category !== "cross") {
-      const current = categoryScores.get(label.category) ?? 0
-      if (score > current) categoryScores.set(label.category, score)
-    }
+    scored.push({ label, score: score + (score < SCORE_THRESHOLD ? META_THRESHOLD : 0), meta })
+  }
+  // The category is decided by declared evidence (name/tags/description); body-text alone never votes.
+  for (const entry of scored) {
+    if (entry.meta < META_THRESHOLD || entry.label.category === "cross") continue
+    const current = categoryScores.get(entry.label.category) ?? 0
+    if (entry.score > current) categoryScores.set(entry.label.category, entry.score)
   }
   scored.sort((a, b) => b.score - a.score || a.label.id.localeCompare(b.label.id))
 

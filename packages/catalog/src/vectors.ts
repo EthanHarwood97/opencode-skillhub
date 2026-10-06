@@ -54,7 +54,7 @@ export async function writeVectors(
   records: SkillRecord[],
   outDir: string,
   opts: { embedder: EmbeddingProvider; now: Date },
-): Promise<{ embedded: number; reused: number }> {
+): Promise<{ embedded: number; reused: number; warnings: string[] }> {
   const previous = readVectors(outDir)
   const reusable =
     previous &&
@@ -78,9 +78,16 @@ export async function writeVectors(
     missing.push({ hash: record.contentHash, text: vectorText(record) })
   }
 
+  const warnings: string[] = []
+  let embedded = 0
   if (missing.length > 0) {
-    const fresh = await opts.embedder.embed(missing.map((entry) => entry.text))
-    fresh.forEach((vector, index) => byHash.set(missing[index]!.hash, vector))
+    try {
+      const fresh = await opts.embedder.embed(missing.map((entry) => entry.text))
+      fresh.forEach((vector, index) => byHash.set(missing[index]!.hash, vector))
+      embedded = missing.length
+    } catch (error) {
+      warnings.push(`embedded 0 of ${missing.length} new vectors: ${error instanceof Error ? error.message : String(error)}`)
+    }
   }
 
   mkdirSync(outDir, { recursive: true })
@@ -102,5 +109,5 @@ export async function writeVectors(
     ids: records.map((record) => ({ id: record.id, contentHash: record.contentHash })),
   }
   writeFileSync(join(outDir, "vectors.json"), JSON.stringify(meta, null, 2) + "\n")
-  return { embedded: missing.length, reused: records.length - missing.length }
+  return { embedded, reused: records.length - embedded, warnings }
 }
