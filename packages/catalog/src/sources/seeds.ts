@@ -33,6 +33,9 @@ export async function fetchSeedRepos(opts: {
         token: opts.token,
         fetchImpl: opts.fetchImpl,
         license: info.license,
+        // Curated seeds are hand-picked: repos without a detectable SPDX license pass the gate
+        // as explicit unknown-license (same convention as the marketplace source). Topic sweeps stay strict.
+        licenseFlags: info.license ? [] : ["unknown-license"],
         signals: info.signals,
         maxSkills: seed.maxSkills ?? opts.maxSkills,
         categoryHint: seed.category,

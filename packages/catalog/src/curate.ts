@@ -160,6 +160,7 @@ export async function curateRecords(
     maxUsd?: number
     costPerItemUsd?: number
     concurrency?: number
+    ids?: ReadonlySet<string>
     now: Date
   },
 ): Promise<{ records: SkillRecord[]; cache: CurationCache; report: CurationReport }> {
@@ -192,6 +193,7 @@ export async function curateRecords(
       totals.skippedNoBody++
       continue
     }
+    if (opts.ids && !opts.ids.has(record.id)) continue
     candidates.push({ index, record, body })
   }
   candidates.sort((a, b) => b.record.scores.total - a.record.scores.total || a.record.id.localeCompare(b.record.id))

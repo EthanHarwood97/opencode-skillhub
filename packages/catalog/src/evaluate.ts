@@ -86,6 +86,12 @@ export async function evaluateRecords(
   }
 
   const pendingIndexes = plan.map((entry, index) => (entry.kind === "pending" ? index : -1)).filter((index) => index >= 0)
+  // Backfill the best-scoring documents first (stable sort: ties keep catalog order).
+  pendingIndexes.sort((a, b) => {
+    const left = (plan[a] as { kind: "pending"; record: SkillRecord }).record.scores.total
+    const right = (plan[b] as { kind: "pending"; record: SkillRecord }).record.scores.total
+    return right - left
+  })
   const budgetSlots = Number.isFinite(maxUsd) ? Math.max(0, Math.floor((maxUsd - stats.spentUsd) / costPerEvalUsd + 1e-9)) : Number.POSITIVE_INFINITY
   const evalSlots = Number.isFinite(maxEvals) ? Math.max(0, maxEvals - stats.evaluated) : Number.POSITIVE_INFINITY
   const runnableCount = Math.min(budgetSlots, evalSlots, pendingIndexes.length)

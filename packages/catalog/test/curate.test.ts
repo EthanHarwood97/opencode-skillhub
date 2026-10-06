@@ -115,6 +115,30 @@ describe("curateRecords", () => {
     expect(second.report.corrections).toEqual([])
   })
 
+  it("restricts curation to selected ids while still re-applying cached corrections", async () => {
+    const cache = {
+      version: 1 as const,
+      entries: {
+        [curationKey("h1", CURATION_VERSION)]: { contentHash: "h1", curationVersion: CURATION_VERSION, category: "games", confidence: "high" as const, flags: [], summary: "cached fix", model: "m", costUsd: 0, curatedAt: "t", applied: true },
+      },
+    }
+    const calls: string[] = []
+    const { records: out, report } = await curateRecords(records, {
+      cache,
+      curate: async (input) => {
+        calls.push(input.id)
+        return curation({ category: "games" })
+      },
+      bodies,
+      ids: new Set(["a/right"]),
+      now: new Date(),
+    })
+    expect(calls).toEqual(["a/right"])
+    expect(out.find((record) => record.id === "a/wrong")!.category).toBe("games")
+    expect(report.totals.cached).toBe(1)
+    expect(report.totals.curated).toBe(1)
+  })
+
   it("isolates failures and skips records without bodies", async () => {
     const curate = async (input: { id: string }): Promise<CurationEvaluation> => {
       if (input.id === "a/wrong") throw new Error("429 rate limited")

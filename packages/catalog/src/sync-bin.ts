@@ -37,6 +37,7 @@ const { values } = parseArgs({
     "curate-max-items": { type: "string", default: "60" },
     "curate-max-usd": { type: "string", default: "0.25" },
     "curate-cost-per-item": { type: "string", default: "0.002" },
+    "curate-ids": { type: "string" },
     "llm-model": { type: "string" },
     "llm-base-url": { type: "string" },
     "no-vectors": { type: "boolean", default: false },
@@ -87,12 +88,17 @@ if (values.llm || values.curate) {
   }
   if (values.curate) {
     const curateMaxUsd = Number(values["curate-max-usd"])
-    console.log(`curate: ${model} via ${baseUrl}; cap $${curateMaxUsd}, max ${values["curate-max-items"]} items`)
+    let ids: ReadonlySet<string> | undefined
+    if (values["curate-ids"]) {
+      ids = new Set(JSON.parse(readFileSync(values["curate-ids"], "utf8")) as string[])
+    }
+    console.log(`curate: ${model} via ${baseUrl}; cap $${curateMaxUsd}, max ${values["curate-max-items"]} items${ids ? `, ${ids.size} targeted ids` : ""}`)
     curation = {
       curate: makeCurator(makeOpenAiCompatClient({ baseUrl, apiKey, model })),
       maxItems: Number(values["curate-max-items"]) || undefined,
       maxUsd: curateMaxUsd,
       costPerItemUsd: Number(values["curate-cost-per-item"]) || undefined,
+      ...(ids ? { ids } : {}),
     }
   }
 }

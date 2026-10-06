@@ -107,11 +107,14 @@ describe("github adapter upgrades", () => {
 })
 
 describe("seed repos adapter", () => {
-  it("fetches curated repos with hints and collects warnings for failures", async () => {
+  it("fetches curated repos with hints, flags unknown licenses, and collects warnings for failures", async () => {
     const fetchThing = (async (url: string | URL) => {
       const href = String(url)
       if (href === "https://api.github.com/repos/acme/good") {
-        return json({ full_name: "acme/good", default_branch: "main", stargazers_count: 9, forks_count: 1, pushed_at: null, created_at: null, archived: false, license: { spdx_id: "MIT" } })
+        return json({ full_name: "acme/good", default_branch: "main", stargazers_count: 9, forks_count: 1, pushed_at: null, created_at: null, archived: false })
+      }
+      if (href === "https://api.github.com/repos/acme/mit") {
+        return json({ full_name: "acme/mit", default_branch: "main", stargazers_count: 9, forks_count: 1, pushed_at: null, created_at: null, archived: false, license: { spdx_id: "MIT" } })
       }
       if (href === "https://api.github.com/repos/acme/bad") return new Response("{}", { status: 404 })
       if (href.includes("/git/trees/")) return json({ sha: "abc", tree: [{ path: "skills/demo/SKILL.md", type: "blob" }] })
@@ -121,14 +124,17 @@ describe("seed repos adapter", () => {
     const result = await fetchSeedRepos({
       seeds: [
         { repo: "acme/good", category: "games", labels: ["godot"] },
+        { repo: "acme/mit" },
         { repo: "acme/bad" },
         { repo: "not a repo" },
       ],
       fetchImpl: fetchThing,
     })
-    expect(result.candidates).toHaveLength(1)
+    expect(result.candidates).toHaveLength(2)
     expect(result.candidates[0]?.categoryHint).toBe("games")
     expect(result.candidates[0]?.labelHints).toEqual(["godot"])
+    expect(result.candidates[0]?.source.licenseFlags).toEqual(["unknown-license"])
+    expect(result.candidates[1]?.source.licenseFlags).toEqual([])
     expect(result.warnings).toEqual(["acme/bad: github repo lookup failed: 404", 'invalid seed repo "not a repo"'])
   })
 })

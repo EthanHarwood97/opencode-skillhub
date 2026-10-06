@@ -93,6 +93,24 @@ export async function fetchRepo(opts: { repo: string; token?: string; fetchImpl:
   }
 }
 
+const RETRYABLE = /fetch failed|network|socket|terminated|ECONN|ENOTFOUND|EAI_AGAIN|aborted|timeout/i
+
+const getWithRetry = async (url: string, opts: { fetchImpl: FetchLike; token?: string; attempts?: number }): Promise<Response> => {
+  const attempts = opts.attempts ?? 3
+  let lastError: unknown
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    try {
+      return await (opts.fetchImpl as unknown as typeof fetch)(url, { headers: headers(opts.token) })
+    } catch (error) {
+      lastError = error
+      const retryable = error instanceof Error && (error.name === "TimeoutError" || RETRYABLE.test(error.message))
+      if (!retryable) throw error
+      await new Promise((resolvePromise) => setTimeout(resolvePromise, 400 * (attempt + 1)))
+    }
+  }
+  throw lastError
+}
+
 export async function fetchRepoSkills(opts: {
   repo: string
   ref: string
@@ -102,12 +120,14 @@ export async function fetchRepoSkills(opts: {
   signals?: Partial<Signals>
   maxSkills?: number
   maxFileBytes?: number
+  maxSkillFiles?: number
   concurrency?: number
   categoryHint?: string
   labelHints?: string[]
+  licenseFlags?: string[]
 }): Promise<Candidate[]> {
   const api = async <T>(url: string): Promise<T> => {
-    const res = await (opts.fetchImpl as unknown as typeof fetch)(url, { headers: headers(opts.token) })
+    const res = await getWithRetry(url, { fetchImpl: opts.fetchImpl, token: opts.token })
     checkRateLimit(res)
     if (!res.ok) throw new Error(`github ${url} -> ${res.status}`)
     return (await res.json()) as T
@@ -121,15 +141,14 @@ export async function fetchRepoSkills(opts: {
   ]
   const dirs = typeof opts.maxSkills === "number" ? allDirs.slice(0, opts.maxSkills) : allDirs
   const maxBytes = opts.maxFileBytes ?? 262_144
+  const maxSkillFiles = opts.maxSkillFiles ?? 150
   const concurrency = opts.concurrency ?? 4
 
   const results = await mapLimit(dirs, concurrency, async (dir): Promise<Candidate | undefined> => {
     const paths = tree.tree.filter((node) => node.type === "blob" && node.path.startsWith(`${dir}/`)).map((node) => node.path)
-    if (paths.length > 50) return undefined
+    if (paths.length > maxSkillFiles) return undefined
     const fetched = await mapLimit(paths, 4, async (path): Promise<CandidateFile | undefined> => {
-      const res = await (opts.fetchImpl as unknown as typeof fetch)(`https://raw.githubusercontent.com/${opts.repo}/${tree.sha}/${path}`, {
-        headers: headers(opts.token),
-      })
+      const res = await getWithRetry(`https://raw.githubusercontent.com/${opts.repo}/${tree.sha}/${path}`, { fetchImpl: opts.fetchImpl, token: opts.token })
       if (!res.ok) throw new Error(`raw fetch failed for ${path}`)
       const bytes = new Uint8Array(await res.arrayBuffer())
       if (bytes.byteLength > maxBytes) return undefined
@@ -138,7 +157,7 @@ export async function fetchRepoSkills(opts: {
     const files = fetched.filter((file): file is CandidateFile => file !== undefined)
     if (!files.some((file) => file.path.endsWith("SKILL.md") && file.content)) return undefined
     return {
-      source: { kind: "github", repo: opts.repo, path: `${dir}/SKILL.md`, ref: tree.sha, license: opts.license, licenseFlags: [] },
+      source: { kind: "github", repo: opts.repo, path: `${dir}/SKILL.md`, ref: tree.sha, license: opts.license, licenseFlags: opts.licenseFlags ?? [] },
       name: dir.split("/").at(-1) ?? dir,
       dir,
       tags: dir.split("/").slice(0, -1).slice(-2),

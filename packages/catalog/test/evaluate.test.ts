@@ -85,8 +85,25 @@ describe("evaluateRecords", () => {
     expect(stats.spentUsd).toBeCloseTo(0.02, 10)
   })
 
-  it("isolates a failed evaluation, keeps its heuristic score, and caches only successes", async () => {
-    const failed = makeRecord({ id: "a/fail", contentHash: "hf" })
+  it("backfills the best-scoring pending documents first", async () => {
+    const base = makeRecord({ id: "t" }).scores
+    const low = makeRecord({ id: "a/low", contentHash: "hl", scores: { ...base, total: 30 } })
+    const high = makeRecord({ id: "a/high", contentHash: "hh", scores: { ...base, total: 90 } })
+    const calls: string[] = []
+    await evaluateRecords([low, high], {
+      cache: { version: 1, entries: {} },
+      bodies: new Map([["a/low", "# L"], ["a/high", "# H"]]),
+      evaluate: async (input) => {
+        calls.push(input.id)
+        return evaluation(70)
+      },
+      maxEvals: 1,
+      now: new Date("2026-10-05T00:00:00Z"),
+    })
+    expect(calls).toEqual(["a/high"])
+  })
+
+  it("isolates a failed evaluation, keeps its heuristic score, and caches only successes", async () => {    const failed = makeRecord({ id: "a/fail", contentHash: "hf" })
     const ok = makeRecord({ id: "a/ok", contentHash: "ho" })
     const { records, stats, cache: out } = await evaluateRecords([failed, ok], {
       cache: { version: 1, entries: {} },

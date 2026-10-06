@@ -27,10 +27,13 @@ if (-not $llmKey -and $env:GEMINI_API_KEY) {
   $llmKey = $env:DEEPSEEK_API_KEY
 }
 if ($llmKey) {
+  $llmArgs = @("--llm", "--max-evals", "120", "--max-usd", "0.25", "--cost-per-eval", "0.002")
   $curateArgs = @("--curate", "--curate-max-items", "60", "--curate-max-usd", "0.25", "--curate-cost-per-item", "0.002")
-  "[{0}] nightly curator enabled (cap `$0.25, 60 items, model {1})" -f (Get-Date -Format o), $env:SKILLHUB_LLM_MODEL | Add-Content $log
+  "[{0}] nightly AI enabled (rubric backfill + curator, combined cap ~`$0.50, model {1})" -f (Get-Date -Format o), $env:SKILLHUB_LLM_MODEL | Add-Content $log
 } else {
-  "[{0}] nightly curator skipped (no SKILLHUB_LLM_API_KEY/GEMINI_API_KEY/DEEPSEEK_API_KEY)" -f (Get-Date -Format o) | Add-Content $log
+  $llmArgs = @()
+  $curateArgs = @()
+  "[{0}] nightly AI skipped (no SKILLHUB_LLM_API_KEY/GEMINI_API_KEY/DEEPSEEK_API_KEY)" -f (Get-Date -Format o) | Add-Content $log
 }
 
 & node (Join-Path $RepoRoot "packages\catalog\src\sync-bin.ts") `
@@ -38,6 +41,7 @@ if ($llmKey) {
   --max-repos 30 --max-skills 15 --pages 2 `
   --seeds (Join-Path $RepoRoot "seed-repos.json") `
   --agentskills "https://agentskills.codes" --agentskills-limit 50 `
+  @llmArgs `
   @curateArgs `
   --out (Join-Path $skillhome "catalog") --state (Join-Path $skillhome "catalog\state") *>> $log
 $code = $LASTEXITCODE

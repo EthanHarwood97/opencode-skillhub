@@ -60,7 +60,7 @@ export async function syncCatalog(opts: {
   now?: Date
   weights?: ScoreWeights
   evaluation?: { evaluate: EvaluateFn; maxEvals?: number; maxUsd?: number; costPerEvalUsd?: number }
-  curation?: { curate: CurateFn; maxItems?: number; maxUsd?: number; costPerItemUsd?: number }
+  curation?: { curate: CurateFn; maxItems?: number; maxUsd?: number; costPerItemUsd?: number; ids?: ReadonlySet<string> }
   cluster?: { k?: number; seed?: number; dupThreshold?: number }
   embed?: Embedder
   vectors?: { embedder: EmbeddingProvider }
@@ -133,6 +133,7 @@ export async function syncCatalog(opts: {
       maxItems: opts.curation.maxItems,
       maxUsd: opts.curation.maxUsd,
       costPerItemUsd: opts.curation.costPerItemUsd,
+      ...(opts.curation.ids ? { ids: opts.curation.ids } : {}),
       now,
     })
     curated = result.records
