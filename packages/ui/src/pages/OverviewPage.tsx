@@ -4,13 +4,14 @@ import { Link } from "react-router"
 import { Modal } from "../components/Modal.tsx"
 import { Button, Chip, ErrorState, Skeleton, StatTile } from "../components/primitives.tsx"
 import { useToast } from "../components/toast.tsx"
-import { getStatus, installBestAction, installSkillAction, isLive } from "../lib/api.ts"
+import { getBrief, getStatus, installBestAction, installSkillAction, isLive } from "../lib/api.ts"
 import type { CoverageGapDto, InstallBestResultDto } from "../lib/contract.ts"
-import { formatNumber, relativeTime } from "../lib/format.ts"
+import { categoryLabel, formatNumber, relativeTime } from "../lib/format.ts"
 import styles from "./OverviewPage.module.css"
 
 export default function OverviewPage() {
   const { data, isPending, isError, error, refetch } = useQuery({ queryKey: ["status"], queryFn: getStatus })
+  const { data: brief } = useQuery({ queryKey: ["brief"], queryFn: getBrief })
   const toast = useToast()
   const queryClient = useQueryClient()
   const [installGap, setInstallGap] = useState<CoverageGapDto | null>(null)
@@ -196,6 +197,42 @@ export default function OverviewPage() {
           </ul>
         )}
       </section>
+
+      {brief ? (
+        <section className={styles.panel}>
+          <div className={styles.panelHead}>
+            <h2>Nightly brief</h2>
+            <span className="pageHint">
+              {relativeTime(brief.generatedAt, new Date())} · {brief.curated} curated, {brief.cached} cached · ${brief.spentUsd.toFixed(4)}
+            </span>
+          </div>
+          <p className="pageHint">{brief.summary}</p>
+          {brief.corrections.length > 0 ? (
+            <>
+              <h3>Category corrections</h3>
+              <ul className={styles.notes}>
+                {brief.corrections.map((correction) => (
+                  <li key={correction.id}>
+                    <Link to={`/skills/${correction.id}`}>{correction.name}</Link> — {categoryLabel(correction.from)} → {categoryLabel(correction.to)}: {correction.reason}
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : null}
+          {brief.highlights.length > 0 ? (
+            <>
+              <h3>Flagged skills</h3>
+              <ul className={styles.notes}>
+                {brief.highlights.map((highlight) => (
+                  <li key={highlight.id}>
+                    <Link to={`/skills/${highlight.id}`}>{highlight.name}</Link> [{highlight.flags.join(", ")}] — {highlight.summary}
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : null}
+        </section>
+      ) : null}
 
       <section className={styles.panel}>
         <h2>Gaps</h2>

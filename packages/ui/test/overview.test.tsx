@@ -157,6 +157,45 @@ describe("overview", () => {
     expect(screen.queryByRole("button", { name: "Review for install" })).not.toBeInTheDocument()
   })
 
+  it("shows the nightly brief when present", async () => {
+    ;(globalThis as { __SKILLHUB__?: unknown }).__SKILLHUB__ = { mode: "live", token: "t" }
+    server.use(
+      http.get("/api/status", () =>
+        HttpResponse.json({
+          generatedAt: "2026-10-05T00:00:00.000Z",
+          counts: { total: 1, byStatus: { candidate: 1 }, byCategory: {} },
+          installed: 0,
+          active: 0,
+          updates: 0,
+          reviewQueue: 0,
+          gaps: [],
+          sources: [],
+          coverage: [],
+        }),
+      ),
+      http.get("/api/brief", () =>
+        HttpResponse.json({
+          generatedAt: "2026-10-06T00:00:00.000Z",
+          summary: "Curated 5 new skills.",
+          scanned: 10,
+          curated: 5,
+          cached: 0,
+          corrected: 1,
+          flagged: 1,
+          spentUsd: 0.01,
+          corrections: [{ id: "acme/one", name: "One", from: "web3", to: "games", reason: "game stuff" }],
+          highlights: [{ id: "acme/two", name: "Two", category: "games", flags: ["thin"], summary: "vague" }],
+        }),
+      ),
+    )
+    renderPage(<OverviewPage />)
+    expect(await screen.findByRole("heading", { name: "Nightly brief" })).toBeInTheDocument()
+    expect(screen.getByText(/Curated 5 new skills/)).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "One" })).toBeInTheDocument()
+    expect(screen.getByText(/game stuff/)).toBeInTheDocument()
+    expect(screen.getByText(/thin/)).toBeInTheDocument()
+  })
+
   it("explains an empty catalog", async () => {
     ;(globalThis as { __SKILLHUB__?: unknown }).__SKILLHUB__ = { mode: "live", token: "t" }
     server.use(http.get("/api/status", () => HttpResponse.json({ error: { code: "not_found", message: "no catalog at /tmp/x" } }, { status: 404 })))

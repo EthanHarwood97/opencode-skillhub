@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 import type { ClustersFile } from "../../../catalog/src/cluster-types.ts"
+import type { CurationReport } from "../../../catalog/src/curate.ts"
 import type { CatalogIndex } from "../../../catalog/src/publish.ts"
 import type { ReconciliationFile } from "../../../catalog/src/reconcile.ts"
 import type { TrendingFile } from "../../../catalog/src/trending.ts"
@@ -9,6 +10,7 @@ import { computeCoverage, GOAL_PROFILES } from "../../../catalog/src/coverage.ts
 import { computeUpgradeSuggestions } from "../../../catalog/src/upgrades.ts"
 import { filterSkills } from "../../../ui/src/lib/filter.ts"
 import type {
+  BriefDto,
   ClustersDto,
   ReviewDto,
   SkillCard,
@@ -27,6 +29,7 @@ export type UiSnapshot = {
   clusters?: ClustersFile
   trending?: TrendingFile
   reconciliation?: ReconciliationFile
+  curation?: CurationReport
   warnings: string[]
 }
 
@@ -63,6 +66,7 @@ export function loadSnapshot(l: StoreLayout, catalogDir: string = l.catalogDir):
     clusters: readOptional<ClustersFile>(join(catalogDir, "clusters.json"), warnings),
     trending: readOptional<TrendingFile>(join(catalogDir, "trending.json"), warnings),
     reconciliation: readOptional<ReconciliationFile>(join(catalogDir, "reconciliation.json"), warnings),
+    curation: readOptional<CurationReport>(join(catalogDir, "curation.json"), warnings),
     warnings,
   }
 }
@@ -141,6 +145,23 @@ export function buildSkills(snapshot: UiSnapshot, query: SkillsQuery): SkillsPag
 export function buildDetail(snapshot: UiSnapshot, id: string): SkillDetail | undefined {
   const record = snapshot.index.skills.find((skill) => skill.id === id)
   return record ? toDetail(record, snapshot.lock) : undefined
+}
+
+export function buildBrief(snapshot: UiSnapshot): BriefDto | undefined {
+  const report = snapshot.curation
+  if (!report) return undefined
+  return {
+    generatedAt: report.generatedAt,
+    summary: report.summary,
+    scanned: report.totals.scanned,
+    curated: report.totals.curated,
+    cached: report.totals.cached,
+    corrected: report.totals.corrected,
+    flagged: report.totals.flagged,
+    spentUsd: report.totals.spentUsd,
+    corrections: report.corrections,
+    highlights: report.highlights,
+  }
 }
 
 export function buildReview(snapshot: UiSnapshot): ReviewDto {

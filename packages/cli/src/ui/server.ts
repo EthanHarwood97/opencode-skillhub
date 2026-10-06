@@ -4,7 +4,7 @@ import { createServer, type IncomingMessage, type Server, type ServerResponse } 
 import { extname, join, resolve, sep } from "node:path"
 import type { SkillsQuery } from "../../../ui/src/lib/contract.ts"
 import { layout } from "../paths.ts"
-import { buildClusters, buildDetail, buildReview, buildSkills, buildStatus, buildTrending, loadSnapshot, type UiSnapshot } from "./data.ts"
+import { buildBrief, buildClusters, buildDetail, buildReview, buildSkills, buildStatus, buildTrending, loadSnapshot, type UiSnapshot } from "./data.ts"
 import { handleActivate, handleInstall, handleInstallBest, handleUpdateApply, handleUpdateReview, UiActionError, type EngineContext } from "./mutations.ts"
 
 export type UiServerOptions = {
@@ -180,6 +180,13 @@ export function startUiServer(opts: UiServerOptions): Promise<UiServerHandle> {
           const detail = buildDetail(snap, id)
           if (!detail) return sendError(res, 404, "not_found", `no skill with id ${id}`)
           return sendJson(res, 200, detail)
+        }
+        if (pathname === "/api/brief") {
+          const snap = readSnapshot()
+          if ("error" in snap) return sendError(res, 404, "not_found", snap.error)
+          const brief = buildBrief(snap)
+          if (!brief) return sendError(res, 404, "not_found", "no nightly brief yet")
+          return sendJson(res, 200, brief)
         }
         if (pathname === "/api/clusters") {
           const snap = readSnapshot()

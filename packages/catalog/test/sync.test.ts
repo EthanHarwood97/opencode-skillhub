@@ -160,3 +160,28 @@ describe("syncCatalog", () => {
     expect(result.reconciliation.gaps).toContain("source fixtures: repo x/y: boom")
   })
 })
+
+ describe('syncCatalog curation', () => {
+  it('applies high-confidence corrections before publishing and writes the brief', async () => {
+    const root = mkdtempSync(join(tmpdir(), 'skillhub-sync-curate-'))
+    const outDir = join(root, 'catalog')
+    const stateDir = join(root, 'state')
+    const result = await syncCatalog({
+      sources: [{ name: 's', load: async () => [skill('lore-tool', 'acme/skills')] }],
+      outDir,
+      stateDir,
+      now,
+      curation: {
+        curate: async () => ({ result: { category: 'games', confidence: 'high', flags: ['thin'], summary: 'mislabelled' }, usage: { inputTokens: 1, outputTokens: 1 }, costUsd: 0.001, model: 'm' }),
+        maxItems: 5,
+        maxUsd: 1,
+      },
+    })
+    const record = result.index.skills.find((s) => s.id === 'acme-skills/lore-tool')!
+    expect(record.category).toBe('games')
+    expect(result.curation?.corrections.map((c) => c.id)).toEqual(['acme-skills/lore-tool'])
+    expect(existsSync(join(outDir, 'curation.json'))).toBe(true)
+    expect(existsSync(join(outDir, 'brief.md'))).toBe(true)
+  })
+ })
+

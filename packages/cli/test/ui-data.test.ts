@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest"
 import { makeRecord } from "../../catalog/test/helpers.ts"
 import type { Lockfile } from "../src/lockfile.ts"
 import { layout } from "../src/paths.ts"
-import { buildClusters, buildDetail, buildReview, buildSkills, buildStatus, buildTrending, loadSnapshot, toCard, type UiSnapshot } from "../src/ui/data.ts"
+import { buildBrief, buildClusters, buildDetail, buildReview, buildSkills, buildStatus, buildTrending, loadSnapshot, toCard, type UiSnapshot } from "../src/ui/data.ts"
 
 const scores = (total: number) => ({ total, quality: total, trust: total, freshness: total, compatibility: total, adoption: total, reasons: [], rubricVersion: "heuristic-v0", evaluatedAt: "2026-10-05T00:00:00.000Z" })
 
@@ -82,6 +82,20 @@ describe("builders", () => {
     const status = buildStatus(empty)
     expect(status.coverage).toHaveLength(7)
     expect(status.coverage.every((profile) => profile.coverage === 0)).toBe(true)
+  })
+
+  it("maps the nightly curation report into a brief", () => {
+    const snap = snapshot()
+    snap.curation = {
+      version: 1,
+      generatedAt: "2026-10-06T00:00:00.000Z",
+      totals: { scanned: 10, curated: 5, cached: 5, skippedBudget: 0, skippedNoBody: 0, failed: 0, corrected: 1, flagged: 1, spentUsd: 0.01 },
+      corrections: [{ id: "a/three", name: "three", from: "web3", to: "games", reason: "game stuff" }],
+      highlights: [{ id: "a/three", name: "three", category: "games", flags: ["thin"], summary: "vague" }],
+      summary: "Curated 5 new skills.",
+    }
+    expect(buildBrief(snap)).toMatchObject({ generatedAt: "2026-10-06T00:00:00.000Z", curated: 5, cached: 5, corrected: 1, flagged: 1 })
+    expect(buildBrief({ ...snap, curation: undefined })).toBeUndefined()
   })
 
   it("filters and paginates cards", () => {

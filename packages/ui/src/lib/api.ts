@@ -1,4 +1,5 @@
 import type {
+  BriefDto,
   ClustersDto,
   InstallBestResultDto,
   InstallResultDto,
@@ -91,6 +92,14 @@ export async function getSkill(id: string): Promise<SkillDetail> {
 export const getClusters = (): Promise<ClustersDto> => (isLive() ? request("/api/clusters") : loadStatic<ClustersDto>("clusters"))
 export const getTrending = (): Promise<TrendingDto> => (isLive() ? request("/api/trending") : loadStatic<TrendingDto>("trending"))
 export const getReview = (): Promise<ReviewDto> => (isLive() ? request("/api/review") : loadStatic<ReviewDto>("review"))
+
+export async function getBrief(): Promise<BriefDto | null> {
+  if (!isLive()) return null
+  const res = await fetch("/api/brief")
+  if (res.status === 404) return null
+  if (!res.ok) throw await errorFrom(res)
+  return (await res.json()) as BriefDto
+}
 
 export async function installSkillAction(id: string, dryRun: boolean): Promise<InstallResultDto> {
   requireLive()

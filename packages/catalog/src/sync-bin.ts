@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 import { parseArgs } from "node:util"
 import { readCalibration } from "./calibrate.ts"
+import { makeCurator, type CurateFn } from "./curate.ts"
 import { makeGeminiEmbedder, type EmbeddingProvider } from "./embeddings.ts"
 import { makeOpenAiCompatClient } from "./llm.ts"
 import { makeRubricEvaluator } from "./rubric.ts"
@@ -32,6 +33,10 @@ const { values } = parseArgs({
     "max-evals": { type: "string", default: "0" },
     "max-usd": { type: "string", default: "0" },
     "cost-per-eval": { type: "string", default: "0.002" },
+    curate: { type: "boolean", default: false },
+    "curate-max-items": { type: "string", default: "60" },
+    "curate-max-usd": { type: "string", default: "0.25" },
+    "curate-cost-per-item": { type: "string", default: "0.002" },
     "llm-model": { type: "string" },
     "llm-base-url": { type: "string" },
     "no-vectors": { type: "boolean", default: false },
@@ -58,21 +63,38 @@ else if (vectorKey) {
 } else console.log("vectors: skipped (no GOOGLE_API_KEY/GEMINI_API_KEY)")
 
 let evaluation: { evaluate: ReturnType<typeof makeRubricEvaluator>; maxEvals?: number; maxUsd: number; costPerEvalUsd?: number } | undefined
-if (values.llm) {
-  const maxUsd = Number(values["max-usd"])
-  if (!(maxUsd > 0)) {
+let curation: { curate: CurateFn; maxItems?: number; maxUsd: number; costPerItemUsd?: number } | undefined
+if (values.llm || values.curate) {
+  if (values.llm && !(Number(values["max-usd"]) > 0)) {
     console.error("--llm requires a hard cost cap: pass --max-usd <usd>")
+    process.exit(2)
+  }
+  if (values.curate && !(Number(values["curate-max-usd"]) > 0)) {
+    console.error("--curate requires a hard cost cap: pass --curate-max-usd <usd>")
     process.exit(2)
   }
   const apiKey = process.env.SKILLHUB_LLM_API_KEY ?? process.env.DEEPSEEK_API_KEY
   if (!apiKey) {
-    console.error("--llm requires SKILLHUB_LLM_API_KEY or DEEPSEEK_API_KEY")
+    console.error("--llm/--curate requires SKILLHUB_LLM_API_KEY or DEEPSEEK_API_KEY")
     process.exit(2)
   }
   const baseUrl = values["llm-base-url"] ?? process.env.SKILLHUB_LLM_BASE_URL ?? "https://api.deepseek.com/v1"
   const model = values["llm-model"] ?? process.env.SKILLHUB_LLM_MODEL ?? "deepseek-chat"
-  console.log(`llm: ${model} via ${baseUrl}; cap $${maxUsd}${values["max-evals"] !== "0" ? `, ${values["max-evals"]} evals` : ""}`)
-  evaluation = { evaluate: makeRubricEvaluator(makeOpenAiCompatClient({ baseUrl, apiKey, model })), maxEvals: Number(values["max-evals"]) || undefined, maxUsd, costPerEvalUsd: Number(values["cost-per-eval"]) || undefined }
+  if (values.llm) {
+    const maxUsd = Number(values["max-usd"])
+    console.log(`llm: ${model} via ${baseUrl}; cap $${maxUsd}${values["max-evals"] !== "0" ? `, ${values["max-evals"]} evals` : ""}`)
+    evaluation = { evaluate: makeRubricEvaluator(makeOpenAiCompatClient({ baseUrl, apiKey, model })), maxEvals: Number(values["max-evals"]) || undefined, maxUsd, costPerEvalUsd: Number(values["cost-per-eval"]) || undefined }
+  }
+  if (values.curate) {
+    const curateMaxUsd = Number(values["curate-max-usd"])
+    console.log(`curate: ${model} via ${baseUrl}; cap $${curateMaxUsd}, max ${values["curate-max-items"]} items`)
+    curation = {
+      curate: makeCurator(makeOpenAiCompatClient({ baseUrl, apiKey, model })),
+      maxItems: Number(values["curate-max-items"]) || undefined,
+      maxUsd: curateMaxUsd,
+      costPerItemUsd: Number(values["curate-cost-per-item"]) || undefined,
+    }
+  }
 }
 
 const sources: SyncSource[] = []
@@ -137,7 +159,7 @@ const calibrationPath = join(values.out, "calibration.json")
 const weights = existsSync(calibrationPath) ? readCalibration(calibrationPath) : undefined
 console.log(`sync: ${sources.length} source(s) -> ${values.out} (state ${stateDir})${weights ? "; calibrated weights applied" : ""}`)
 
-const result = await syncCatalog({ sources, outDir: values.out, stateDir, weights, evaluation, vectors })
+const result = await syncCatalog({ sources, outDir: values.out, stateDir, weights, evaluation, curation, vectors })
 const summary = result.summary
 console.log(`sync: ${summary.candidates} candidate(s) -> ${summary.published} published, ${summary.quarantined} quarantined, ${summary.rejected} rejected`)
 const spread = Object.entries(result.index.counts.byCategory).sort((a, b) => b[1] - a[1])
@@ -152,4 +174,9 @@ for (const gap of result.reconciliation.gaps) console.log(`  gap: ${gap}`)
 if (result.vectors) {
   console.log(`vectors: embedded ${result.vectors.embedded}, reused ${result.vectors.reused}`)
   for (const warning of result.vectors.warnings) console.log(`  vector warning: ${warning}`)
+}
+if (result.curation) {
+  console.log(`curate: ${result.curation.summary}`)
+  for (const correction of result.curation.corrections) console.log(`  corrected ${correction.id}: ${correction.from} -> ${correction.to}`)
+  for (const highlight of result.curation.highlights) console.log(`  flagged ${highlight.id}: ${highlight.flags.join(", ")}`)
 }

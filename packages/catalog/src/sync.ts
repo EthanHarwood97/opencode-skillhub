@@ -1,9 +1,10 @@
-import { existsSync, readFileSync } from "node:fs"
+import { existsSync, readFileSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 import type { BuildSummary } from "./build.ts"
 import { normalizeAll } from "./build.ts"
 import { composeTotal } from "./calibrate.ts"
 import { readClusterState, refineClusters, writeClusterState, type ClusterState } from "./cluster-refine.ts"
+import { curateRecords, readCurationCache, renderBrief, writeCurationCache, type CurateFn, type CurationReport } from "./curate.ts"
 import type { Embedder } from "./embed.ts"
 import type { EmbeddingProvider } from "./embeddings.ts"
 import { readEvalCache, writeEvalCache } from "./eval-cache.ts"
@@ -40,6 +41,7 @@ export type SyncResult = {
   clusterState: ClusterState
   evalStats?: EvaluateStats
   vectors?: { embedded: number; reused: number; warnings: string[] }
+  curation?: CurationReport
 }
 
 const readIndex = (outDir: string): CatalogIndex | undefined => {
@@ -58,6 +60,7 @@ export async function syncCatalog(opts: {
   now?: Date
   weights?: ScoreWeights
   evaluation?: { evaluate: EvaluateFn; maxEvals?: number; maxUsd?: number; costPerEvalUsd?: number }
+  curation?: { curate: CurateFn; maxItems?: number; maxUsd?: number; costPerItemUsd?: number }
   cluster?: { k?: number; seed?: number; dupThreshold?: number }
   embed?: Embedder
   vectors?: { embedder: EmbeddingProvider }
@@ -119,8 +122,26 @@ export async function syncCatalog(opts: {
   }
   if (opts.weights) evaluated = rescoreAll(evaluated, opts.weights)
 
+  let curated = evaluated
+  let curation: CurationReport | undefined
+  if (opts.curation) {
+    const cacheFile = join(opts.stateDir, "curation-cache.json")
+    const result = await curateRecords(evaluated, {
+      cache: readCurationCache(cacheFile),
+      curate: opts.curation.curate,
+      bodies,
+      maxItems: opts.curation.maxItems,
+      maxUsd: opts.curation.maxUsd,
+      costPerItemUsd: opts.curation.costPerItemUsd,
+      now,
+    })
+    curated = result.records
+    curation = result.report
+    writeCurationCache(cacheFile, result.cache)
+  }
+
   const stateFile = join(opts.stateDir, "clusters-state.json")
-  const refined = refineClusters(evaluated, {
+  const refined = refineClusters(curated, {
     prev: readClusterState(stateFile),
     k: opts.cluster?.k,
     seed: opts.cluster?.seed,
@@ -135,6 +156,10 @@ export async function syncCatalog(opts: {
   const reconciliation = reconcile({ previous: previousIndex, current: refined.records, sourceStats, now })
   const { index } = writeCatalog(refined.records, opts.outDir, now, { trending, reconciliation })
   writeSnapshot(opts.stateDir, snapshotFromRecords(refined.records, now))
+  if (curation) {
+    writeFileSync(join(opts.outDir, "curation.json"), JSON.stringify(curation, null, 2) + "\n")
+    writeFileSync(join(opts.outDir, "brief.md"), renderBrief(curation))
+  }
 
   let vectors: { embedded: number; reused: number; warnings: string[] } | undefined
   if (opts.vectors) {
@@ -168,5 +193,6 @@ export async function syncCatalog(opts: {
     clusterState: refined.state,
     evalStats,
     vectors,
+    curation,
   }
 }

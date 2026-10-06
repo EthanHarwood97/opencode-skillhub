@@ -130,6 +130,21 @@ export type InstallBestResultDto = {
   failed: number
 }
 
+export type BriefHighlightDto = { id: string; name: string; category: string; flags: string[]; summary: string }
+export type BriefCorrectionDto = { id: string; name: string; from: string; to: string; reason: string }
+export type BriefDto = {
+  generatedAt: string
+  summary: string
+  scanned: number
+  curated: number
+  cached: number
+  corrected: number
+  flagged: number
+  spentUsd: number
+  corrections: BriefCorrectionDto[]
+  highlights: BriefHighlightDto[]
+}
+
 export type UpdateReviewDto = {
   kind: "update" | "up-to-date" | "not-installed" | "blocked"
   changes?: { path: string; status: string; patch?: string }[]
