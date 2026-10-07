@@ -59,7 +59,7 @@ export async function fetchRecordFiles(
     return files
   }
 
-  throw new MissingSourceError(`local records are ingest-only; adoption lands in Phase 2 (${record.id})`)
+  throw new MissingSourceError(`local records have no remote source; manage them with "skillhub adopt" or refresh with "skillhub repair-local" (${record.id})`)
 }
 
 export function verifyFiles(record: SkillRecord, files: FetchedFiles): void {

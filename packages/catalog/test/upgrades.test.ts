@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest"
 import { computeUpgradeSuggestions } from "../src/upgrades.ts"
 import { makeRecord } from "./helpers.ts"
 
+const github = { kind: "github" as const, repo: "acme/skills", path: "SKILL.md", ref: "abc123", license: "MIT", licenseFlags: [] }
+
 const rec = (id: string, over: Partial<Parameters<typeof makeRecord>[0]> = {}) =>
-  makeRecord({ id, clusterId: "c-1", status: "candidate", scores: { ...makeRecord({ id }).scores, total: 60 }, ...over })
+  makeRecord({ id, clusterId: "c-1", status: "candidate", source: github, scores: { ...makeRecord({ id }).scores, total: 60 }, ...over })
 
 describe("computeUpgradeSuggestions", () => {
   it("suggests a better same-cluster candidate for an active skill", () => {
@@ -76,6 +78,29 @@ describe("computeUpgradeSuggestions", () => {
     const out = computeUpgradeSuggestions(records, installed)
     expect(out.map((s) => s.from)).toEqual(["a/old1", "a/old2"])
     expect(out.map((s) => s.toTotal)).toEqual([90, 90])
+  })
+
+  it("never targets pinned installs or local records", () => {
+    const records = [rec("a/old", { scores: { ...rec("a/old").scores, total: 40 } }), rec("a/new", { scores: { ...rec("a/new").scores, total: 90 } })]
+    expect(computeUpgradeSuggestions(records, [{ id: "a/old", total: 50, active: true, pinned: true }])).toEqual([])
+    expect(computeUpgradeSuggestions(records, [{ id: "a/old", total: 50, active: true }])).toHaveLength(1)
+
+    const withLocal = [
+      ...records,
+      rec("local/mine", { source: { kind: "local", path: "SKILL.md", licenseFlags: [] }, scores: { ...rec("local/mine").scores, total: 30 } }),
+      rec("a/local-target", { source: { kind: "local", path: "SKILL.md", licenseFlags: [] }, scores: { ...rec("a/local-target").scores, total: 95 } }),
+    ]
+    const out = computeUpgradeSuggestions(withLocal, [
+      { id: "local/mine", total: 0, active: true },
+      { id: "a/old", total: 50, active: true },
+    ])
+    expect(out.map((s) => s.from)).toEqual(["a/old"])
+    expect(out.map((s) => s.to)).not.toContain("a/local-target")
+  })
+
+  it("rejects cross-category candidates even inside a broad shared cluster", () => {
+    const records = [rec("a/old"), rec("a/other", { category: "writing", scores: { ...rec("a/other").scores, total: 95 } })]
+    expect(computeUpgradeSuggestions(records, [{ id: "a/old", total: 50, active: true }])).toEqual([])
   })
 
   it("qualifies a candidate at exactly total + margin and rejects one below", () => {

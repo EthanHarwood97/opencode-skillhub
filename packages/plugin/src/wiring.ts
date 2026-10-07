@@ -98,7 +98,7 @@ export function collectStatus(root: string, projectDir: string, _now?: Date): St
   const updates = index
     ? Object.entries(lock.skills).filter(([id, e]) => {
         const record = index.skills.find((s) => s.id === id)
-        return record !== undefined && record.contentHash !== e.contentHash
+        return record !== undefined && record.source.kind !== "local" && record.contentHash !== e.contentHash
       }).length
     : 0
   const adverts = listManagedAdverts(root)
@@ -106,7 +106,7 @@ export function collectStatus(root: string, projectDir: string, _now?: Date): St
   const uses = Object.fromEntries(Object.entries(usage.loads).map(([id, v]) => [id, v.count]))
   const upgrades = computeUpgradeSuggestions(
     index?.skills ?? [],
-    Object.entries(lock.skills).map(([id, e]) => ({ id, total: e.total, active: e.active })),
+    Object.entries(lock.skills).map(([id, e]) => ({ id, total: e.total, active: e.active, pinned: e.pinned })),
   )
   return {
     active,

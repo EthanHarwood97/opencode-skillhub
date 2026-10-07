@@ -91,7 +91,7 @@ export function toCard(record: SkillRecord, lock: Lockfile): SkillCard {
     ...(record.source.repo ? { sourceRepo: record.source.repo } : {}),
     installed: entry !== undefined,
     active: entry?.active ?? false,
-    updateAvailable: entry !== undefined && entry.contentHash !== record.contentHash && record.status === "candidate",
+    updateAvailable: entry !== undefined && record.source.kind !== "local" && entry.contentHash !== record.contentHash && record.status === "candidate",
   }
 }
 
@@ -170,14 +170,14 @@ export function buildReview(snapshot: UiSnapshot): ReviewDto {
   const updates = Object.values(snapshot.lock.skills)
     .flatMap((entry) => {
       const record = byId.get(entry.id)
-      if (!record || record.status !== "candidate" || entry.contentHash === record.contentHash) return []
+      if (!record || record.status !== "candidate" || record.source.kind === "local" || entry.contentHash === record.contentHash) return []
       return [{ id: entry.id, from: entry.total, to: record.scores.total, riskFrom: entry.riskLevel, riskTo: record.risk.level }]
     })
     .sort((a, b) => b.to - a.to || a.id.localeCompare(b.id))
   const queue = new Set(snapshot.reconciliation?.reviewQueue ?? [])
   const upgrades = computeUpgradeSuggestions(
     snapshot.index.skills,
-    Object.entries(snapshot.lock.skills).map(([id, entry]) => ({ id, total: entry.total, active: entry.active })),
+    Object.entries(snapshot.lock.skills).map(([id, entry]) => ({ id, total: entry.total, active: entry.active, pinned: entry.pinned })),
   ).map(({ from, to, fromTotal, toTotal }) => ({ from, to, fromTotal, toTotal }))
   return {
     newCandidates: cards

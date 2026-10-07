@@ -9,13 +9,15 @@ import { buildBrief, buildClusters, buildDetail, buildReview, buildSkills, build
 
 const scores = (total: number) => ({ total, quality: total, trust: total, freshness: total, compatibility: total, adoption: total, reasons: [], rubricVersion: "heuristic-v0", evaluatedAt: "2026-10-05T00:00:00.000Z" })
 
+const github = { kind: "github" as const, repo: "acme/skills", path: "SKILL.md", ref: "abc123", license: "MIT", licenseFlags: [] }
+
 const snapshot = (): UiSnapshot => ({
   index: {
     version: 1,
     generatedAt: "2026-10-05T00:00:00.000Z",
     counts: { total: 3, byStatus: { candidate: 2, quarantined: 1 }, byCategory: { writing: 1 } },
     skills: [
-      makeRecord({ id: "a/one", category: "writing", tags: ["pdf"], scores: scores(90) }),
+      makeRecord({ id: "a/one", source: github, category: "writing", tags: ["pdf"], scores: scores(90) }),
       makeRecord({ id: "a/two", status: "quarantined", scores: scores(70) }),
       makeRecord({ id: "a/three", scores: scores(60) }),
     ],
@@ -118,9 +120,31 @@ describe("builders", () => {
 
   it("suggests a better-ranked same-cluster alternative for an active skill", () => {
     const snap = snapshot()
-    snap.index.skills.push(makeRecord({ id: "a/better", category: "writing", tags: ["pdf"], scores: scores(90) }))
+    snap.index.skills.push(makeRecord({ id: "a/better", source: github, category: "writing", tags: ["pdf"], scores: scores(90) }))
     expect(buildReview(snap).upgrades).toEqual([{ from: "a/one", to: "a/better", fromTotal: 80, toTotal: 90 }])
     expect(buildReview(snapshot()).upgrades).toEqual([])
+  })
+
+  it("never offers updates or upgrades for manager-owned local records", () => {
+    const snap = snapshot()
+    snap.index.skills.push(makeRecord({ id: "local/mine", category: "writing", tags: ["pdf"], scores: scores(30) }))
+    snap.lock.skills["local/mine"] = {
+      id: "local/mine",
+      contentHash: "old",
+      provenanceTier: "local",
+      installedAt: "",
+      files: [],
+      active: true,
+      pinned: true,
+      riskLevel: "low",
+      total: 0,
+    }
+    const review = buildReview(snap)
+    expect(review.updates.some((update) => update.id === "local/mine")).toBe(false)
+    expect(review.upgrades.some((upgrade) => upgrade.from === "local/mine" || upgrade.to === "local/mine")).toBe(false)
+
+    const card = toCard(snap.index.skills.find((skill) => skill.id === "local/mine")!, snap.lock)
+    expect(card).toMatchObject({ installed: true, active: true, updateAvailable: false })
   })
 
   it("degrades gracefully when optional artifacts are missing", () => {

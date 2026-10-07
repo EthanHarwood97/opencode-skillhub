@@ -76,7 +76,7 @@ describe("collectStatus", () => {
     )
     writeFileSync(
       join(root, "catalog", "index.json"),
-      JSON.stringify({ version: 1, generatedAt: "", counts: { total: 1, byStatus: {}, byCategory: {} }, skills: [{ id: "a/one", name: "one", description: "d", category: "c", tags: [], clusterId: "c/x", clusterLabel: "X", source: { kind: "local", path: "p", licenseFlags: [] }, files: [], contentHash: "new", requires: { runtime: [], scripts: [], mcp: [], env: [], services: [] }, risk: { level: "low", findings: [] }, signals: {}, scores: { total: 1, quality: 1, trust: 1, freshness: 1, compatibility: 1, adoption: 1, reasons: [], rubricVersion: "heuristic-v0", evaluatedAt: "" }, provenanceTier: "local", status: "candidate", relations: { supersedes: [], duplicates: [], alternatives: [] } }] }),
+      JSON.stringify({ version: 1, generatedAt: "", counts: { total: 1, byStatus: {}, byCategory: {} }, skills: [{ id: "a/one", name: "one", description: "d", category: "c", tags: [], clusterId: "c/x", clusterLabel: "X", source: { kind: "github", repo: "a/one", path: "p", ref: "abc", licenseFlags: [] }, files: [], contentHash: "new", requires: { runtime: [], scripts: [], mcp: [], env: [], services: [] }, risk: { level: "low", findings: [] }, signals: {}, scores: { total: 1, quality: 1, trust: 1, freshness: 1, compatibility: 1, adoption: 1, reasons: [], rubricVersion: "heuristic-v0", evaluatedAt: "" }, provenanceTier: "local", status: "candidate", relations: { supersedes: [], duplicates: [], alternatives: [] } }] }),
     )
     const status = collectStatus(root, "C:/proj", new Date("2026-10-05T00:00:00Z"))
     expect(status.updates).toBe(1)
@@ -124,7 +124,7 @@ describe("collectStatus", () => {
       tags: [],
       clusterId: "c/x",
       clusterLabel: "X",
-      source: { kind: "local", path: "p", licenseFlags: [] },
+      source: { kind: "github", repo: "a/x", path: "p", ref: "abc", licenseFlags: [] },
       files: [],
       contentHash: "h",
       requires: { runtime: [], scripts: [], mcp: [], env: [], services: [] },
