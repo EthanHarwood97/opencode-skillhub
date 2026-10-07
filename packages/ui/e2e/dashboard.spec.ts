@@ -21,3 +21,11 @@ test("opens a skill detail with the score breakdown", async ({ page }) => {
   await expect(page.getByText("Why this score")).toBeVisible()
   await expect(page.getByText("Requirements")).toBeVisible()
 })
+
+test("walks the how-it-works plate", async ({ page }) => {
+  await page.goto("/")
+  await page.getByRole("link", { name: "How it works" }).click()
+  await expect(page.getByRole("heading", { level: 1, name: /Your agent is only as good as the skills it can find/ })).toBeVisible()
+  await expect(page.getByText(/Six stages stand between raw repositories/)).toBeVisible()
+  await expect(page.getByText(/Give your agent the right skills/)).toBeVisible()
+})

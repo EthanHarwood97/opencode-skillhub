@@ -1,8 +1,11 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { Link } from "react-router"
+import { Atlas } from "../components/Atlas.tsx"
 import { Modal } from "../components/Modal.tsx"
-import { Button, Chip, ErrorState, Skeleton, StatTile } from "../components/primitives.tsx"
+import { PipelineStrip, type PipelineStep } from "../components/PipelineStrip.tsx"
+import { Button, Chip, ErrorState, PlotBar, Skeleton, StatTile } from "../components/primitives.tsx"
+import { Counter } from "../components/plot.tsx"
 import { useToast } from "../components/toast.tsx"
 import { getBrief, getStatus, installBestAction, installSkillAction, isLive } from "../lib/api.ts"
 import type { CoverageGapDto, InstallBestResultDto } from "../lib/contract.ts"
@@ -104,9 +107,14 @@ export default function OverviewPage() {
   if (isPending) {
     return (
       <section className="stack">
-        <header className="pageHead"><h1>Status</h1></header>
-        <div className={styles.tiles}>{Array.from({ length: 4 }, (_, i) => <Skeleton key={i} height={86} />)}</div>
-        <Skeleton height={160} />
+        <header className={styles.masthead}>
+          <div>
+            <span className="eyebrow">Plate 00 · The Observatory</span>
+            <h1>Status</h1>
+          </div>
+        </header>
+        <div className={styles.tiles}>{Array.from({ length: 4 }, (_, i) => <Skeleton key={i} height={96} />)}</div>
+        <Skeleton height={420} />
       </section>
     )
   }
@@ -119,148 +127,243 @@ export default function OverviewPage() {
     )
   }
 
+  const anySourceError = data.sources.some((source) => source.error)
+  const lastFetch = data.sources.map((source) => source.fetchedAt).sort().at(-1)
+  const steps: PipelineStep[] = [
+    {
+      id: "sync",
+      label: "Sync",
+      detail: `${data.sources.length} sources${lastFetch ? ` · ${relativeTime(lastFetch, new Date())}` : ""}`,
+      state: anySourceError ? "warn" : data.sources.length > 0 ? "ok" : "idle",
+    },
+    { id: "gates", label: "Gates", detail: `${formatNumber(data.counts.byStatus.candidate ?? 0)} published`, state: data.counts.total > 0 ? "ok" : "idle" },
+    {
+      id: "scan",
+      label: "Scan",
+      detail: `${formatNumber(data.counts.byStatus.quarantined ?? 0)} quarantined`,
+      state: (data.counts.byStatus.quarantined ?? 0) > 0 ? "warn" : "ok",
+    },
+    { id: "score", label: "Score", detail: "quality · trust · freshness", state: "ok" },
+    {
+      id: "curate",
+      label: "Curate",
+      detail: brief ? `${brief.curated} curated · $${brief.spentUsd.toFixed(4)}` : "runs at 03:00",
+      state: brief ? "ok" : "idle",
+    },
+    { id: "autopilot", label: "Autopilot", detail: `${formatNumber(data.active)} active · 1 per domain`, state: "ok" },
+  ]
+
+  const categoryMax = Math.max(1, ...CATEGORY_ORDER.map((category) => data.counts.byCategory[category] ?? 0))
+
   return (
     <section className="stack">
-      <header className="pageHead">
-        <h1>Status</h1>
-        <p className="pageHint">Last sync {relativeTime(data.generatedAt, new Date())}</p>
+      <header className={styles.masthead}>
+        <div className={styles.mastLeft}>
+          <span className="eyebrow">Plate 00 · The Observatory</span>
+          <h1>Status</h1>
+          <p className={styles.mastSub}>Every skill your agent can reach, plotted and kept current.</p>
+        </div>
+        <div className={styles.mastRight}>
+          <p className="pageHint">Last sync {relativeTime(data.generatedAt, new Date())}</p>
+          <Link to="/how" className={styles.howCta}>How it works</Link>
+        </div>
       </header>
 
       <div className={styles.tiles}>
-        <StatTile label="Library" value={formatNumber(data.counts.total)} hint={`${data.counts.byStatus.candidate ?? 0} published`} />
-        <StatTile label="Installed" value={data.installed} hint={`${data.active} active · auto-pilot`} />
-        <StatTile label="Updates" value={data.updates} hint="awaiting review" />
-        <StatTile label="Review queue" value={data.reviewQueue} hint="new candidates" />
+        <StatTile label="Library" value={<Counter value={data.counts.total} format={formatNumber} />} hint={`${data.counts.byStatus.candidate ?? 0} published`} />
+        <StatTile label="Installed" value={<Counter value={data.installed} />} hint={`${data.active} active · autopilot`} />
+        <StatTile label="Updates" value={<Counter value={data.updates} />} hint="awaiting review" />
+        <StatTile label="Review queue" value={<Counter value={data.reviewQueue} />} hint="new candidates" />
       </div>
 
-      <section className={styles.panel}>
-        <h2>Sources</h2>
-        {data.sources.length === 0 ? (
-          <p className="pageHint">No source stats yet. They appear after a sync writes reconciliation.json.</p>
+      <section className={styles.plate}>
+        <header className="plateHead">
+          <div>
+            <span className="plateNo">Fig. 01 <b>·</b> The Atlas</span>
+            <h2>Every skill in the catalog</h2>
+          </div>
+          <p className="pageHint">plotted by score · hover to inspect · click to open</p>
+        </header>
+        <Atlas />
+      </section>
+
+      <div className={styles.split}>
+        <section className={styles.plate}>
+          <header className="plateHead">
+            <div>
+              <span className="plateNo">Fig. 02 <b>·</b> The Pipeline</span>
+              <h2>Sources to active set</h2>
+            </div>
+          </header>
+          <div className="plateBody">
+            <PipelineStrip steps={steps} />
+          </div>
+        </section>
+
+        {brief ? (
+          <section className={styles.plate}>
+            <header className="plateHead">
+              <div>
+                <span className="plateNo">Fig. 03 <b>·</b> Field notes</span>
+                <h2>Nightly brief</h2>
+              </div>
+              <span className="pageHint num">
+                {relativeTime(brief.generatedAt, new Date())} · {brief.curated} curated · ${brief.spentUsd.toFixed(4)}
+              </span>
+            </header>
+            <div className={`plateBody ${styles.briefBody}`}>
+              <p className="pageHint">{brief.summary}</p>
+              {brief.corrections.length > 0 ? (
+                <>
+                  <h3>Category corrections</h3>
+                  <ul className={styles.notes}>
+                    {brief.corrections.map((correction) => (
+                      <li key={correction.id}>
+                        <Link to={`/skills/${correction.id}`}>{correction.name}</Link> — {categoryLabel(correction.from)} → {categoryLabel(correction.to)}: {correction.reason}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : null}
+              {brief.highlights.length > 0 ? (
+                <>
+                  <h3>Flagged skills</h3>
+                  <ul className={styles.notes}>
+                    {brief.highlights.map((highlight) => (
+                      <li key={highlight.id}>
+                        <Link to={`/skills/${highlight.id}`}>{highlight.name}</Link> [{highlight.flags.join(", ")}] — {highlight.summary}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : null}
+            </div>
+          </section>
         ) : (
-          <table className={styles.table}>
-            <thead>
-              <tr><th>source</th><th>candidates</th><th>last fetched</th><th>status</th></tr>
-            </thead>
-            <tbody>
-              {data.sources.map((source) => (
-                <tr key={source.source}>
-                  <td className="mono">{source.source}</td>
-                  <td>{source.candidates}</td>
-                  <td>{relativeTime(source.fetchedAt, new Date())}</td>
-                  <td>
-                    {source.error ? <Chip tone="critical">error</Chip> : (source.warnings?.length ?? 0) > 0 ? <Chip tone="medium">warnings</Chip> : <Chip tone="low">ok</Chip>}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <section className={styles.plate}>
+            <header className="plateHead">
+              <div>
+                <span className="plateNo">Fig. 03 <b>·</b> Field notes</span>
+                <h2>Nightly brief</h2>
+              </div>
+            </header>
+            <div className="plateBody">
+              <p className="pageHint">The curator writes a brief after the 03:00 sync. Nothing yet.</p>
+            </div>
+          </section>
         )}
-        {(data.sources.some((source) => (source.warnings?.length ?? 0) > 0)) ? (
-          <ul className={styles.notes}>
-            {data.sources.flatMap((source) => (source.warnings ?? []).map((warning) => <li key={`${source.source}:${warning}`}>{source.source} — {warning}</li>))}
+      </div>
+
+      <section className={styles.plate}>
+        <header className="plateHead">
+          <div>
+            <span className="plateNo">Fig. 04 <b>·</b> Domains</span>
+            <h2>Categories</h2>
+          </div>
+          <span className="pageHint">24 domains — every skill lives in exactly one</span>
+        </header>
+        <div className="plateBody">
+          <ul className={styles.domains}>
+            {CATEGORY_ORDER.map((category) => {
+              const count = data.counts.byCategory[category] ?? 0
+              return (
+                <li key={category}>
+                  <Link to={`/gallery?category=${encodeURIComponent(category)}`} className={styles.domainRow}>
+                    <span className={styles.domainLabel}>{categoryLabel(category)}</span>
+                    <PlotBar value={count} max={categoryMax} />
+                    <span className={`mono ${styles.domainCount}`}>{count}</span>
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
-        ) : null}
-      </section>
-
-      <section className={styles.panel}>
-        <div className={styles.panelHead}>
-          <h2>Categories</h2>
-          <span className="pageHint">{CATEGORY_ORDER.length} domains — every skill lives in exactly one</span>
-        </div>
-        <div className={styles.categories}>
-          {CATEGORY_ORDER.map((category) => (
-            <Link key={category} to={`/gallery?category=${encodeURIComponent(category)}`} className={styles.categoryLink}>
-              <Chip tone="muted">{categoryLabel(category)}</Chip>
-              <span className="mono">{data.counts.byCategory[category] ?? 0}</span>
-            </Link>
-          ))}
         </div>
       </section>
 
-      <section className={styles.panel}>
-        <div className={styles.panelHead}>
-          <h2>Coverage</h2>
+      <section className={styles.plate}>
+        <header className="plateHead">
+          <div>
+            <span className="plateNo">Fig. 05 <b>·</b> Coverage</span>
+            <h2>Coverage</h2>
+          </div>
           {isLive() ? (
             <Button onClick={() => void openBest()} disabled={bestBusy}>{bestBusy && bestOpen ? "Finding picks…" : "Install best per category"}</Button>
           ) : null}
+        </header>
+        <div className="plateBody">
+          <p className="pageHint">What each goal profile needs, measured against the catalog.</p>
+          {data.counts.total === 0 && data.coverage.every((profile) => profile.coverage === 0) ? (
+            <p className="pageHint">No skills yet — run a sync to populate the catalog.</p>
+          ) : (
+            <ul className={styles.coverage}>
+              {data.coverage.map((profile) => (
+                <li key={profile.profile} className={styles.coverageRow}>
+                  <span className={styles.coverageProfile}>{profile.profile}</span>
+                  <span className={`mono ${styles.coveragePct}`}>{profile.coverage}%</span>
+                  <span className={styles.coverageTrack} aria-hidden="true">
+                    <span className={styles.coverageFill} style={{ width: `${profile.coverage}%` }} />
+                  </span>
+                  <span className={styles.coverageGaps}>
+                    {profile.gaps.map((gap) => (
+                      <span key={gap.category} className={styles.gapItem}>
+                        <Link to={`/gallery?category=${encodeURIComponent(gap.category)}`} className={styles.gapLink}>
+                          <Chip tone="muted">{gap.category} {gap.supply}/{gap.min}</Chip>
+                        </Link>
+                        {isLive() && gap.top.length > 0 ? <Button onClick={() => openInstall(gap)}>Review for install</Button> : null}
+                      </span>
+                    ))}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-        <p className="pageHint">What each goal profile needs, measured against the catalog.</p>
-        {data.counts.total === 0 && data.coverage.every((profile) => profile.coverage === 0) ? (
-          <p className="pageHint">No skills yet — run a sync to populate the catalog.</p>
-        ) : (
-          <ul className={styles.coverage}>
-            {data.coverage.map((profile) => (
-              <li key={profile.profile} className={styles.coverageRow}>
-                <span className={styles.coverageProfile}>{profile.profile}</span>
-                <span className={`mono ${styles.coveragePct}`}>{profile.coverage}%</span>
-                <span className={styles.coverageTrack} aria-hidden="true">
-                  <span className={styles.coverageFill} style={{ width: `${profile.coverage}%` }} />
-                </span>
-                <span className={styles.coverageGaps}>
-                  {profile.gaps.map((gap) => (
-                    <span key={gap.category} className={styles.gapItem}>
-                      <Link to={`/gallery?category=${encodeURIComponent(gap.category)}`} className={styles.gapLink}>
-                        <Chip tone="muted">{gap.category} {gap.supply}/{gap.min}</Chip>
-                      </Link>
-                      {isLive() && gap.top.length > 0 ? <Button onClick={() => openInstall(gap)}>Review for install</Button> : null}
-                    </span>
-                  ))}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
       </section>
 
-      {brief ? (
-        <section className={styles.panel}>
-          <div className={styles.panelHead}>
-            <h2>Nightly brief</h2>
-            <span className="pageHint">
-              {relativeTime(brief.generatedAt, new Date())} · {brief.curated} curated, {brief.cached} cached · ${brief.spentUsd.toFixed(4)}
-            </span>
+      <section className={styles.plate}>
+        <header className="plateHead">
+          <div>
+            <span className="plateNo">Fig. 06 <b>·</b> Survey index</span>
+            <h2>Sources</h2>
           </div>
-          <p className="pageHint">{brief.summary}</p>
-          {brief.corrections.length > 0 ? (
-            <>
-              <h3>Category corrections</h3>
-              <ul className={styles.notes}>
-                {brief.corrections.map((correction) => (
-                  <li key={correction.id}>
-                    <Link to={`/skills/${correction.id}`}>{correction.name}</Link> — {categoryLabel(correction.from)} → {categoryLabel(correction.to)}: {correction.reason}
-                  </li>
+        </header>
+        <div className="plateBody">
+          {data.sources.length === 0 ? (
+            <p className="pageHint">No source stats yet. They appear after a sync writes reconciliation.json.</p>
+          ) : (
+            <table className="ledger">
+              <thead>
+                <tr><th>source</th><th className="num">candidates</th><th>last fetched</th><th>status</th></tr>
+              </thead>
+              <tbody>
+                {data.sources.map((source) => (
+                  <tr key={source.source}>
+                    <td className="mono">{source.source}</td>
+                    <td className="num">{source.candidates}</td>
+                    <td className="mono">{relativeTime(source.fetchedAt, new Date())}</td>
+                    <td>
+                      {source.error ? <Chip tone="critical">error</Chip> : (source.warnings?.length ?? 0) > 0 ? <Chip tone="medium">warnings</Chip> : <Chip tone="low">ok</Chip>}
+                    </td>
+                  </tr>
                 ))}
+              </tbody>
+            </table>
+          )}
+          {data.sources.some((source) => (source.warnings?.length ?? 0) > 0) ? (
+            <ul className={styles.notes}>
+              {data.sources.flatMap((source) => (source.warnings ?? []).map((warning) => <li key={`${source.source}:${warning}`}>{source.source} — {warning}</li>))}
+            </ul>
+          ) : null}
+          {data.gaps.length > 0 ? (
+            <>
+              <h3>Gaps</h3>
+              <ul className={styles.notes}>
+                {data.gaps.map((gap) => <li key={gap}>{gap}</li>)}
               </ul>
             </>
           ) : null}
-          {brief.highlights.length > 0 ? (
-            <>
-              <h3>Flagged skills</h3>
-              <ul className={styles.notes}>
-                {brief.highlights.map((highlight) => (
-                  <li key={highlight.id}>
-                    <Link to={`/skills/${highlight.id}`}>{highlight.name}</Link> [{highlight.flags.join(", ")}] — {highlight.summary}
-                  </li>
-                ))}
-              </ul>
-            </>
-          ) : null}
-        </section>
-      ) : null}
-
-      <section className={styles.panel}>
-        <h2>Gaps</h2>
-        {data.gaps.length === 0 ? (
-          <p className="pageHint">No gaps reported by the last reconciliation.</p>
-        ) : (
-          <ul className={styles.notes}>
-            {data.gaps.map((gap) => <li key={gap}>{gap}</li>)}
-          </ul>
-        )}
+        </div>
       </section>
-
-      <p><Link to="/review">Open the review queue</Link></p>
 
       <Modal
         open={bestOpen}
@@ -270,54 +373,57 @@ export default function OverviewPage() {
         footer={
           <>
             <Button onClick={() => setBestOpen(false)} disabled={bestBusy}>Cancel</Button>
-            <Button tone="primary" disabled={bestBusy || !bestPreview || bestPreview.picks.length === 0} onClick={() => void installBest()}>
-              {bestBusy && bestPreview ? "Installing…" : `Install + activate ${bestPreview?.picks.length ?? 0}`}
+            <Button tone="primary" onClick={() => void installBest()} disabled={bestBusy || !bestPreview || bestPreview.picks.length === 0}>
+              {bestBusy ? "Working…" : `Install ${bestPreview?.picks.length ?? 0} and activate`}
             </Button>
           </>
         }
       >
-        {bestPreview === null ? (
-          <p className="pageHint">Finding the best skill for each category…</p>
-        ) : bestPreview.picks.length === 0 ? (
-          <p className="pageHint">Every category already has its best skill installed.</p>
-        ) : (
-          <>
-            <p className="pageHint">
-              Top-scoring, gate-passed candidate for each of the {bestPreview.picks.length} category slots not yet covered. They are activated on install so your agent can use them.
-              {bestPreview.covered.length > 0 ? ` ${bestPreview.covered.length} categories are already covered.` : ""}
-            </p>
-            <ul className={styles.installList}>
+        {bestPreview ? (
+          bestPreview.picks.length === 0 ? (
+            <p>Every category already has a pick.</p>
+          ) : (
+            <ul className={styles.picks}>
               {bestPreview.picks.map((pick) => (
                 <li key={pick.id}>
-                  <span>{pick.category} — {pick.name} <span className="mono">(score {pick.total}, risk {pick.risk})</span></span>
+                  <span className="mono">{pick.category}</span>
+                  <span>{pick.name}</span>
+                  <span className="mono">score {pick.total}</span>
                 </li>
               ))}
             </ul>
-          </>
+          )
+        ) : (
+          <p>Finding the best uninstalled skill for each category…</p>
         )}
       </Modal>
 
       <Modal
         open={installGap !== null}
         title={installGap ? `Install skills for ${installGap.category}` : "Install skills"}
-        dismissible={!installing}
-        onClose={() => { if (!installing) setInstallGap(null) }}
+        onClose={() => setInstallGap(null)}
         footer={
           <>
             <Button onClick={() => setInstallGap(null)} disabled={installing}>Cancel</Button>
-            <Button tone="primary" disabled={checked.size === 0 || installing} onClick={() => void installSelected()}>
-              Install selected
+            <Button tone="primary" onClick={() => void installSelected()} disabled={installing || checked.size === 0}>
+              {installing ? "Installing…" : "Install selected"}
             </Button>
           </>
         }
       >
         {installGap ? (
-          <ul className={styles.installList}>
+          <ul className={styles.picks}>
             {installGap.top.map((skill) => (
               <li key={skill.id}>
-                <label className={styles.installItem}>
-                  <input type="checkbox" checked={checked.has(skill.id)} onChange={() => toggleSkill(skill.id)} disabled={installing} />
-                  <span>{skill.name} ({skill.id}, score {skill.total})</span>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={checked.has(skill.id)}
+                    onChange={() => toggleSkill(skill.id)}
+                    aria-label={`${skill.name} (${skill.id}, score ${skill.total})`}
+                  />
+                  <span>{skill.name}</span>
+                  <span className="mono">score {skill.total}</span>
                 </label>
               </li>
             ))}

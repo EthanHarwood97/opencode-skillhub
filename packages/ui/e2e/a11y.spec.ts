@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright"
 import { expect, test } from "@playwright/test"
 
-const ROUTES = ["/#/", "/#/gallery", "/#/clusters", "/#/trending", "/#/review", "/#/skills/acme-skills/pdf-tool"]
+const ROUTES = ["/#/", "/#/gallery", "/#/clusters", "/#/trending", "/#/review", "/#/how", "/#/skills/acme-skills/pdf-tool"]
 
 for (const route of ROUTES) {
   test(`axe serious checks pass on ${route}`, async ({ page }) => {

@@ -1,6 +1,16 @@
-.delta { color: var(--text-muted); font-family: var(--font-mono); font-size: var(--text-sm); }
+.delta { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--ink-2); }
 .changes { list-style: none; display: flex; flex-direction: column; gap: var(--space-3); }
-.change { display: grid; grid-template-columns: auto 1fr; gap: var(--space-2); align-items: start; }
-.path { font-family: var(--font-mono); font-size: var(--text-sm); }
-.patch { grid-column: 1 / -1; }
-.patch pre { max-height: 260px; overflow: auto; padding: var(--space-3); background: var(--bg-raise); border: 1px solid var(--line); border-radius: var(--radius-sm); }
+.change { display: grid; grid-template-columns: auto 1fr; gap: var(--space-2); align-items: start; font-size: var(--text-sm); }
+.path { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--ink-2); word-break: break-all; }
+.patch { grid-column: 1 / -1; width: 100%; }
+.patch summary { cursor: pointer; font-family: var(--font-mono); font-size: var(--text-xs); color: var(--accent); }
+.patch pre {
+  margin: var(--space-2) 0 0;
+  background: var(--paper-sunken);
+  border: 1px solid var(--line);
+  padding: var(--space-3);
+  max-height: 280px;
+  overflow: auto;
+  font-size: var(--text-xs);
+  line-height: 1.5;
+}

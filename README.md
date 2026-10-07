@@ -57,7 +57,7 @@ Run them as `npm run skillhub -- <command>` from a checkout.
 
 ## The dashboard
 
-Six views: Status, Gallery, Clusters, Trending, Review, and skill detail. Detail shows why a skill scored what it scored, the scan findings, requirements, files, and source. Install runs a dry-run verification first, and you see the result before anything is written.
+Seven views: Status, Gallery, Clusters, Trending, Review, skill detail, and **How it works** (the machine, told as plotted plates — built for demos). The Status page opens on an atlas of every skill, plotted by score across 24 domains; hover to inspect, click to open. Detail shows why a skill scored what it scored, the scan findings, requirements, files, and source. Install runs a dry-run verification first, and you see the result before anything is written.
 
 - Review flags an active skill when a better-ranked alternative exists, linking you to it — nothing is swapped without you acting.
 - Coverage percentages describe the catalog, so installing a skill does not move them — they answer "is there a good team of skills available", not "have I installed it".

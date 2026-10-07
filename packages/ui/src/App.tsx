@@ -5,6 +5,7 @@ import { ToastHost } from "./components/toast.tsx"
 import ClustersPage from "./pages/ClustersPage.tsx"
 import DetailPage from "./pages/DetailPage.tsx"
 import GalleryPage from "./pages/GalleryPage.tsx"
+import HowItWorksPage from "./pages/HowItWorksPage.tsx"
 import OverviewPage from "./pages/OverviewPage.tsx"
 import ReviewPage from "./pages/ReviewPage.tsx"
 import TrendingPage from "./pages/TrendingPage.tsx"
@@ -34,6 +35,7 @@ const router = createHashRouter([
       { path: "clusters", element: <ClustersPage /> },
       { path: "trending", element: <TrendingPage /> },
       { path: "review", element: <ReviewPage /> },
+      { path: "how", element: <HowItWorksPage /> },
       { path: "skills/*", element: <DetailPage /> },
     ],
   },

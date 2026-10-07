@@ -77,12 +77,18 @@ export default function DetailPage() {
 
   return (
     <article className="stack">
-      <header className="pageHead">
-        <div>
+      <header className={styles.head}>
+        <div className={styles.headMain}>
+          <span className="eyebrow">Specimen sheet · {categoryLabel(skill.category)}</span>
           <h1>{skill.name}</h1>
-          <p className="pageHint"><span className="mono">{skill.id}</span> · {categoryLabel(skill.category)} · <Chip tone={skill.risk}>{skill.risk}</Chip></p>
+          <p className={styles.headMeta}>
+            <span className="mono">{skill.id}</span>
+            <Chip tone={skill.risk}>{skill.risk}</Chip>
+            <Chip tone={skill.status === "quarantined" ? "critical" : "muted"}>{statusLabel(skill.status)}</Chip>
+          </p>
         </div>
         <div className={styles.actions}>
+          <span className={styles.stamp} aria-label={`provenance ${skill.provenance}`}>{skill.provenance.replace(/-/g, " ")}</span>
           {!live ? (
             <p className="pageHint">Exported gallery: actions run in the local dashboard.</p>
           ) : skill.installed ? (
@@ -130,7 +136,7 @@ export default function DetailPage() {
         {skill.riskFindings.length === 0 ? (
           <p className="pageHint">No findings. The static scan came back clean.</p>
         ) : (
-          <table className={styles.table}>
+          <table className="ledger">
             <thead>
               <tr><th>rule</th><th>severity</th><th>line</th><th>match</th></tr>
             </thead>

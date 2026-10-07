@@ -46,7 +46,10 @@ export default function GalleryPage() {
   return (
     <section className="stack">
       <header className="pageHead">
-        <h1>Gallery</h1>
+        <div>
+          <span className="eyebrow">Plate 01 · The Specimen Index</span>
+          <h1>Gallery</h1>
+        </div>
         {data ? <p className="pageHint">{data.total} skill{data.total === 1 ? "" : "s"}{isFetching ? " · updating…" : ""}</p> : null}
       </header>
 
@@ -117,8 +120,8 @@ export default function GalleryPage() {
       ) : (
         <>
           <div className="gridCards" aria-busy={isFetching}>
-            {data.items.map((card) => (
-              <SkillCardView key={card.id} card={card} />
+            {data.items.map((card, index) => (
+              <SkillCardView key={card.id} card={card} rank={(data.page - 1) * data.pageSize + index + 1} />
             ))}
           </div>
           {totalPages > 1 ? (
@@ -134,10 +137,11 @@ export default function GalleryPage() {
   )
 }
 
-function SkillCardView({ card }: { card: SkillCard }) {
+function SkillCardView({ card, rank }: { card: SkillCard; rank: number }) {
   return (
     <Link to={`/skills/${card.id}`} className={styles.card}>
       <span className={styles.cardTop}>
+        <span className={styles.cardRank} aria-hidden="true">{String(rank).padStart(3, "0")}</span>
         <span className={styles.cardName}>{card.name}</span>
         <ScoreMeter value={card.total} />
       </span>

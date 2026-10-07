@@ -1,0 +1,19 @@
+.fig { width: 100%; height: auto; display: block; }
+.figSmall { width: min(100%, 230px); height: auto; display: block; }
+.figLabels text {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  fill: var(--ink-3);
+}
+.figDot { fill: var(--ink); }
+.figDotAccent { fill: var(--accent); }
+.figFillInk { fill: var(--ink); }
+.figFillAccent { fill: var(--accent); }
+.figFillHatch {
+  fill: var(--paper-sunken);
+  stroke: var(--line-strong);
+  stroke-width: 1;
+}
+.glyph { width: 34px; height: 34px; display: block; flex: none; }

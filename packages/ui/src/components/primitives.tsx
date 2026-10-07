@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react"
+import { PlotBar } from "./plot.tsx"
 import styles from "./primitives.module.css"
 
 export type ChipTone = "neutral" | "muted" | "accent" | "info" | "low" | "medium" | "high" | "critical"
@@ -15,7 +16,13 @@ const CHIP_CLASS: Record<ChipTone, string> = {
 }
 
 export function Chip({ children, tone = "neutral" }: { children: ReactNode; tone?: ChipTone }) {
-  return <span className={`${styles.chip} ${CHIP_CLASS[tone]}`}>{children}</span>
+  const dot = tone !== "neutral" && tone !== "muted" ? <span className={styles.chipDot} aria-hidden="true" /> : null
+  return (
+    <span className={`${styles.chip} ${CHIP_CLASS[tone]}`}>
+      {dot}
+      {children}
+    </span>
+  )
 }
 
 export function Button({ tone = "ghost", ...props }: ButtonHTMLAttributes<HTMLButtonElement> & { tone?: "primary" | "ghost" | "danger" }) {
@@ -35,7 +42,7 @@ export function ScoreMeter({ value, label = "score" }: { value: number; label?: 
   )
 }
 
-export function StatTile({ label, value, hint }: { label: string; value: string | number; hint?: string }) {
+export function StatTile({ label, value, hint }: { label: string; value: ReactNode; hint?: string }) {
   return (
     <div className={styles.stat}>
       <span className={styles.statLabel}>{label}</span>
@@ -67,3 +74,5 @@ export function ErrorState({ title, children, retry }: { title: string; children
     </div>
   )
 }
+
+export { PlotBar }

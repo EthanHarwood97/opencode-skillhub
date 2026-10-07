@@ -14,8 +14,8 @@ export default function ReviewPage() {
   if (isPending) {
     return (
       <div className="stack">
-        <Skeleton height={120} />
-        <Skeleton height={120} />
+        <Skeleton height={140} />
+        <Skeleton height={140} />
       </div>
     )
   }
@@ -30,10 +30,19 @@ export default function ReviewPage() {
 
   return (
     <section className="stack">
-      <header className="pageHead"><h1>Review</h1></header>
+      <header className="pageHead">
+        <div>
+          <span className="eyebrow">Plate 04 · Pending Plates</span>
+          <h1>Review</h1>
+        </div>
+        {live ? <p className="pageHint">every action below is review-gated</p> : <p className="pageHint">read-only snapshot</p>}
+      </header>
 
       <section className={styles.section}>
-        <h2>New this week</h2>
+        <header className={styles.sectionHead}>
+          <span className="plateNo">Fig. 01 <b>·</b> new candidates</span>
+          <h2>New this week</h2>
+        </header>
         {data.newCandidates.length === 0 ? (
           <p className="pageHint">No new candidates in the queue.</p>
         ) : (
@@ -49,7 +58,10 @@ export default function ReviewPage() {
       </section>
 
       <section className={styles.section}>
-        <h2>Upgrade suggestions</h2>
+        <header className={styles.sectionHead}>
+          <span className="plateNo">Fig. 02 <b>·</b> upgrades</span>
+          <h2>Upgrade suggestions</h2>
+        </header>
         {data.upgrades.length === 0 ? (
           <p className="pageHint">Every active skill is the best in its group.</p>
         ) : (
@@ -68,7 +80,10 @@ export default function ReviewPage() {
       </section>
 
       <section className={styles.section}>
-        <h2>Updates available</h2>
+        <header className={styles.sectionHead}>
+          <span className="plateNo">Fig. 03 <b>·</b> updates</span>
+          <h2>Updates available</h2>
+        </header>
         {data.updates.length === 0 ? (
           <p className="pageHint">Every installed skill matches the catalog.</p>
         ) : (
@@ -92,7 +107,10 @@ export default function ReviewPage() {
       </section>
 
       <section className={styles.section}>
-        <h2>Quarantined</h2>
+        <header className={styles.sectionHead}>
+          <span className="plateNo">Fig. 04 <b>·</b> quarantine</span>
+          <h2>Quarantined</h2>
+        </header>
         {data.quarantined.length === 0 ? (
           <p className="pageHint">The scan found nothing critical.</p>
         ) : (
@@ -108,7 +126,10 @@ export default function ReviewPage() {
       </section>
 
       <section className={styles.section}>
-        <h2>Source gaps</h2>
+        <header className={styles.sectionHead}>
+          <span className="plateNo">Fig. 05 <b>·</b> reconciliation</span>
+          <h2>Source gaps</h2>
+        </header>
         {data.gaps.length === 0 ? (
           <p className="pageHint">No gaps reported by the last reconciliation.</p>
         ) : (
