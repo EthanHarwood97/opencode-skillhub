@@ -1,0 +1,60 @@
+{
+  "name": "SkillHub",
+  "version": "2026.10",
+  "mode": "refresh",
+  "dna": "A precision instrument that charts, vets and maintains your agent's skill universe.",
+  "provenance": {
+    "observed": [
+      "name SkillHub + 'SH' monogram + tagline lineage (README)",
+      "dark surface + mint accent #6ee7a8 (packages/ui/src/styles/tokens.css)"
+    ],
+    "proposed": [
+      "graph-paper light surface + oxblood ink accent (avoids recent green/dark fingerprints; fixes light-surface contrast)",
+      "Instrument Serif / Space Grotesk / IBM Plex Mono type system (self-hosted, OFL)",
+      "plotter-draw motion language",
+      "hatch/fill risk grammar (meaning never hue-only)"
+    ],
+    "unverified": ["fonts are OFL (Google Fonts); log license texts with the woff2 files"]
+  },
+  "color": {
+    "primitives": {
+      "paper": { "$value": "#F4F3EE", "$type": "color" },
+      "paper-raised": { "$value": "#FBFAF6", "$type": "color" },
+      "grid": { "$value": "#E5E4DC", "$type": "color" },
+      "ink": { "$value": "#191A16", "$type": "color" },
+      "ink-secondary": { "$value": "#55564F", "$type": "color" },
+      "ink-muted": { "$value": "#86877F", "$type": "color" },
+      "line": { "$value": "#DCDBD2", "$type": "color" },
+      "line-strong": { "$value": "#B9B8AE", "$type": "color" },
+      "oxblood": { "$value": "#9E2820", "$type": "color" },
+      "oxblood-hover": { "$value": "#831F19", "$type": "color" },
+      "oxblood-active": { "$value": "#6B1813", "$type": "color" }
+    },
+    "semantic": {
+      "surface": { "default": "#F4F3EE", "raised": "#FBFAF6", "grid": "#E5E4DC", "inverse": "#191A16" },
+      "text": { "primary": "#191A16", "secondary": "#55564F", "muted": "#86877F", "on-action": "#F7F5EF", "inverse": "#F4F3EE" },
+      "border": { "default": "#DCDBD2", "strong": "#B9B8AE", "focus": "#9E2820" },
+      "action": { "primary": "#9E2820", "primary-hover": "#831F19", "primary-active": "#6B1813", "on-primary": "#F7F5EF" },
+      "feedback": { "success": "#2E6B4F", "warning": "#A8741A", "error": "#9E2820", "info": "#3F5B8C" },
+      "risk": {
+        "low": { "color": "#2E6B4F", "pattern": "none" },
+        "medium": { "color": "#A8741A", "pattern": "diagonal-hatch" },
+        "high": { "color": "#C2551F", "pattern": "cross-hatch" },
+        "critical": { "color": "#9E2820", "pattern": "solid" }
+      }
+    }
+  },
+  "typography": {
+    "display": { "family": "Instrument Serif", "weights": [400], "style": "normal+italic", "role": "plate titles, oversized numerals" },
+    "body": { "family": "Space Grotesk", "weights": [400, 500, 600], "role": "UI text, prose" },
+    "mono": { "family": "IBM Plex Mono", "weights": [400, 500], "role": "labels, data, annotations, coordinates" },
+    "scale": { "body": "15px/1.55", "measure": "68ch", "tracking-uppercase": "0.08em" }
+  },
+  "motion": {
+    "signature": { "name": "plotter-draw", "duration": "900ms", "easing": "cubic-bezier(0.65, 0, 0.35, 1)", "detail": "stroke draw-on with pen marker; stepped counters" },
+    "rest": { "duration": "150-200ms", "easing": "cubic-bezier(0.2, 0.7, 0.3, 1)" },
+    "reducedMotion": "plates render fully drawn; counters final; no draw-on"
+  },
+  "radius": { "plate": "0px", "input": "2px", "marker": "50%" },
+  "texture": { "grid": "CSS linear-gradient grid, 24px major / 6px minor at 40%", "grain": "SVG feTurbulence, 4% opacity, fixed" }
+}
