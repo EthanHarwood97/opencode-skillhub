@@ -1,25 +1,25 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-10T10:39:32.159Z",
+  "generatedAt": "2026-10-11T10:52:25.464Z",
   "topVelocity": [],
   "newThisMonth": [
     {
       "id": "coldteadotai-abide/abide-compile",
       "repo": "coldteadotai/abide",
       "createdAt": "2026-09-18T10:41:48Z",
-      "stars": 571
+      "stars": 577
     },
     {
       "id": "akkie76-code-review-skills/evidence-code-review",
       "repo": "akkie76/code-review-skills",
       "createdAt": "2026-09-22T13:23:22Z",
-      "stars": 82
+      "stars": 83
     },
     {
       "id": "it-shelter-labs-research-first-builder/research-first-build",
       "repo": "IT-Shelter-Labs/research-first-builder",
       "createdAt": "2026-09-30T23:57:45Z",
-      "stars": 11
+      "stars": 13
     }
   ]
 }

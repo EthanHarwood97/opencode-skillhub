@@ -1,107 +1,69 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-10T10:39:32.159Z",
+  "generatedAt": "2026-10-11T10:52:25.464Z",
   "totals": {
-    "previous": 2063,
-    "current": 2056,
+    "previous": 2056,
+    "current": 2080,
     "added": [
-      "it-shelter-labs-research-first-builder/research-first-build",
-      "microsoft-azure-skills/aks-gpu-inference",
-      "microsoft-azure-skills/aks-known-issues",
-      "microsoft-azure-skills/aks-network-capture",
-      "microsoft-azure-skills/aks-troubleshooting",
-      "microsoft-azure-skills/azure-search-nav",
-      "morluto-rea/rea-tool-design",
-      "reactive-resume-reactive-resume/interview-prep",
-      "reactive-resume-reactive-resume/job-application-manager",
-      "reactive-resume-reactive-resume/mock-interview",
-      "reactive-resume-reactive-resume/offer-negotiation",
-      "reactive-resume-reactive-resume/resume-bullet-writer",
-      "reactive-resume-reactive-resume/resume-content-guide",
-      "reactive-resume-reactive-resume/resume-tailor",
-      "wesammustafa-claude-code-everything-you-need-to-know/onboard",
-      "zenbu-labs-terminal-browser/verify"
+      "mbeacom-adrkit/code-review",
+      "mbeacom-adrkit/decision-backfill",
+      "mbeacom-adrkit/decision-memory",
+      "morluto-rea/rea-changelog-update",
+      "nledford-engineering-review-board/adversarial-review",
+      "nledford-engineering-review-board/api-design",
+      "nledford-engineering-review-board/architecture-review",
+      "nledford-engineering-review-board/behavior-driven-development",
+      "nledford-engineering-review-board/brainstorming",
+      "nledford-engineering-review-board/ci-release-engineering",
+      "nledford-engineering-review-board/clean-architecture",
+      "nledford-engineering-review-board/code-review",
+      "nledford-engineering-review-board/container-engineering",
+      "nledford-engineering-review-board/create-agent-skill",
+      "nledford-engineering-review-board/csharp-dotnet-engineering",
+      "nledford-engineering-review-board/css-scss-styling",
+      "nledford-engineering-review-board/data-platform-engineering",
+      "nledford-engineering-review-board/dependency-supply-chain-review",
+      "nledford-engineering-review-board/digital-asset-management",
+      "nledford-engineering-review-board/documentation-engineering",
+      "nledford-engineering-review-board/domain-driven-design",
+      "nledford-engineering-review-board/domain-modeling",
+      "nledford-engineering-review-board/gherkin",
+      "nledford-engineering-review-board/git-commit"
     ],
-    "removed": [
-      "glitternetwork-pinme/pinme",
-      "glitternetwork-pinme/pinme-auth",
-      "glitternetwork-pinme/pinme-email",
-      "glitternetwork-pinme/pinme-llm",
-      "glitternetwork-pinme/pinme-r2",
-      "glitternetwork-pinme/pinme-share",
-      "glitternetwork-pinme/pinme-uniwebpay",
-      "microsoft-azure-skills/azure-upgrade",
-      "microsoft-azure-skills/azure-validate",
-      "microsoft-azure-skills/discover-azure-skills",
-      "microsoft-azure-skills/entra-agent-id",
-      "microsoft-azure-skills/entra-app-registration",
-      "tercel-spec-forge/analyze",
-      "tercel-spec-forge/audit",
-      "tercel-spec-forge/decompose",
-      "tercel-spec-forge/idea",
-      "tercel-spec-forge/prd-generation",
-      "tercel-spec-forge/propagate",
-      "tercel-spec-forge/review",
-      "tercel-spec-forge/srs-generation",
-      "tercel-spec-forge/tech-design-generation",
-      "tercel-spec-forge/test-cases-generation",
-      "tercel-spec-forge/test-plan-generation"
-    ],
+    "removed": [],
     "changed": [
-      "addyosmani-agent-skills/documentation-and-adrs",
-      "addyosmani-agent-skills/frontend-ui-engineering",
-      "akkie76-code-review-skills/evidence-code-review",
-      "alibaba-open-code-review/open-code-review-delegate",
-      "amruthpillai/resume-builder",
-      "anthropics-skills/claude-api",
-      "heygen-com-hyperframes/hyperframes-cli",
-      "larksuite-cli/lark-base",
-      "metabase/typescript-review",
-      "microsoft-azure-skills/airunway-aks-setup",
-      "microsoft-azure-skills/azure-app-onboard",
-      "microsoft-azure-skills/azure-diagnostics",
-      "microsoft-azure-skills/azure-kubernetes",
-      "microsoft-azure-skills/azure-kubernetes-automatic-readiness",
-      "microsoft-azure-skills/azure-kusto",
-      "microsoft-power-platform-skills/canvas-app",
+      "datit309-supergraph/execute",
+      "epicenterhq/tauri",
+      "fabricioctelles-skills/human-ai",
+      "fabricioctelles-skills/humanizar",
+      "heygen-com-hyperframes/hyperframes-audio",
+      "imbad0202-academic-research-skills/academic-paper",
+      "imbad0202-academic-research-skills/academic-paper-reviewer",
+      "imbad0202-academic-research-skills/academic-pipeline",
+      "imbad0202-academic-research-skills/deep-research",
+      "imbad0202-academic-research-skills/sr-screener",
+      "konraddzbik-architecture-diagram-skill/architecture-diagram",
       "morluto-rea/reverse-engineer-anything",
-      "obra-superpowers/brainstorming",
-      "obra-superpowers/requesting-code-review",
-      "obra-superpowers/systematic-debugging",
-      "obra/brainstorming",
-      "othmanadi-planning-with-files/planning-with-files",
-      "othmanadi-planning-with-files/planning-with-files-ar",
-      "othmanadi-planning-with-files/planning-with-files-de",
-      "othmanadi-planning-with-files/planning-with-files-es",
-      "othmanadi-planning-with-files/planning-with-files-zh",
-      "othmanadi-planning-with-files/planning-with-files-zht",
-      "phuryn-pm-skills/create-prd",
-      "phuryn-pm-skills/intended-vs-implemented",
-      "phuryn-pm-skills/shipping-artifacts",
-      "reactive-resume-reactive-resume/resume-builder",
-      "shadcn-ui/shadcn",
-      "sickn33-antigravity-awesome-skills/agent-reels",
-      "zenstory-ai-oh-story-claudecode/story-deslop",
-      "zenstory-ai-oh-story-claudecode/story-long-write",
-      "zenstory-ai-oh-story-claudecode/story-review",
-      "zenstory-ai-oh-story-claudecode/story-short-write"
+      "nanocoai-nanoclaw/add-codex",
+      "zenstory-ai-oh-story-claudecode/story",
+      "zenstory-ai-oh-story-claudecode/story-long-scan"
     ]
   },
   "sources": [
     {
       "source": "agentskills",
       "candidates": 100,
-      "fetchedAt": "2026-10-10T10:39:32.159Z"
+      "fetchedAt": "2026-10-11T10:52:25.464Z"
     },
     {
       "source": "github:agent-skills",
-      "candidates": 433,
-      "fetchedAt": "2026-10-10T10:39:32.159Z"
+      "candidates": 434,
+      "fetchedAt": "2026-10-11T10:52:25.464Z"
     },
     {
       "source": "github:ai-agent-skills",
-      "candidates": 348,
-      "fetchedAt": "2026-10-10T10:39:32.159Z",
+      "candidates": 365,
+      "fetchedAt": "2026-10-11T10:52:25.464Z",
       "warnings": [
         "repo capture0x/YeepForge: raw fetch failed for .claude/skills/security-payloads/references/Payloads/File-Names/null-byte/Hello%00World.txt"
       ]
@@ -109,22 +71,22 @@
     {
       "source": "github:claude-code-skills",
       "candidates": 425,
-      "fetchedAt": "2026-10-10T10:39:32.159Z"
+      "fetchedAt": "2026-10-11T10:52:25.464Z"
     },
     {
       "source": "github:claude-skills",
       "candidates": 473,
-      "fetchedAt": "2026-10-10T10:39:32.159Z"
+      "fetchedAt": "2026-10-11T10:52:25.464Z"
     },
     {
       "source": "github:opencode-skills",
       "candidates": 343,
-      "fetchedAt": "2026-10-10T10:39:32.159Z"
+      "fetchedAt": "2026-10-11T10:52:25.464Z"
     },
     {
       "source": "seeds",
       "candidates": 842,
-      "fetchedAt": "2026-10-10T10:39:32.159Z",
+      "fetchedAt": "2026-10-11T10:52:25.464Z",
       "warnings": [
         "PleasePrompto/notebooklm-skill: archived"
       ]
@@ -135,19 +97,25 @@
     "source seeds: PleasePrompto/notebooklm-skill: archived"
   ],
   "reviewQueue": [
-    "microsoft-azure-skills/aks-gpu-inference",
-    "microsoft-azure-skills/aks-known-issues",
-    "microsoft-azure-skills/aks-network-capture",
-    "reactive-resume-reactive-resume/job-application-manager",
-    "reactive-resume-reactive-resume/offer-negotiation",
-    "reactive-resume-reactive-resume/interview-prep",
-    "reactive-resume-reactive-resume/mock-interview",
-    "reactive-resume-reactive-resume/resume-bullet-writer",
-    "zenbu-labs-terminal-browser/verify",
-    "microsoft-azure-skills/azure-search-nav",
-    "reactive-resume-reactive-resume/resume-tailor",
-    "it-shelter-labs-research-first-builder/research-first-build",
-    "microsoft-azure-skills/aks-troubleshooting",
-    "morluto-rea/rea-tool-design"
+    "nledford-engineering-review-board/brainstorming",
+    "nledford-engineering-review-board/gherkin",
+    "morluto-rea/rea-changelog-update",
+    "nledford-engineering-review-board/create-agent-skill",
+    "nledford-engineering-review-board/behavior-driven-development",
+    "nledford-engineering-review-board/ci-release-engineering",
+    "nledford-engineering-review-board/container-engineering",
+    "nledford-engineering-review-board/domain-driven-design",
+    "nledford-engineering-review-board/code-review",
+    "nledford-engineering-review-board/documentation-engineering",
+    "nledford-engineering-review-board/git-commit",
+    "mbeacom-adrkit/decision-backfill",
+    "mbeacom-adrkit/code-review",
+    "mbeacom-adrkit/decision-memory",
+    "nledford-engineering-review-board/api-design",
+    "nledford-engineering-review-board/architecture-review",
+    "nledford-engineering-review-board/clean-architecture",
+    "nledford-engineering-review-board/css-scss-styling",
+    "nledford-engineering-review-board/data-platform-engineering",
+    "nledford-engineering-review-board/dependency-supply-chain-review"
   ]
 }
