@@ -1,69 +1,62 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-11T10:52:25.464Z",
+  "generatedAt": "2026-10-12T12:06:23.409Z",
   "totals": {
-    "previous": 2056,
-    "current": 2080,
+    "previous": 2080,
+    "current": 2085,
     "added": [
-      "mbeacom-adrkit/code-review",
-      "mbeacom-adrkit/decision-backfill",
-      "mbeacom-adrkit/decision-memory",
-      "morluto-rea/rea-changelog-update",
-      "nledford-engineering-review-board/adversarial-review",
-      "nledford-engineering-review-board/api-design",
-      "nledford-engineering-review-board/architecture-review",
-      "nledford-engineering-review-board/behavior-driven-development",
-      "nledford-engineering-review-board/brainstorming",
-      "nledford-engineering-review-board/ci-release-engineering",
-      "nledford-engineering-review-board/clean-architecture",
-      "nledford-engineering-review-board/code-review",
-      "nledford-engineering-review-board/container-engineering",
-      "nledford-engineering-review-board/create-agent-skill",
-      "nledford-engineering-review-board/csharp-dotnet-engineering",
-      "nledford-engineering-review-board/css-scss-styling",
-      "nledford-engineering-review-board/data-platform-engineering",
-      "nledford-engineering-review-board/dependency-supply-chain-review",
-      "nledford-engineering-review-board/digital-asset-management",
-      "nledford-engineering-review-board/documentation-engineering",
-      "nledford-engineering-review-board/domain-driven-design",
-      "nledford-engineering-review-board/domain-modeling",
-      "nledford-engineering-review-board/gherkin",
-      "nledford-engineering-review-board/git-commit"
+      "alexander-danilenko-cortex-ai-skills/coderabbit-resolve-feedback",
+      "alexander-danilenko-cortex-ai-skills/jira-qa-scope",
+      "alexander-danilenko-cortex-ai-skills/learn-with-docs",
+      "alexander-danilenko-cortex-ai-skills/learn-with-docs-refresh",
+      "emilkowalski-skills/animation-performance"
     ],
     "removed": [],
     "changed": [
+      "av-skills/ideate",
+      "career-ops-hq-career-ops/career-ops",
+      "cherryhq-cherry-studio/gh-create-pr",
       "datit309-supergraph/execute",
-      "epicenterhq/tauri",
-      "fabricioctelles-skills/human-ai",
-      "fabricioctelles-skills/humanizar",
       "heygen-com-hyperframes/hyperframes-audio",
-      "imbad0202-academic-research-skills/academic-paper",
-      "imbad0202-academic-research-skills/academic-paper-reviewer",
-      "imbad0202-academic-research-skills/academic-pipeline",
-      "imbad0202-academic-research-skills/deep-research",
-      "imbad0202-academic-research-skills/sr-screener",
-      "konraddzbik-architecture-diagram-skill/architecture-diagram",
+      "larksuite-cli/lark-apps",
+      "larksuite-cli/lark-doc",
+      "leonxlnx-taste-skill/brandkit",
+      "leonxlnx-taste-skill/gpt-tasteskill",
+      "leonxlnx-taste-skill/minimalist-skill",
+      "leonxlnx-taste-skill/redesign-skill",
+      "leonxlnx-taste-skill/taste-skill",
       "morluto-rea/reverse-engineer-anything",
-      "nanocoai-nanoclaw/add-codex",
-      "zenstory-ai-oh-story-claudecode/story",
-      "zenstory-ai-oh-story-claudecode/story-long-scan"
+      "remotion-dev-skills/remotion-best-practices",
+      "remotion-dev-skills/remotion-captions",
+      "remotion-dev-skills/remotion-create",
+      "remotion-dev-skills/remotion-docs",
+      "remotion-dev-skills/remotion-interactivity",
+      "remotion-dev-skills/remotion-maps",
+      "remotion-dev-skills/remotion-markup",
+      "remotion-dev-skills/remotion-multimedia",
+      "remotion-dev-skills/remotion-render",
+      "remotion-dev-skills/remotion-saas",
+      "remotion-dev-skills/remotion-studio",
+      "remotion-dev-skills/remotion-upgrade",
+      "santifer-career-ops/career-ops",
+      "simoneavogadro-android-reverse-engineering-skill/android-reverse-engineering"
     ]
   },
   "sources": [
     {
       "source": "agentskills",
       "candidates": 100,
-      "fetchedAt": "2026-10-11T10:52:25.464Z"
+      "fetchedAt": "2026-10-12T12:06:23.409Z"
     },
     {
       "source": "github:agent-skills",
-      "candidates": 434,
-      "fetchedAt": "2026-10-11T10:52:25.464Z"
+      "candidates": 433,
+      "fetchedAt": "2026-10-12T12:06:23.409Z"
     },
     {
       "source": "github:ai-agent-skills",
       "candidates": 365,
-      "fetchedAt": "2026-10-11T10:52:25.464Z",
+      "fetchedAt": "2026-10-12T12:06:23.409Z",
       "warnings": [
         "repo capture0x/YeepForge: raw fetch failed for .claude/skills/security-payloads/references/Payloads/File-Names/null-byte/Hello%00World.txt"
       ]
@@ -71,22 +64,22 @@
     {
       "source": "github:claude-code-skills",
       "candidates": 425,
-      "fetchedAt": "2026-10-11T10:52:25.464Z"
+      "fetchedAt": "2026-10-12T12:06:23.409Z"
     },
     {
       "source": "github:claude-skills",
       "candidates": 473,
-      "fetchedAt": "2026-10-11T10:52:25.464Z"
+      "fetchedAt": "2026-10-12T12:06:23.409Z"
     },
     {
       "source": "github:opencode-skills",
-      "candidates": 343,
-      "fetchedAt": "2026-10-11T10:52:25.464Z"
+      "candidates": 347,
+      "fetchedAt": "2026-10-12T12:06:23.409Z"
     },
     {
       "source": "seeds",
       "candidates": 842,
-      "fetchedAt": "2026-10-11T10:52:25.464Z",
+      "fetchedAt": "2026-10-12T12:06:23.409Z",
       "warnings": [
         "PleasePrompto/notebooklm-skill: archived"
       ]
@@ -97,25 +90,10 @@
     "source seeds: PleasePrompto/notebooklm-skill: archived"
   ],
   "reviewQueue": [
-    "nledford-engineering-review-board/brainstorming",
-    "nledford-engineering-review-board/gherkin",
-    "morluto-rea/rea-changelog-update",
-    "nledford-engineering-review-board/create-agent-skill",
-    "nledford-engineering-review-board/behavior-driven-development",
-    "nledford-engineering-review-board/ci-release-engineering",
-    "nledford-engineering-review-board/container-engineering",
-    "nledford-engineering-review-board/domain-driven-design",
-    "nledford-engineering-review-board/code-review",
-    "nledford-engineering-review-board/documentation-engineering",
-    "nledford-engineering-review-board/git-commit",
-    "mbeacom-adrkit/decision-backfill",
-    "mbeacom-adrkit/code-review",
-    "mbeacom-adrkit/decision-memory",
-    "nledford-engineering-review-board/api-design",
-    "nledford-engineering-review-board/architecture-review",
-    "nledford-engineering-review-board/clean-architecture",
-    "nledford-engineering-review-board/css-scss-styling",
-    "nledford-engineering-review-board/data-platform-engineering",
-    "nledford-engineering-review-board/dependency-supply-chain-review"
+    "alexander-danilenko-cortex-ai-skills/learn-with-docs-refresh",
+    "emilkowalski-skills/animation-performance",
+    "alexander-danilenko-cortex-ai-skills/jira-qa-scope",
+    "alexander-danilenko-cortex-ai-skills/learn-with-docs",
+    "alexander-danilenko-cortex-ai-skills/coderabbit-resolve-feedback"
   ]
 }
