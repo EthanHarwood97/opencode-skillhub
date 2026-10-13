@@ -1,7 +1,148 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-12T12:06:23.409Z",
-  "topVelocity": [],
+  "generatedAt": "2026-10-13T11:52:56.185Z",
+  "topVelocity": [
+    {
+      "id": "dietrichgebert-ponytail/ponytail-gain",
+      "repo": "DietrichGebert/ponytail",
+      "stars": 162266,
+      "delta7d": 6340,
+      "delta30d": 0
+    },
+    {
+      "id": "tt-a1i-archify/archify-review",
+      "repo": "tt-a1i/archify",
+      "stars": 82840,
+      "delta7d": 4775,
+      "delta30d": 0
+    },
+    {
+      "id": "addyosmani-agent-skills/idea-refine",
+      "repo": "addyosmani/agent-skills",
+      "stars": 105931,
+      "delta7d": 4403,
+      "delta30d": 0
+    },
+    {
+      "id": "thedotmack-claude-mem/babysit",
+      "repo": "thedotmack/claude-mem",
+      "stars": 100261,
+      "delta7d": 3670,
+      "delta30d": 0
+    },
+    {
+      "id": "ayghri-i-have-adhd/i-have-adhd",
+      "repo": "ayghri/i-have-adhd",
+      "stars": 56822,
+      "delta7d": 2915,
+      "delta30d": 0
+    },
+    {
+      "id": "alibaba-open-code-review/open-code-review-delegate",
+      "repo": "alibaba/open-code-review",
+      "stars": 46748,
+      "delta7d": 2894,
+      "delta30d": 0
+    },
+    {
+      "id": "latent-spaces-brag/brag-slim",
+      "repo": "latent-spaces/brag",
+      "stars": 15602,
+      "delta7d": 1899,
+      "delta30d": 0
+    },
+    {
+      "id": "nexu-io-open-design/clinical-case-report",
+      "repo": "nexu-io/open-design",
+      "stars": 100881,
+      "delta7d": 1321,
+      "delta30d": 0
+    },
+    {
+      "id": "k-dense-ai-scientific-agent-skills/benchling-integration",
+      "repo": "K-Dense-AI/scientific-agent-skills",
+      "stars": 48674,
+      "delta7d": 989,
+      "delta30d": 0
+    },
+    {
+      "id": "egonex-ai-understand-anything/understand-chat",
+      "repo": "Egonex-AI/Understand-Anything",
+      "stars": 86126,
+      "delta7d": 769,
+      "delta30d": 0
+    },
+    {
+      "id": "topoteretes-cognee/cognee-docker",
+      "repo": "topoteretes/cognee",
+      "stars": 32144,
+      "delta7d": 743,
+      "delta30d": 0
+    },
+    {
+      "id": "career-ops-hq-career-ops/career-ops",
+      "repo": "career-ops-hq/career-ops",
+      "stars": 74241,
+      "delta7d": 680,
+      "delta30d": 0
+    },
+    {
+      "id": "pacifio-atlas/atlas-self-configure",
+      "repo": "pacifio/atlas",
+      "stars": 9594,
+      "delta7d": 469,
+      "delta30d": 0
+    },
+    {
+      "id": "reactive-resume-reactive-resume/resume-builder",
+      "repo": "reactive-resume/reactive-resume",
+      "stars": 44223,
+      "delta7d": 376,
+      "delta30d": 0
+    },
+    {
+      "id": "wshobson-agents/wcag-audit-patterns",
+      "repo": "wshobson/agents",
+      "stars": 40570,
+      "delta7d": 352,
+      "delta30d": 0
+    },
+    {
+      "id": "jimliu-baoyu-skills/baoyu-danger-gemini-web",
+      "repo": "JimLiu/baoyu-skills",
+      "stars": 26614,
+      "delta7d": 260,
+      "delta30d": 0
+    },
+    {
+      "id": "sickn33-agentic-awesome-skills/acceptance-orchestrator",
+      "repo": "sickn33/agentic-awesome-skills",
+      "stars": 47533,
+      "delta7d": 255,
+      "delta30d": 0
+    },
+    {
+      "id": "github-awesome-copilot/add-educational-comments",
+      "repo": "github/awesome-copilot",
+      "stars": 39974,
+      "delta7d": 249,
+      "delta30d": 0
+    },
+    {
+      "id": "orchestra-research-ai-research-skills/sentencepiece",
+      "repo": "Orchestra-Research/AI-Research-SKILLs",
+      "stars": 13522,
+      "delta7d": 245,
+      "delta30d": 0
+    },
+    {
+      "id": "zenstory-ai-oh-story-claudecode/story-import",
+      "repo": "zenstory-ai/oh-story-claudecode",
+      "stars": 7510,
+      "delta7d": 241,
+      "delta30d": 0
+    }
+  ],
   "newThisMonth": [
     {
       "id": "coldteadotai-abide/abide-compile",
