@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-14T09:34:31.048Z",
+  "generatedAt": "2026-10-15T09:12:16.990Z",
   "clusters": [
     {
       "id": "c-0367fb84",
@@ -18,38 +18,28 @@
       "category": "ai",
       "top": "orchestra-research-ai-research-skills/axolotl",
       "alternatives": [
-        "orchestra-research-ai-research-skills/grpo-rl-training",
-        "orchestra-research-ai-research-skills/peft"
-      ]
-    },
-    {
-      "id": "c-0e1858e2",
-      "label": "Skills",
-      "category": "data",
-      "top": "phuryn-pm-skills/dummy-dataset",
-      "alternatives": [
-        "mattpocock-skills/setup-pre-commit",
-        "wshobson-agents/temporal-python-testing"
+        "orchestra-research-ai-research-skills/peft",
+        "nanocoai-nanoclaw/add-dial-number"
       ]
     },
     {
       "id": "c-108178ea",
       "label": "Skills",
-      "category": "media",
-      "top": "ceeon-videocut-skills/ian-xiaohei-svg-motion",
+      "category": "docs-productivity",
+      "top": "juliusbrussee-caveman/caveman-setup",
       "alternatives": [
-        "orchestra-research-ai-research-skills/pyvene",
-        "mattpocock-skills/improve-codebase-architecture"
+        "coreyhaines31-marketingskills/ads",
+        "juliusbrussee-caveman/caveman-discover"
       ]
     },
     {
       "id": "c-138d4ad9",
       "label": "Skills",
-      "category": "education",
-      "top": "github-awesome-copilot/add-educational-comments",
+      "category": "data",
+      "top": "nexu-io-open-design/flowai-live-dashboard-template",
       "alternatives": [
-        "wshobson-agents/api-design-principles",
-        "jeffallan-claude-skills/architecture-designer"
+        "nexu-io-open-design/github-dashboard",
+        "wshobson-agents/api-design-principles"
       ]
     },
     {
@@ -58,8 +48,8 @@
       "category": "ai",
       "top": "sickn33-antigravity-awesome-skills/agent-evaluation",
       "alternatives": [
-        "github-awesome-copilot/ai-team-orchestration",
-        "vercel-labs-agent-browser/protected-vercel-deployments"
+        "sickn33-antigravity-awesome-skills/agent-orchestration-multi-agent-optimize",
+        "mattpocock-skills/triage"
       ]
     },
     {
@@ -68,68 +58,48 @@
       "category": "engineering",
       "top": "obra-superpowers/requesting-code-review",
       "alternatives": [
-        "obra-superpowers/receiving-code-review",
-        "juliusbrussee-caveman/caveman-evidence-review"
+        "vercel-labs-agent-skills/web-design-guidelines",
+        "obra-superpowers/receiving-code-review"
       ]
     },
     {
-      "id": "c-2ce63280",
+      "id": "c-33fe762f",
       "label": "Skills",
-      "category": "integrations",
-      "top": "larksuite-cli/lark-markdown",
+      "category": "automation",
+      "top": "vercel-labs-agent-browser/agentcore",
       "alternatives": [
-        "donchitos-claude-code-game-studios/balance-check",
-        "tusharkrbarman-skills-for-open-code/benchmark"
-      ]
-    },
-    {
-      "id": "c-2e77ff58",
-      "label": "Skills",
-      "category": "iot-hardware",
-      "top": "jeffallan-claude-skills/embedded-systems",
-      "alternatives": [
-        "mohitmishra786-low-level-dev-skills/adc-dac-baremetal",
-        "mohitmishra786-low-level-dev-skills/af-xdp"
+        "hashicorp-agent-skills/azure-image-builder",
+        "heygen-com-hyperframes/hyperframes-creative"
       ]
     },
     {
       "id": "c-36f9fc8e",
       "label": "Skills",
-      "category": "marketing-growth",
-      "top": "sergebulaev-linkedin-skills/linkedin-content-planner",
+      "category": "integrations",
+      "top": "googleworkspace-cli/gws-events-subscribe",
       "alternatives": [
-        "sergebulaev-linkedin-skills/linkedin-reply-handler",
-        "agricidaniel-claude-ads/ads-apple"
-      ]
-    },
-    {
-      "id": "c-38e159d2",
-      "label": "Skills",
-      "category": "security",
-      "top": "mukul975-anthropic-cybersecurity-skills/analyzing-azure-activity-logs-for-threats",
-      "alternatives": [
-        "microsoft-azure-skills/azure-resource-lookup",
-        "hashicorp-agent-skills/azure-image-builder"
+        "sergebulaev-linkedin-skills/linkedin-content-planner",
+        "jimliu-baoyu-skills/baoyu-post-to-weibo"
       ]
     },
     {
       "id": "c-3b0fad4c",
       "label": "Skills",
-      "category": "security",
-      "top": "mukul975-anthropic-cybersecurity-skills/analyzing-api-gateway-access-logs",
+      "category": "engineering",
+      "top": "jeffallan-claude-skills/dotnet-core-expert",
       "alternatives": [
-        "mukul975-anthropic-cybersecurity-skills/analyzing-cloud-storage-access-patterns",
-        "nexu-io-open-design/flowai-live-dashboard-template"
+        "zubair-trabzada-geo-seo-claude/geo-prospect",
+        "larksuite-cli/cli-e2e-testcase-writer"
       ]
     },
     {
       "id": "c-3bcafd8f",
       "label": "Skills",
-      "category": "testing",
-      "top": "mattpocock-skills/migrate-to-shoehorn",
+      "category": "media",
+      "top": "ceeon-videocut-skills/ian-xiaohei-svg-motion",
       "alternatives": [
-        "obra-superpowers/finishing-a-development-branch",
-        "obra-superpowers/verification-before-completion"
+        "nexu-io-open-design/audio-jingle",
+        "101-skills-superpowers/ai-product-photography"
       ]
     },
     {
@@ -138,78 +108,88 @@
       "category": "docs-productivity",
       "top": "juliusbrussee-caveman/caveman-commit",
       "alternatives": [
-        "jeffallan-claude-skills/csharp-developer",
-        "k-dense-ai-scientific-agent-skills/benchling-integration"
+        "mattpocock-skills/domain-modeling",
+        "obra-superpowers/finishing-a-development-branch"
       ]
     },
     {
       "id": "c-4d1481bf",
       "label": "Skills",
-      "category": "automation",
-      "top": "vercel-labs-agent-browser/slack",
+      "category": "engineering",
+      "top": "jeffallan-claude-skills/csharp-developer",
       "alternatives": [
-        "mattpocock-skills/codebase-design",
-        "alexander-danilenko-cortex-claude-code-plugins/report-comment"
+        "vercel-labs-agent-skills/writing-guidelines",
+        "reactive-resume-reactive-resume/resume-builder"
+      ]
+    },
+    {
+      "id": "c-4e5bb84d",
+      "label": "Skills",
+      "category": "design-ui",
+      "top": "cherryhq-cherry-studio/cherry-studio-feedback",
+      "alternatives": [
+        "googleworkspace-cli/gws-events-renew",
+        "cherryhq-cherry-studio/issue-reporter"
       ]
     },
     {
       "id": "c-4fe4e3cb",
       "label": "Skills",
-      "category": "business-ops",
-      "top": "nexu-io-open-design/dcf-valuation",
+      "category": "media",
+      "top": "jimliu-baoyu-skills/baoyu-url-to-markdown",
       "alternatives": [
-        "reactive-resume-reactive-resume/resume-builder",
+        "nexu-io-open-design/dcf-valuation",
         "agricidaniel-claude-seo/seo-competitor-pages"
       ]
     },
     {
       "id": "c-544df482",
       "label": "Amazon-Ads",
-      "category": "engineering",
-      "top": "nexscope-ai-ecommerce-skills/brand-protection-amazon",
+      "category": "marketing-growth",
+      "top": "agricidaniel-claude-ads/ads-audit",
       "alternatives": [
-        "browser-act-skills/amazon-bestseller-listing",
-        "browser-act-skills/amazon-competitor-analyzer"
+        "agricidaniel-claude-ads/ads-amazon",
+        "agricidaniel-claude-ads/ads-apple"
       ]
     },
     {
-      "id": "c-55f3aad5",
+      "id": "c-57ec7960",
       "label": "Skills",
-      "category": "business-ops",
-      "top": "sickn33-agentic-awesome-skills/access-matrix",
+      "category": "engineering",
+      "top": "wshobson-agents/event-store-design",
       "alternatives": [
-        "sickn33-antigravity-awesome-skills/access-matrix",
-        "sickn33-antigravity-awesome-skills/accounting-software-selection"
+        "zenstory-ai-drama-skills/short-drama",
+        "zenstory-ai-drama-skills/short-drama-assets"
       ]
     },
     {
       "id": "c-57ffbeb2",
       "label": "Skills",
       "category": "engineering",
-      "top": "konglong87-superpm/pm-clarify",
+      "top": "egonex-ai-understand-anything/understand-chat",
       "alternatives": [
-        "konglong87-superpm/pm-competitor",
-        "konglong87-superpm/pm-interview"
+        "egonex-ai-understand-anything/understand-onboard",
+        "phuryn-pm-skills/summarize-meeting"
       ]
     },
     {
-      "id": "c-5dc9c412",
+      "id": "c-6226d518",
       "label": "Skills",
       "category": "integrations",
-      "top": "googleworkspace-cli/gws-events-renew",
+      "top": "googleworkspace-cli/gws-drive-upload",
       "alternatives": [
-        "googleworkspace-cli/gws-events-subscribe",
-        "eliasoulkadi-shokunin/documentation"
+        "browser-act-skills/airbnb-search-listing",
+        "microsoft-azure-skills/azure-ai"
       ]
     },
     {
       "id": "c-6b7a0d6b",
       "label": "Skills",
-      "category": "design-ui",
-      "top": "google-labs-code-stitch-skills/design-md",
+      "category": "education",
+      "top": "github-awesome-copilot/add-educational-comments",
       "alternatives": [
-        "google-labs-code-stitch-skills/enhance-prompt",
-        "sanhuang520-ship-it-awesome-chinese-ai-tools/chinese-design-md"
+        "google-labs-code-stitch-skills/design-md",
+        "google-labs-code-stitch-skills/enhance-prompt"
       ]
     },
     {
@@ -218,58 +198,98 @@
       "category": "ai",
       "top": "sickn33-antigravity-awesome-skills/agent-evaluation-reporting",
       "alternatives": [
-        "sickn33-agentic-awesome-skills/acceptance-orchestrator",
-        "sickn33-antigravity-awesome-skills/acceptance-orchestrator"
+        "hashicorp-agent-skills/terraform-style-guide",
+        "sickn33-agentic-awesome-skills/20-andruia-niche-intelligence"
       ]
     },
     {
-      "id": "c-7120679f",
+      "id": "c-73b83370",
       "label": "Skills",
-      "category": "ai",
-      "top": "ryze-ai-adgent-open-seo-mcp-skills/ai-visibility",
+      "category": "media",
+      "top": "jimliu-baoyu-skills/baoyu-danger-gemini-web",
       "alternatives": [
-        "microsoft-azure-skills/azure-aigateway",
-        "coreyhaines31-marketingskills/ai-seo"
+        "keli-wen-agy-staff/reviewer",
+        "majiayu000-spellbook/ask-opencli"
+      ]
+    },
+    {
+      "id": "c-7d742de6",
+      "label": "Skills",
+      "category": "infrastructure-devops",
+      "top": "microsoft-azure-skills/azure-resource-lookup",
+      "alternatives": [
+        "konglong87-superpm/prompt-pe",
+        "microsoft-azure-skills/aks-gpu-inference"
       ]
     },
     {
       "id": "c-7fdac053",
       "label": "Skills",
-      "category": "engineering",
-      "top": "zenstory-ai-drama-skills/short-drama-assets",
-      "alternatives": [
-        "zenstory-ai-drama-skills/short-drama-develop",
-        "zenstory-ai-drama-skills/short-drama-review"
-      ]
-    },
-    {
-      "id": "c-955efb07",
-      "label": "Skills",
-      "category": "engineering",
-      "top": "wshobson-agents/event-store-design",
-      "alternatives": [
-        "googleworkspace-cli/gws-calendar-agenda",
-        "googleworkspace-cli/gws-gmail-forward"
-      ]
-    },
-    {
-      "id": "c-9c6554b8",
-      "label": "Skills",
       "category": "writing",
-      "top": "keli-wen-agy-staff/implementer",
+      "top": "nexu-io-html-anything/article-sketchnote-editorial",
       "alternatives": [
-        "keli-wen-agy-staff/researcher",
-        "keli-wen-agy-staff/agy-implementer"
+        "nexu-io-html-anything/deck-guizang-editorial",
+        "nexu-io-html-anything/deck-ljg-present"
+      ]
+    },
+    {
+      "id": "c-81635bec",
+      "label": "Skills",
+      "category": "ai",
+      "top": "seb1n-awesome-ai-agent-skills/ml-pipeline-creation",
+      "alternatives": [
+        "microsoft-azure-skills/azure-aigateway",
+        "coreyhaines31-marketingskills/community-marketing"
+      ]
+    },
+    {
+      "id": "c-87092fb1",
+      "label": "Skills",
+      "category": "design-ui",
+      "top": "cherryhq-cherry-studio/cherry-pr-test",
+      "alternatives": [
+        "sickn33-agentic-awesome-skills/accesslint-diff",
+        "sickn33-antigravity-awesome-skills/accesslint-diff"
+      ]
+    },
+    {
+      "id": "c-8afe22b9",
+      "label": "Skills",
+      "category": "communication",
+      "top": "googleworkspace-cli/gws-calendar-agenda",
+      "alternatives": [
+        "googleworkspace-cli/gws-gmail-forward",
+        "googleworkspace-cli/gws-gmail-read"
+      ]
+    },
+    {
+      "id": "c-8e481d3c",
+      "label": "Skills",
+      "category": "integrations",
+      "top": "elementalsouls-claude-bughunter/hunt-clickjacking",
+      "alternatives": [
+        "elementalsouls-claude-bughunter/hunt-ato",
+        "mattpocock-skills/chief-of-staff"
+      ]
+    },
+    {
+      "id": "c-a9716407",
+      "label": "Skills",
+      "category": "security",
+      "top": "mukul975-anthropic-cybersecurity-skills/analyzing-api-gateway-access-logs",
+      "alternatives": [
+        "mukul975-anthropic-cybersecurity-skills/analyzing-azure-activity-logs-for-threats",
+        "mukul975-anthropic-cybersecurity-skills/analyzing-cloud-storage-access-patterns"
       ]
     },
     {
       "id": "c-a9c29aec",
       "label": "Skills",
-      "category": "writing",
-      "top": "nexu-io-open-design/clinical-case-report",
+      "category": "data",
+      "top": "wshobson-agents/cqrs-implementation",
       "alternatives": [
-        "wshobson-agents/wcag-audit-patterns",
-        "phuryn-pm-skills/summarize-meeting"
+        "wshobson-agents/projection-patterns",
+        "jeffallan-claude-skills/api-designer"
       ]
     },
     {
@@ -279,47 +299,37 @@
       "top": "larksuite-cli/lark-event",
       "alternatives": [
         "larksuite-cli/lark-approval",
-        "larksuite-cli/lark-openapi-explorer"
+        "larksuite-cli/lark-contact"
       ]
     },
     {
-      "id": "c-b54f49ee",
+      "id": "c-b9635835",
       "label": "Skills",
-      "category": "design-ui",
-      "top": "cherryhq-cherry-studio/cherry-studio-feedback",
+      "category": "communication",
+      "top": "googleworkspace-cli/gws-gmail-reply",
       "alternatives": [
-        "phuryn-pm-skills/release-notes",
-        "cherryhq-cherry-studio/cherry-assistant-guide"
-      ]
-    },
-    {
-      "id": "c-b7e1ac5e",
-      "label": "Antigravity",
-      "category": "product",
-      "top": "phuryn-pm-skills/pre-mortem",
-      "alternatives": [
-        "phuryn-pm-skills/strategy-red-team",
-        "orchestra-research-ai-research-skills/sentencepiece"
+        "googleworkspace-cli/gws-gmail-reply-all",
+        "prisma-skills/prisma-client-api"
       ]
     },
     {
       "id": "c-b98ecc89",
       "label": "Skills",
-      "category": "engineering",
-      "top": "sickn33-antigravity-awesome-skills/agent-orchestration-multi-agent-optimize",
+      "category": "ai",
+      "top": "fabricioctelles-skills/ard",
       "alternatives": [
-        "fabricioctelles-skills/ard",
-        "fabricioctelles-skills/dns-aid"
+        "fabricioctelles-skills/dns-aid",
+        "fabricioctelles-skills/mpp"
       ]
     },
     {
-      "id": "c-c20d20dc",
+      "id": "c-c7bc61d2",
       "label": "Skills",
-      "category": "docs-productivity",
-      "top": "mattpocock-skills/domain-modeling",
+      "category": "writing",
+      "top": "nexu-io-open-design/clinical-case-report",
       "alternatives": [
-        "tt-a1i-archify/simplify-codebase",
-        "hashicorp-agent-skills/windows-builder"
+        "datit309-supergraph/architecture",
+        "obra-superpowers/subagent-driven-development"
       ]
     },
     {
@@ -329,17 +339,17 @@
       "top": "google-labs-code-stitch-skills/react-vite-dashboard",
       "alternatives": [
         "google-labs-code-stitch-skills/upload-to-stitch",
-        "gabelul-stitch-kit/stitch-mcp-delete-project"
+        "browser-act-skills/ebay-item-detail"
       ]
     },
     {
-      "id": "c-d12b29fd",
+      "id": "c-cea5b537",
       "label": "Skills",
-      "category": "data",
-      "top": "wshobson-agents/cqrs-implementation",
+      "category": "communication",
+      "top": "pedrohcgs-claude-code-my-workflow/compile-latex",
       "alternatives": [
-        "wshobson-agents/projection-patterns",
-        "microsoft-azure-skills/azure-app-onboard"
+        "pedrohcgs-claude-code-my-workflow/create-lecture",
+        "agricidaniel-claude-seo/seo-flow"
       ]
     },
     {
@@ -353,23 +363,13 @@
       ]
     },
     {
-      "id": "c-d39ba50e",
-      "label": "Skills",
-      "category": "automation",
-      "top": "vercel-labs-agent-browser/agentcore",
+      "id": "c-dacac5f0",
+      "label": "Fixtures",
+      "category": "docs-productivity",
+      "top": "kkkkhazix-khazix-skills/hv-analysis",
       "alternatives": [
-        "vercel-labs-agent-browser/agent-browser",
-        "zubair-trabzada-geo-seo-claude/geo-report-pdf"
-      ]
-    },
-    {
-      "id": "c-d500a4fe",
-      "label": "Skills",
-      "category": "security",
-      "top": "paperclipai-paperclip/deal-with-security-advisory",
-      "alternatives": [
-        "microsoft-azure-skills/azure-storage",
-        "microsoft-power-platform-skills/add-dataverse"
+        "sanhuang520-ship-it-awesome-chinese-ai-tools/ai-learning-coach",
+        "nvidia-skillspector/safe-skill"
       ]
     },
     {
@@ -378,88 +378,88 @@
       "category": "ai",
       "top": "cherryhq-cherry-studio/create-skill",
       "alternatives": [
-        "larksuite-cli/lark-skill-maker",
-        "zenstory-ai-drama-skills/short-drama"
+        "yusufkaraaslan-skill-seekers/skill-builder",
+        "nvidia-skillspector/skill-inspector"
       ]
     },
     {
       "id": "c-e0b62fc3",
       "label": "Skills",
-      "category": "engineering",
-      "top": "nanocoai-nanoclaw/dial-cli",
+      "category": "product",
+      "top": "alexander-danilenko-cortex-claude-code-plugins/report-comment",
       "alternatives": [
-        "pascalorg-editor/open-pr",
-        "expo-skills/eas-observe"
+        "cherryhq-cherry-studio/gh-create-issue",
+        "nanocoai-nanoclaw/dial-cli"
       ]
     },
     {
       "id": "c-e0ca5aa6",
       "label": "Skills",
-      "category": "data",
-      "top": "phuryn-pm-skills/sql-queries",
+      "category": "automation",
+      "top": "vercel-labs-agent-browser/slack",
       "alternatives": [
-        "orchestra-research-ai-research-skills/ray-data",
-        "zebbern-claude-code-guide/data-viz-renderer"
+        "phuryn-pm-skills/cohort-analysis",
+        "phuryn-pm-skills/dummy-dataset"
       ]
     },
     {
-      "id": "c-e1fa3a79",
+      "id": "c-e20bc26d",
       "label": "Skills",
-      "category": "infrastructure-devops",
-      "top": "hashicorp-agent-skills/terraform-style-guide",
+      "category": "testing",
+      "top": "datit309-supergraph/fix",
       "alternatives": [
-        "googleworkspace-cli/gws-gmail-reply",
-        "googleworkspace-cli/gws-gmail-reply-all"
+        "nexscope-ai-ecommerce-skills/brand-protection-amazon",
+        "nexscope-ai-ecommerce-skills/brand-protection-ebay"
       ]
     },
     {
       "id": "c-ec90fdb9",
       "label": "Skills",
-      "category": "data",
-      "top": "phuryn-pm-skills/cohort-analysis",
+      "category": "engineering",
+      "top": "mattpocock-skills/scaffold-exercises",
       "alternatives": [
-        "mattpocock-skills/scaffold-exercises",
-        "jimliu-baoyu-skills/baoyu-danger-gemini-web"
+        "mattpocock-skills/codebase-design",
+        "mattpocock-skills/migrate-to-shoehorn"
       ]
     },
     {
       "id": "c-f1f99d69",
       "label": "Skills",
-      "category": "engineering",
-      "top": "majiayu000-spellbook/idea-analogist",
+      "category": "product",
+      "top": "phuryn-pm-skills/brainstorm-okrs",
       "alternatives": [
-        "majiayu000-spellbook/idea-devils-advocate",
-        "majiayu000-spellbook/idea-research"
+        "majiayu000-spellbook/idea-analogist",
+        "majiayu000-spellbook/idea-devils-advocate"
       ]
     },
     {
       "id": "c-f2ba93d4",
       "label": "Skills",
-      "category": "data",
-      "top": "nexu-io-open-design/github-dashboard",
+      "category": "ai",
+      "top": "av-skills/boost-modules",
       "alternatives": [
-        "cherryhq-cherry-studio/gh-create-issue",
-        "cherryhq-cherry-studio/gh-create-pr"
+        "vercel-labs-agent-browser/electron",
+        "expo-skills/eas-app-stores"
       ]
     },
     {
       "id": "c-f9ea1612",
       "label": "Skills",
-      "category": "data",
-      "top": "thedotmack-claude-mem/cloud-sync",
+      "category": "engineering",
+      "top": "egonex-ai-understand-anything/understand-diff",
       "alternatives": [
-        "egonex-ai-understand-anything/understand-chat",
-        "egonex-ai-understand-anything/understand-diff"
+        "jeffallan-claude-skills/chaos-engineer",
+        "jeffallan-claude-skills/cloud-architect"
       ]
     },
     {
       "id": "c-fc063da3",
       "label": "Skills",
-      "category": "integrations",
-      "top": "googleworkspace-cli/gws-drive-upload",
+      "category": "docs-productivity",
+      "top": "juliusbrussee-caveman/caveman",
       "alternatives": [
-        "vercel-labs-skills/triage",
-        "zenstory-ai-drama-skills/short-drama-image-prompts"
+        "mohitmishra786-low-level-dev-skills/custom-allocators",
+        "k-dense-ai-scientific-agent-skills/biopython"
       ]
     }
   ]
