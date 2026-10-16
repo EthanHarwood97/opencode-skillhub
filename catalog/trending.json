@@ -1,145 +1,145 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-15T09:12:16.990Z",
+  "generatedAt": "2026-10-16T09:04:58.424Z",
   "topVelocity": [
     {
       "id": "morluto-rea/rea-ci-tests-audit",
       "repo": "morluto/rea",
-      "stars": 254817,
-      "delta7d": 243497,
+      "stars": 280092,
+      "delta7d": 260988,
       "delta30d": 0
     },
     {
       "id": "mattpocock-skills/scaffold-exercises",
       "repo": "mattpocock/skills",
-      "stars": 291913,
-      "delta7d": 13149,
+      "stars": 293360,
+      "delta7d": 12870,
       "delta30d": 0
     },
     {
       "id": "dietrichgebert-ponytail/ponytail-gain",
       "repo": "DietrichGebert/ponytail",
-      "stars": 163913,
-      "delta7d": 6736,
+      "stars": 164744,
+      "delta7d": 6641,
       "delta30d": 0
     },
     {
       "id": "stablyai-orca/computer-use",
       "repo": "stablyai/orca",
-      "stars": 92876,
-      "delta7d": 6083,
+      "stars": 93906,
+      "delta7d": 6348,
       "delta30d": 0
     },
     {
       "id": "heygen-com-hyperframes/hyperframes-creative",
       "repo": "heygen-com/hyperframes",
-      "stars": 64016,
-      "delta7d": 5802,
+      "stars": 64862,
+      "delta7d": 5977,
       "delta30d": 0
     },
     {
       "id": "tt-a1i-archify/simplify-codebase",
       "repo": "tt-a1i/archify",
-      "stars": 83813,
-      "delta7d": 4868,
+      "stars": 84238,
+      "delta7d": 4628,
       "delta30d": 0
     },
     {
       "id": "addyosmani-agent-skills/interview-me",
       "repo": "addyosmani/agent-skills",
-      "stars": 106823,
-      "delta7d": 4510,
-      "delta30d": 0
-    },
-    {
-      "id": "thedotmack-claude-mem/babysit",
-      "repo": "thedotmack/claude-mem",
-      "stars": 100866,
-      "delta7d": 3475,
-      "delta30d": 0
-    },
-    {
-      "id": "pbakaus-impeccable/impeccable",
-      "repo": "pbakaus/impeccable",
-      "stars": 81371,
-      "delta7d": 3332,
+      "stars": 107175,
+      "delta7d": 4006,
       "delta30d": 0
     },
     {
       "id": "obra-superpowers/requesting-code-review",
       "repo": "obra/superpowers",
-      "stars": 299358,
-      "delta7d": 3174,
+      "stars": 300256,
+      "delta7d": 3674,
+      "delta30d": 0
+    },
+    {
+      "id": "pbakaus-impeccable/impeccable",
+      "repo": "pbakaus/impeccable",
+      "stars": 81778,
+      "delta7d": 3313,
+      "delta30d": 0
+    },
+    {
+      "id": "thedotmack-claude-mem/babysit",
+      "repo": "thedotmack/claude-mem",
+      "stars": 101142,
+      "delta7d": 3106,
       "delta30d": 0
     },
     {
       "id": "alibaba-open-code-review/open-code-review-delegate",
       "repo": "alibaba/open-code-review",
-      "stars": 47272,
-      "delta7d": 3139,
-      "delta30d": 0
-    },
-    {
-      "id": "forrestchang-andrej-karpathy-skills/karpathy-guidelines",
-      "repo": "forrestchang/andrej-karpathy-skills",
-      "stars": 219926,
-      "delta7d": 2565,
-      "delta30d": 0
-    },
-    {
-      "id": "ayghri-i-have-adhd/i-have-adhd",
-      "repo": "ayghri/i-have-adhd",
-      "stars": 57191,
-      "delta7d": 2518,
-      "delta30d": 0
-    },
-    {
-      "id": "emilkowalski-skills/animation-vocabulary",
-      "repo": "emilkowalski/skills",
-      "stars": 46349,
-      "delta7d": 2336,
-      "delta30d": 0
-    },
-    {
-      "id": "nextlevelbuilder-ui-ux-pro-max-skill/banner-design",
-      "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
-      "stars": 136004,
-      "delta7d": 2279,
-      "delta30d": 0
-    },
-    {
-      "id": "latent-spaces-brag/brag-slim",
-      "repo": "latent-spaces/brag",
-      "stars": 16014,
-      "delta7d": 2022,
+      "stars": 47455,
+      "delta7d": 2992,
       "delta30d": 0
     },
     {
       "id": "k-dense-ai-scientific-agent-skills/benchling-integration",
       "repo": "K-Dense-AI/scientific-agent-skills",
-      "stars": 49803,
-      "delta7d": 1957,
+      "stars": 50935,
+      "delta7d": 2943,
       "delta30d": 0
     },
     {
-      "id": "vercel-labs-skills/triage",
-      "repo": "vercel-labs/skills",
-      "stars": 35018,
-      "delta7d": 1706,
+      "id": "forrestchang-andrej-karpathy-skills/karpathy-guidelines",
+      "repo": "forrestchang/andrej-karpathy-skills",
+      "stars": 220185,
+      "delta7d": 2661,
+      "delta30d": 0
+    },
+    {
+      "id": "nextlevelbuilder-ui-ux-pro-max-skill/banner-design",
+      "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "stars": 136383,
+      "delta7d": 2405,
       "delta30d": 0
     },
     {
       "id": "juliusbrussee-caveman/caveman-commit",
       "repo": "JuliusBrussee/caveman",
-      "stars": 112016,
-      "delta7d": 1692,
+      "stars": 112884,
+      "delta7d": 2388,
       "delta30d": 0
     },
     {
-      "id": "nexu-io-open-design/clinical-case-report",
-      "repo": "nexu-io/open-design",
-      "stars": 101249,
-      "delta7d": 1462,
+      "id": "emilkowalski-skills/animation-vocabulary",
+      "repo": "emilkowalski/skills",
+      "stars": 46568,
+      "delta7d": 2356,
+      "delta30d": 0
+    },
+    {
+      "id": "latent-spaces-brag/brag-slim",
+      "repo": "latent-spaces/brag",
+      "stars": 16197,
+      "delta7d": 2020,
+      "delta30d": 0
+    },
+    {
+      "id": "ayghri-i-have-adhd/i-have-adhd",
+      "repo": "ayghri/i-have-adhd",
+      "stars": 57357,
+      "delta7d": 1776,
+      "delta30d": 0
+    },
+    {
+      "id": "vercel-labs-skills/triage",
+      "repo": "vercel-labs/skills",
+      "stars": 35171,
+      "delta7d": 1769,
+      "delta30d": 0
+    },
+    {
+      "id": "imbad0202-academic-research-skills/deep-research",
+      "repo": "Imbad0202/academic-research-skills",
+      "stars": 52346,
+      "delta7d": 1473,
       "delta30d": 0
     }
   ],
@@ -148,7 +148,7 @@
       "id": "coldteadotai-abide/abide-compile",
       "repo": "coldteadotai/abide",
       "createdAt": "2026-09-18T10:41:48Z",
-      "stars": 580
+      "stars": 581
     },
     {
       "id": "akkie76-code-review-skills/evidence-code-review",
