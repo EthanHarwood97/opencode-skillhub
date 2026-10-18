@@ -1,147 +1,133 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-17T08:37:44.295Z",
+  "generatedAt": "2026-10-18T08:53:41.725Z",
   "totals": {
-    "previous": 2092,
-    "current": 2104,
+    "previous": 2104,
+    "current": 2087,
     "added": [
-      "morluto-rea/rea-analysis-optimization",
-      "scrapecreators-social-media-research-skills/ad-library-teardown",
-      "scrapecreators-social-media-research-skills/audience-research",
-      "scrapecreators-social-media-research-skills/comment-mining",
-      "scrapecreators-social-media-research-skills/competitor-social-research",
-      "scrapecreators-social-media-research-skills/content-repurposing",
-      "scrapecreators-social-media-research-skills/creator-profile-teardown",
-      "scrapecreators-social-media-research-skills/influencer-prospecting",
-      "scrapecreators-social-media-research-skills/outlier-post-finder",
-      "scrapecreators-social-media-research-skills/product-demand-research",
-      "scrapecreators-social-media-research-skills/scrapecreators-api",
-      "scrapecreators-social-media-research-skills/social-listening-brief",
-      "scrapecreators-social-media-research-skills/transcript-intelligence",
-      "scrapecreators-social-media-research-skills/trend-discovery",
-      "thedotmack-claude-mem/build",
-      "thedotmack-claude-mem/build-and-release",
-      "thedotmack-claude-mem/childhood"
+      "cherryhq-cherry-studio/agent-notes",
+      "cherryhq-cherry-studio/docs-governance",
+      "cherryhq-cherry-studio/find-simplifications",
+      "cherryhq-cherry-studio/gh-stack",
+      "cherryhq-cherry-studio/translate-docs",
+      "devohmycode-skills-atlas/skills-atlas"
     ],
     "removed": [
-      "kurone-kito-idd-skill/idd-spec-audit",
-      "kurone-kito-idd-skill/issue-authoring",
-      "thedotmack-claude-mem/cloud-sync",
-      "thedotmack-claude-mem/design-is",
-      "thedotmack-claude-mem/do"
+      "cherryhq-cherry-studio/code-mate-antigravity",
+      "cherryhq-cherry-studio/code-mate-claude-code",
+      "cherryhq-cherry-studio/code-mate-codex",
+      "cherryhq-cherry-studio/code-mate-deepseek-harness",
+      "cherryhq-cherry-studio/code-mate-gemini",
+      "decebals-claude-code-java/api-contract-review",
+      "decebals-claude-code-java/architecture-review",
+      "decebals-claude-code-java/changelog-generator",
+      "decebals-claude-code-java/clean-code",
+      "decebals-claude-code-java/concurrency-review",
+      "decebals-claude-code-java/design-patterns",
+      "decebals-claude-code-java/git-commit",
+      "decebals-claude-code-java/issue-triage",
+      "decebals-claude-code-java/java-code-review",
+      "decebals-claude-code-java/java-migration",
+      "decebals-claude-code-java/jpa-patterns",
+      "decebals-claude-code-java/logging-patterns",
+      "decebals-claude-code-java/maven-dependency-audit",
+      "decebals-claude-code-java/performance-smell-detection",
+      "decebals-claude-code-java/security-audit",
+      "decebals-claude-code-java/solid-principles",
+      "decebals-claude-code-java/spring-boot-patterns",
+      "decebals-claude-code-java/test-quality"
     ],
     "changed": [
-      "agricidaniel-claude-ads/ads",
-      "agricidaniel-claude-ads/ads-amazon",
-      "agricidaniel-claude-ads/ads-apple",
-      "agricidaniel-claude-ads/ads-audit",
-      "agricidaniel-claude-ads/ads-budget",
-      "agricidaniel-claude-ads/ads-competitor",
-      "agricidaniel-claude-ads/ads-create",
-      "agricidaniel-claude-ads/ads-google",
-      "agricidaniel-claude-ads/ads-landing",
-      "agricidaniel-claude-ads/ads-linkedin",
-      "agricidaniel-claude-ads/ads-meta",
-      "agricidaniel-claude-ads/ads-microsoft",
-      "agricidaniel-claude-ads/ads-monitor",
       "career-ops-hq-career-ops/career-ops",
-      "coupler-io-skills/create-dataflow",
-      "coupler-io-skills/ecom-analytics",
-      "coupler-io-skills/finance-analytics",
-      "coupler-io-skills/get-started",
-      "coupler-io-skills/shopify-customer-retention-and-ltv",
-      "coupler-io-skills/shopify-inventory-report-and-stockout-forecast",
-      "dietrichgebert-ponytail/ponytail-help",
-      "expo-skills/eas-observe",
-      "heygen-com-hyperframes/hyperframes-core",
-      "juliusbrussee-caveman/caveman-learn",
-      "laravel-boost/deploying-to-cloud",
-      "ljagiello-ctf-skills/ctf-reverse",
+      "cherryhq-cherry-studio/gh-create-pr",
+      "expo-skills/expo-dev-client",
+      "expo-skills/expo-overview",
+      "heygen-com-hyperframes/faceless-explainer",
+      "heygen-com-hyperframes/media-use",
+      "heygen-com-hyperframes/pr-to-video",
+      "heygen-com-hyperframes/product-launch-video",
+      "lobehub/zustand",
+      "moonlight-lupin-agent-skills/skill-retrieval",
       "othmanadi-planning-with-files/planning-with-files",
       "othmanadi-planning-with-files/planning-with-files-ar",
       "othmanadi-planning-with-files/planning-with-files-de",
       "othmanadi-planning-with-files/planning-with-files-es",
       "othmanadi-planning-with-files/planning-with-files-zh",
       "othmanadi-planning-with-files/planning-with-files-zht",
-      "prisma-skills/prisma-compute",
-      "prisma-skills/prisma-postgres-setup",
+      "reactive-resume-reactive-resume/resume-builder",
       "santifer-career-ops/career-ops",
-      "topoteretes-cognee/cognee-cli",
-      "topoteretes-cognee/cognee-custom-graph-models",
-      "topoteretes-cognee/cognee-custom-pipelines",
-      "topoteretes-cognee/cognee-improve-sessions",
-      "topoteretes-cognee/cognee-ingestion",
-      "topoteretes-cognee/cognee-install",
-      "topoteretes-cognee/cognee-migrations",
-      "topoteretes-cognee/cognee-performance",
-      "topoteretes-cognee/cognee-recall",
-      "topoteretes-cognee/cognee-server"
+      "wshobson/architecture-decision-records",
+      "zenstory-ai-oh-story-claudecode/browser-cdp",
+      "zenstory-ai-oh-story-claudecode/story",
+      "zenstory-ai-oh-story-claudecode/story-cover",
+      "zenstory-ai-oh-story-claudecode/story-deslop",
+      "zenstory-ai-oh-story-claudecode/story-import",
+      "zenstory-ai-oh-story-claudecode/story-long-analyze",
+      "zenstory-ai-oh-story-claudecode/story-long-scan",
+      "zenstory-ai-oh-story-claudecode/story-long-write",
+      "zenstory-ai-oh-story-claudecode/story-review",
+      "zenstory-ai-oh-story-claudecode/story-short-analyze",
+      "zenstory-ai-oh-story-claudecode/story-short-scan",
+      "zenstory-ai-oh-story-claudecode/story-short-write"
     ]
   },
   "sources": [
     {
       "source": "agentskills",
       "candidates": 100,
-      "fetchedAt": "2026-10-17T08:37:44.295Z"
+      "fetchedAt": "2026-10-18T08:53:41.725Z"
     },
     {
       "source": "github:agent-skills",
       "candidates": 452,
-      "fetchedAt": "2026-10-17T08:37:44.295Z"
+      "fetchedAt": "2026-10-18T08:53:41.725Z"
     },
     {
       "source": "github:ai-agent-skills",
       "candidates": 365,
-      "fetchedAt": "2026-10-17T08:37:44.295Z",
+      "fetchedAt": "2026-10-18T08:53:41.725Z",
       "warnings": [
         "repo capture0x/YeepForge: raw fetch failed for .claude/skills/security-payloads/references/Payloads/File-Names/null-byte/Hello%00World.txt"
       ]
     },
     {
       "source": "github:claude-code-skills",
-      "candidates": 427,
-      "fetchedAt": "2026-10-17T08:37:44.295Z"
+      "candidates": 409,
+      "fetchedAt": "2026-10-18T08:53:41.725Z",
+      "warnings": [
+        "repo decebals/claude-code-java: raw fetch failed for skills/performance-smell-detection/SKILL.md"
+      ]
     },
     {
       "source": "github:claude-skills",
       "candidates": 488,
-      "fetchedAt": "2026-10-17T08:37:44.295Z"
+      "fetchedAt": "2026-10-18T08:53:41.725Z"
     },
     {
       "source": "github:opencode-skills",
-      "candidates": 343,
-      "fetchedAt": "2026-10-17T08:37:44.295Z"
+      "candidates": 344,
+      "fetchedAt": "2026-10-18T08:53:41.725Z"
     },
     {
       "source": "seeds",
       "candidates": 847,
-      "fetchedAt": "2026-10-17T08:37:44.295Z",
+      "fetchedAt": "2026-10-18T08:53:41.725Z",
       "warnings": [
         "PleasePrompto/notebooklm-skill: archived"
       ]
     }
   ],
   "gaps": [
+    "source github:claude-code-skills: repo decebals/claude-code-java: raw fetch failed for skills/performance-smell-detection/SKILL.md",
     "source github:ai-agent-skills: repo capture0x/YeepForge: raw fetch failed for .claude/skills/security-payloads/references/Payloads/File-Names/null-byte/Hello%00World.txt",
     "source seeds: PleasePrompto/notebooklm-skill: archived"
   ],
   "reviewQueue": [
-    "scrapecreators-social-media-research-skills/trend-discovery",
-    "scrapecreators-social-media-research-skills/ad-library-teardown",
-    "scrapecreators-social-media-research-skills/audience-research",
-    "scrapecreators-social-media-research-skills/comment-mining",
-    "scrapecreators-social-media-research-skills/competitor-social-research",
-    "scrapecreators-social-media-research-skills/content-repurposing",
-    "scrapecreators-social-media-research-skills/creator-profile-teardown",
-    "scrapecreators-social-media-research-skills/influencer-prospecting",
-    "scrapecreators-social-media-research-skills/outlier-post-finder",
-    "scrapecreators-social-media-research-skills/product-demand-research",
-    "scrapecreators-social-media-research-skills/social-listening-brief",
-    "scrapecreators-social-media-research-skills/transcript-intelligence",
-    "morluto-rea/rea-analysis-optimization",
-    "thedotmack-claude-mem/childhood",
-    "scrapecreators-social-media-research-skills/scrapecreators-api",
-    "thedotmack-claude-mem/build",
-    "thedotmack-claude-mem/build-and-release"
+    "cherryhq-cherry-studio/gh-stack",
+    "cherryhq-cherry-studio/translate-docs",
+    "cherryhq-cherry-studio/agent-notes",
+    "cherryhq-cherry-studio/docs-governance",
+    "cherryhq-cherry-studio/find-simplifications",
+    "devohmycode-skills-atlas/skills-atlas"
   ]
 }
