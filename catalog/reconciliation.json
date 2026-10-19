@@ -1,23 +1,10 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-18T08:53:41.725Z",
+  "generatedAt": "2026-10-19T09:59:32.752Z",
   "totals": {
-    "previous": 2104,
-    "current": 2087,
+    "previous": 2087,
+    "current": 2104,
     "added": [
-      "cherryhq-cherry-studio/agent-notes",
-      "cherryhq-cherry-studio/docs-governance",
-      "cherryhq-cherry-studio/find-simplifications",
-      "cherryhq-cherry-studio/gh-stack",
-      "cherryhq-cherry-studio/translate-docs",
-      "devohmycode-skills-atlas/skills-atlas"
-    ],
-    "removed": [
-      "cherryhq-cherry-studio/code-mate-antigravity",
-      "cherryhq-cherry-studio/code-mate-claude-code",
-      "cherryhq-cherry-studio/code-mate-codex",
-      "cherryhq-cherry-studio/code-mate-deepseek-harness",
-      "cherryhq-cherry-studio/code-mate-gemini",
       "decebals-claude-code-java/api-contract-review",
       "decebals-claude-code-java/architecture-review",
       "decebals-claude-code-java/changelog-generator",
@@ -35,99 +22,128 @@
       "decebals-claude-code-java/security-audit",
       "decebals-claude-code-java/solid-principles",
       "decebals-claude-code-java/spring-boot-patterns",
-      "decebals-claude-code-java/test-quality"
+      "decebals-claude-code-java/test-quality",
+      "wanshuiyin-auto-claude-code-research-in-sleep/citation-crosscheck"
+    ],
+    "removed": [
+      "leonxlnx-taste-skill/output-skill",
+      "wanshuiyin-auto-claude-code-research-in-sleep/feishu-notify"
     ],
     "changed": [
-      "career-ops-hq-career-ops/career-ops",
-      "cherryhq-cherry-studio/gh-create-pr",
-      "expo-skills/expo-dev-client",
-      "expo-skills/expo-overview",
-      "heygen-com-hyperframes/faceless-explainer",
-      "heygen-com-hyperframes/media-use",
-      "heygen-com-hyperframes/pr-to-video",
-      "heygen-com-hyperframes/product-launch-video",
-      "lobehub/zustand",
-      "moonlight-lupin-agent-skills/skill-retrieval",
-      "othmanadi-planning-with-files/planning-with-files",
-      "othmanadi-planning-with-files/planning-with-files-ar",
-      "othmanadi-planning-with-files/planning-with-files-de",
-      "othmanadi-planning-with-files/planning-with-files-es",
-      "othmanadi-planning-with-files/planning-with-files-zh",
-      "othmanadi-planning-with-files/planning-with-files-zht",
-      "reactive-resume-reactive-resume/resume-builder",
-      "santifer-career-ops/career-ops",
-      "wshobson/architecture-decision-records",
-      "zenstory-ai-oh-story-claudecode/browser-cdp",
-      "zenstory-ai-oh-story-claudecode/story",
-      "zenstory-ai-oh-story-claudecode/story-cover",
-      "zenstory-ai-oh-story-claudecode/story-deslop",
-      "zenstory-ai-oh-story-claudecode/story-import",
-      "zenstory-ai-oh-story-claudecode/story-long-analyze",
-      "zenstory-ai-oh-story-claudecode/story-long-scan",
-      "zenstory-ai-oh-story-claudecode/story-long-write",
-      "zenstory-ai-oh-story-claudecode/story-review",
-      "zenstory-ai-oh-story-claudecode/story-short-analyze",
-      "zenstory-ai-oh-story-claudecode/story-short-scan",
-      "zenstory-ai-oh-story-claudecode/story-short-write"
+      "devohmycode-skills-atlas/skills-atlas",
+      "donchitos-claude-code-game-studios/adopt",
+      "donchitos-claude-code-game-studios/architecture-decision",
+      "donchitos-claude-code-game-studios/architecture-review",
+      "donchitos-claude-code-game-studios/art-bible",
+      "donchitos-claude-code-game-studios/asset-audit",
+      "donchitos-claude-code-game-studios/asset-spec",
+      "donchitos-claude-code-game-studios/balance-check",
+      "donchitos-claude-code-game-studios/brainstorm",
+      "donchitos-claude-code-game-studios/bug-report",
+      "donchitos-claude-code-game-studios/changelog",
+      "donchitos-claude-code-game-studios/code-review",
+      "donchitos-claude-code-game-studios/consistency-check",
+      "donchitos-claude-code-game-studios/content-audit",
+      "donchitos-claude-code-game-studios/create-architecture",
+      "donchitos-claude-code-game-studios/create-control-manifest",
+      "donchitos-claude-code-game-studios/create-epics",
+      "donchitos-claude-code-game-studios/create-stories",
+      "donchitos-claude-code-game-studios/day-one-patch",
+      "donchitos-claude-code-game-studios/design-review",
+      "fabricioctelles-skills/agent-ready-cloudflare",
+      "heygen-com-hyperframes/hyperframes",
+      "heygen-com-hyperframes/hyperframes-animation",
+      "heygen-com-hyperframes/motion-graphics",
+      "leonxlnx-taste-skill/brandkit",
+      "leonxlnx-taste-skill/brutalist-skill",
+      "leonxlnx-taste-skill/gpt-tasteskill",
+      "leonxlnx-taste-skill/image-to-code-skill",
+      "leonxlnx-taste-skill/imagegen-frontend-mobile",
+      "leonxlnx-taste-skill/imagegen-frontend-web",
+      "leonxlnx-taste-skill/minimalist-skill",
+      "leonxlnx-taste-skill/redesign-skill",
+      "leonxlnx-taste-skill/soft-skill",
+      "leonxlnx-taste-skill/stitch-skill",
+      "leonxlnx-taste-skill/taste-skill",
+      "leonxlnx-taste-skill/taste-skill-v1",
+      "leonxlnx-taste-skill/taste-skill-v2-experimental",
+      "paperclipai-paperclip/honeycomb-tracing",
+      "wanshuiyin-auto-claude-code-research-in-sleep/auto-paper-improvement-loop",
+      "wanshuiyin-auto-claude-code-research-in-sleep/auto-review-loop",
+      "wanshuiyin-auto-claude-code-research-in-sleep/citation-audit",
+      "wanshuiyin-auto-claude-code-research-in-sleep/claims-drafting",
+      "wanshuiyin-auto-claude-code-research-in-sleep/experiment-audit",
+      "wanshuiyin-auto-claude-code-research-in-sleep/experiment-bridge",
+      "zenstory-ai-novel-to-game/game-build",
+      "zenstory-ai-novel-to-game/novel-to-game"
     ]
   },
   "sources": [
     {
       "source": "agentskills",
       "candidates": 100,
-      "fetchedAt": "2026-10-18T08:53:41.725Z"
+      "fetchedAt": "2026-10-19T09:59:32.752Z"
     },
     {
       "source": "github:agent-skills",
-      "candidates": 452,
-      "fetchedAt": "2026-10-18T08:53:41.725Z"
+      "candidates": 451,
+      "fetchedAt": "2026-10-19T09:59:32.752Z"
     },
     {
       "source": "github:ai-agent-skills",
       "candidates": 365,
-      "fetchedAt": "2026-10-18T08:53:41.725Z",
+      "fetchedAt": "2026-10-19T09:59:32.752Z",
       "warnings": [
         "repo capture0x/YeepForge: raw fetch failed for .claude/skills/security-payloads/references/Payloads/File-Names/null-byte/Hello%00World.txt"
       ]
     },
     {
       "source": "github:claude-code-skills",
-      "candidates": 409,
-      "fetchedAt": "2026-10-18T08:53:41.725Z",
-      "warnings": [
-        "repo decebals/claude-code-java: raw fetch failed for skills/performance-smell-detection/SKILL.md"
-      ]
+      "candidates": 427,
+      "fetchedAt": "2026-10-19T09:59:32.752Z"
     },
     {
       "source": "github:claude-skills",
       "candidates": 488,
-      "fetchedAt": "2026-10-18T08:53:41.725Z"
+      "fetchedAt": "2026-10-19T09:59:32.752Z"
     },
     {
       "source": "github:opencode-skills",
       "candidates": 344,
-      "fetchedAt": "2026-10-18T08:53:41.725Z"
+      "fetchedAt": "2026-10-19T09:59:32.752Z"
     },
     {
       "source": "seeds",
-      "candidates": 847,
-      "fetchedAt": "2026-10-18T08:53:41.725Z",
+      "candidates": 846,
+      "fetchedAt": "2026-10-19T09:59:32.752Z",
       "warnings": [
         "PleasePrompto/notebooklm-skill: archived"
       ]
     }
   ],
   "gaps": [
-    "source github:claude-code-skills: repo decebals/claude-code-java: raw fetch failed for skills/performance-smell-detection/SKILL.md",
     "source github:ai-agent-skills: repo capture0x/YeepForge: raw fetch failed for .claude/skills/security-payloads/references/Payloads/File-Names/null-byte/Hello%00World.txt",
     "source seeds: PleasePrompto/notebooklm-skill: archived"
   ],
   "reviewQueue": [
-    "cherryhq-cherry-studio/gh-stack",
-    "cherryhq-cherry-studio/translate-docs",
-    "cherryhq-cherry-studio/agent-notes",
-    "cherryhq-cherry-studio/docs-governance",
-    "cherryhq-cherry-studio/find-simplifications",
-    "devohmycode-skills-atlas/skills-atlas"
+    "decebals-claude-code-java/git-commit",
+    "decebals-claude-code-java/maven-dependency-audit",
+    "decebals-claude-code-java/changelog-generator",
+    "decebals-claude-code-java/issue-triage",
+    "decebals-claude-code-java/api-contract-review",
+    "decebals-claude-code-java/architecture-review",
+    "decebals-claude-code-java/clean-code",
+    "decebals-claude-code-java/design-patterns",
+    "decebals-claude-code-java/java-migration",
+    "decebals-claude-code-java/jpa-patterns",
+    "decebals-claude-code-java/logging-patterns",
+    "decebals-claude-code-java/security-audit",
+    "decebals-claude-code-java/solid-principles",
+    "decebals-claude-code-java/spring-boot-patterns",
+    "decebals-claude-code-java/test-quality",
+    "decebals-claude-code-java/concurrency-review",
+    "decebals-claude-code-java/java-code-review",
+    "decebals-claude-code-java/performance-smell-detection",
+    "wanshuiyin-auto-claude-code-research-in-sleep/citation-crosscheck"
   ]
 }
