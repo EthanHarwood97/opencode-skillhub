@@ -1,149 +1,155 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-20T09:28:59.759Z",
+  "generatedAt": "2026-10-21T09:24:52.768Z",
   "topVelocity": [
     {
       "id": "morluto-rea/rea-ci-tests-audit",
       "repo": "morluto/rea",
-      "stars": 341606,
-      "delta7d": 209556,
+      "stars": 352253,
+      "delta7d": 166104,
       "delta30d": 0
     },
     {
       "id": "mattpocock-skills/scaffold-exercises",
       "repo": "mattpocock/skills",
-      "stars": 297986,
-      "delta7d": 10787,
+      "stars": 299132,
+      "delta7d": 10316,
       "delta30d": 0
     },
     {
       "id": "stablyai-orca/computer-use",
       "repo": "stablyai/orca",
-      "stars": 98860,
-      "delta7d": 8581,
+      "stars": 100357,
+      "delta7d": 9204,
       "delta30d": 0
     },
     {
       "id": "dietrichgebert-ponytail/ponytail-gain",
       "repo": "DietrichGebert/ponytail",
-      "stars": 168509,
-      "delta7d": 6997,
+      "stars": 170503,
+      "delta7d": 8237,
       "delta30d": 0
     },
     {
       "id": "heygen-com-hyperframes/hyperframes-creative",
       "repo": "heygen-com/hyperframes",
-      "stars": 67986,
-      "delta7d": 6588,
+      "stars": 68778,
+      "delta7d": 6580,
       "delta30d": 0
     },
     {
       "id": "k-dense-ai-scientific-agent-skills/benchling-integration",
       "repo": "K-Dense-AI/scientific-agent-skills",
-      "stars": 53099,
-      "delta7d": 4588,
+      "stars": 53421,
+      "delta7d": 4747,
       "delta30d": 0
     },
     {
       "id": "obra-superpowers/requesting-code-review",
       "repo": "obra/superpowers",
-      "stars": 302328,
-      "delta7d": 4345,
+      "stars": 302794,
+      "delta7d": 4351,
+      "delta30d": 0
+    },
+    {
+      "id": "paperclipai-paperclip/doc-maintenance",
+      "repo": "paperclipai/paperclip",
+      "stars": 105400,
+      "delta7d": 4133,
       "delta30d": 0
     },
     {
       "id": "tt-a1i-archify/simplify-codebase",
       "repo": "tt-a1i/archify",
-      "stars": 86063,
-      "delta7d": 3706,
-      "delta30d": 0
-    },
-    {
-      "id": "addyosmani-agent-skills/interview-me",
-      "repo": "addyosmani/agent-skills",
-      "stars": 108757,
-      "delta7d": 3449,
+      "stars": 86725,
+      "delta7d": 3885,
       "delta30d": 0
     },
     {
       "id": "pbakaus-impeccable/impeccable",
       "repo": "pbakaus/impeccable",
-      "stars": 83457,
-      "delta7d": 3357,
+      "stars": 84070,
+      "delta7d": 3539,
+      "delta30d": 0
+    },
+    {
+      "id": "addyosmani-agent-skills/interview-me",
+      "repo": "addyosmani/agent-skills",
+      "stars": 109113,
+      "delta7d": 3182,
       "delta30d": 0
     },
     {
       "id": "nextlevelbuilder-ui-ux-pro-max-skill/banner-design",
       "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
-      "stars": 137767,
-      "delta7d": 2746,
+      "stars": 138192,
+      "delta7d": 2836,
       "delta30d": 0
     },
     {
       "id": "juliusbrussee-caveman/caveman-commit",
       "repo": "JuliusBrussee/caveman",
-      "stars": 113747,
-      "delta7d": 2600,
-      "delta30d": 0
-    },
-    {
-      "id": "forrestchang-andrej-karpathy-skills/karpathy-guidelines",
-      "repo": "forrestchang/andrej-karpathy-skills",
-      "stars": 221336,
-      "delta7d": 2257,
+      "stars": 113962,
+      "delta7d": 2614,
       "delta30d": 0
     },
     {
       "id": "emilkowalski-skills/animation-vocabulary",
       "repo": "emilkowalski/skills",
-      "stars": 47820,
-      "delta7d": 2256,
+      "stars": 48162,
+      "delta7d": 2330,
+      "delta30d": 0
+    },
+    {
+      "id": "forrestchang-andrej-karpathy-skills/karpathy-guidelines",
+      "repo": "forrestchang/andrej-karpathy-skills",
+      "stars": 221660,
+      "delta7d": 2286,
       "delta30d": 0
     },
     {
       "id": "nexu-io-open-design/clinical-case-report",
       "repo": "nexu-io/open-design",
-      "stars": 102651,
-      "delta7d": 1970,
-      "delta30d": 0
-    },
-    {
-      "id": "thedotmack-claude-mem/babysit",
-      "repo": "thedotmack/claude-mem",
-      "stars": 101866,
-      "delta7d": 1932,
-      "delta30d": 0
-    },
-    {
-      "id": "vercel-labs-skills/triage",
-      "repo": "vercel-labs/skills",
-      "stars": 35758,
-      "delta7d": 1827,
-      "delta30d": 0
-    },
-    {
-      "id": "anthropics-skills/slack-gif-creator",
-      "repo": "anthropics/skills",
-      "stars": 182357,
-      "delta7d": 1707,
-      "delta30d": 0
-    },
-    {
-      "id": "latent-spaces-brag/brag-slim",
-      "repo": "latent-spaces/brag",
-      "stars": 17043,
-      "delta7d": 1683,
+      "stars": 102927,
+      "delta7d": 2046,
       "delta30d": 0
     },
     {
       "id": "santifer-career-ops/career-ops",
       "repo": "santifer/career-ops",
-      "stars": 75736,
-      "delta7d": 1608,
+      "stars": 76171,
+      "delta7d": 1930,
+      "delta30d": 0
+    },
+    {
+      "id": "career-ops-hq-career-ops/career-ops",
+      "repo": "career-ops-hq/career-ops",
+      "stars": 76169,
+      "delta7d": 1928,
+      "delta30d": 0
+    },
+    {
+      "id": "thedotmack-claude-mem/babysit",
+      "repo": "thedotmack/claude-mem",
+      "stars": 102032,
+      "delta7d": 1771,
+      "delta30d": 0
+    },
+    {
+      "id": "vercel-labs-skills/triage",
+      "repo": "vercel-labs/skills",
+      "stars": 35908,
+      "delta7d": 1770,
       "delta30d": 0
     }
   ],
   "newThisMonth": [
+    {
+      "id": "qingyuna-answer-me-with-html/answer-me-with-html",
+      "repo": "QingYunA/answer-me-with-html",
+      "createdAt": "2026-10-02T09:57:40Z",
+      "stars": 4147
+    },
     {
       "id": "akkie76-code-review-skills/evidence-code-review",
       "repo": "akkie76/code-review-skills",
@@ -154,7 +160,7 @@
       "id": "devohmycode-skills-atlas/skills-atlas",
       "repo": "devohmycode/Skills-Atlas",
       "createdAt": "2026-09-26T17:27:24Z",
-      "stars": 30
+      "stars": 31
     },
     {
       "id": "it-shelter-labs-research-first-builder/research-first-build",
