@@ -1,135 +1,84 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-23T09:23:58.189Z",
+  "generatedAt": "2026-10-24T08:55:25.493Z",
   "totals": {
-    "previous": 2111,
-    "current": 2092,
+    "previous": 2092,
+    "current": 2088,
     "added": [
-      "konglong87-superpm/pm-deep-talk",
-      "precious112-code-slowmo/code-slowmo"
+      "reactive-resume-reactive-resume/fill-translations",
+      "sno-ai-sno-station-skills/e2e-environment-preflight",
+      "sno-ai-sno-station-skills/e2e-red-triage",
+      "sno-ai-sno-station-skills/skill"
     ],
     "removed": [
-      "konglong87-superpm/pm-search",
-      "painhardcore-pstack/architect",
-      "painhardcore-pstack/arena",
-      "painhardcore-pstack/blast-radius",
-      "painhardcore-pstack/bro",
-      "painhardcore-pstack/create-verification-skill",
-      "painhardcore-pstack/figure-it-out",
-      "painhardcore-pstack/how",
-      "painhardcore-pstack/interrogate",
-      "painhardcore-pstack/maintain-verification-skill",
-      "painhardcore-pstack/no-comments",
-      "painhardcore-pstack/poteto-mode",
-      "painhardcore-pstack/principle-boundary-discipline",
-      "painhardcore-pstack/principle-build-the-lever",
-      "painhardcore-pstack/principle-encode-lessons-in-structure",
-      "painhardcore-pstack/principle-exhaust-the-design-space",
-      "painhardcore-pstack/principle-experience-first",
-      "painhardcore-pstack/principle-fix-root-causes",
-      "painhardcore-pstack/principle-foundational-thinking",
-      "painhardcore-pstack/principle-guard-the-context-window",
-      "painhardcore-pstack/principle-laziness-protocol"
+      "kubesphere-kubesphere/frontend-forge-fe-operations",
+      "kubesphere-kubesphere/kubesphere-devops-credentials",
+      "kubesphere-kubesphere/kubesphere-devops-jenkins",
+      "kubesphere-kubesphere/kubesphere-devops-pipeline",
+      "kubesphere-kubesphere/kubesphere-devops-tenant",
+      "kubesphere-kubesphere/kubesphere-fluid",
+      "kubesphere-kubesphere/kubesphere-openkruise",
+      "liustack-modlens/modlens"
     ],
     "changed": [
-      "agricidaniel-claude-seo/seo-agentic",
-      "agricidaniel-claude-seo/seo-ahrefs",
-      "agricidaniel-claude-seo/seo-audit",
-      "agricidaniel-claude-seo/seo-backlinks",
-      "agricidaniel-claude-seo/seo-bing",
-      "agricidaniel-claude-seo/seo-cluster",
-      "agricidaniel-claude-seo/seo-competitor-pages",
-      "agricidaniel-claude-seo/seo-content",
-      "agricidaniel-claude-seo/seo-content-brief",
-      "agricidaniel-claude-seo/seo-dataforseo",
-      "agricidaniel-claude-seo/seo-drift",
-      "agricidaniel-claude-seo/seo-ecommerce",
-      "agricidaniel-claude-seo/seo-firecrawl",
-      "agricidaniel-claude-seo/seo-flow",
-      "agricidaniel-claude-seo/seo-image-gen",
-      "agricidaniel-claude-seo/seo-matomo",
-      "agricidaniel-claude-seo/seo-profound",
-      "agricidaniel-claude-seo/seo-seranking",
-      "agricidaniel-claude-seo/seo-unlighthouse",
-      "antfu/vitest",
-      "devohmycode-skills-atlas/skills-atlas",
-      "expo-skills/eas-app-stores",
-      "expo-skills/eas-hosting",
-      "expo-skills/eas-observe",
-      "expo-skills/eas-simulator",
-      "expo-skills/eas-update",
-      "expo-skills/eas-update-insights",
-      "expo-skills/eas-workflows",
-      "expo-skills/expo-animation",
-      "expo-skills/expo-app-clip",
-      "expo-skills/expo-brownfield",
-      "expo-skills/expo-data-fetching",
-      "expo-skills/expo-design-system",
-      "expo-skills/expo-dev-client",
-      "expo-skills/expo-dom",
-      "expo-skills/expo-examples",
-      "expo-skills/expo-migrate-module",
-      "expo-skills/expo-module",
-      "expo-skills/expo-native-ui",
-      "expo-skills/expo-overview",
-      "konglong87-superpm/pm-brainstorm",
-      "konraddzbik-architecture-diagram-skill/architecture-diagram",
+      "alexander-danilenko-cortex-claude-code-plugins/resolve-feedback",
+      "career-ops-hq-career-ops/career-ops",
+      "imbad0202-academic-research-skills/academic-pipeline",
+      "latent-spaces-brag/brag-slim",
       "morluto-rea/reverse-engineer-anything",
-      "nanocoai-nanoclaw/add-dial",
-      "nanocoai-nanoclaw/add-dial-tool",
-      "nanocoai-nanoclaw/add-gchat",
-      "nanocoai-nanoclaw/add-github",
-      "nanocoai-nanoclaw/dial-cli",
-      "pacifio-atlas/atlas-self-configure",
-      "remotion-dev-skills/remotion-best-practices",
-      "remotion-dev-skills/remotion-captions",
-      "remotion-dev-skills/remotion-create",
-      "remotion-dev-skills/remotion-docs",
-      "remotion-dev-skills/remotion-interactivity",
-      "remotion-dev-skills/remotion-maps",
-      "remotion-dev-skills/remotion-markup",
-      "remotion-dev-skills/remotion-multimedia",
-      "remotion-dev-skills/remotion-render",
-      "remotion-dev-skills/remotion-saas",
-      "remotion-dev-skills/remotion-studio",
-      "remotion-dev-skills/remotion-upgrade"
+      "neondatabase-agent-skills/neon-ai-gateway",
+      "neondatabase-agent-skills/neon-postgres",
+      "othmanadi-planning-with-files/planning-with-files",
+      "othmanadi-planning-with-files/planning-with-files-ar",
+      "othmanadi-planning-with-files/planning-with-files-de",
+      "othmanadi-planning-with-files/planning-with-files-es",
+      "othmanadi-planning-with-files/planning-with-files-zh",
+      "othmanadi-planning-with-files/planning-with-files-zht",
+      "pascalorg-editor/review-architecture",
+      "pbakaus-impeccable/impeccable",
+      "santifer-career-ops/career-ops",
+      "sickn33/angular",
+      "sickn33/frontend-slides",
+      "sickn33/godot-gdscript-patterns",
+      "sickn33/mobile-design",
+      "vercel-labs-agent-browser/core"
     ]
   },
   "sources": [
     {
       "source": "agentskills",
       "candidates": 100,
-      "fetchedAt": "2026-10-23T09:23:58.189Z"
+      "fetchedAt": "2026-10-24T08:55:25.493Z"
     },
     {
       "source": "github:agent-skills",
-      "candidates": 439,
-      "fetchedAt": "2026-10-23T09:23:58.189Z"
+      "candidates": 420,
+      "fetchedAt": "2026-10-24T08:55:25.493Z"
     },
     {
       "source": "github:ai-agent-skills",
       "candidates": 385,
-      "fetchedAt": "2026-10-23T09:23:58.189Z"
+      "fetchedAt": "2026-10-24T08:55:25.493Z"
     },
     {
       "source": "github:claude-code-skills",
-      "candidates": 428,
-      "fetchedAt": "2026-10-23T09:23:58.189Z"
+      "candidates": 448,
+      "fetchedAt": "2026-10-24T08:55:25.493Z"
     },
     {
       "source": "github:claude-skills",
-      "candidates": 479,
-      "fetchedAt": "2026-10-23T09:23:58.189Z"
+      "candidates": 478,
+      "fetchedAt": "2026-10-24T08:55:25.493Z"
     },
     {
       "source": "github:opencode-skills",
       "candidates": 345,
-      "fetchedAt": "2026-10-23T09:23:58.189Z"
+      "fetchedAt": "2026-10-24T08:55:25.493Z"
     },
     {
       "source": "seeds",
       "candidates": 821,
-      "fetchedAt": "2026-10-23T09:23:58.189Z",
+      "fetchedAt": "2026-10-24T08:55:25.493Z",
       "warnings": [
         "PleasePrompto/notebooklm-skill: archived"
       ]
@@ -139,7 +88,9 @@
     "source seeds: PleasePrompto/notebooklm-skill: archived"
   ],
   "reviewQueue": [
-    "konglong87-superpm/pm-deep-talk",
-    "precious112-code-slowmo/code-slowmo"
+    "sno-ai-sno-station-skills/e2e-red-triage",
+    "reactive-resume-reactive-resume/fill-translations",
+    "sno-ai-sno-station-skills/skill",
+    "sno-ai-sno-station-skills/e2e-environment-preflight"
   ]
 }

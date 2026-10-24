@@ -1,145 +1,145 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-23T09:23:58.189Z",
+  "generatedAt": "2026-10-24T08:55:25.493Z",
   "topVelocity": [
     {
       "id": "morluto-rea/rea-ci-tests-audit",
       "repo": "morluto/rea",
-      "stars": 369257,
-      "delta7d": 89165,
+      "stars": 374918,
+      "delta7d": 78602,
       "delta30d": 0
     },
     {
       "id": "dietrichgebert-ponytail/ponytail-gain",
       "repo": "DietrichGebert/ponytail",
-      "stars": 174194,
-      "delta7d": 9450,
+      "stars": 175050,
+      "delta7d": 9644,
       "delta30d": 0
     },
     {
       "id": "stablyai-orca/computer-use",
       "repo": "stablyai/orca",
-      "stars": 103230,
-      "delta7d": 9324,
+      "stars": 104255,
+      "delta7d": 9523,
       "delta30d": 0
     },
     {
       "id": "mattpocock-skills/scaffold-exercises",
       "repo": "mattpocock/skills",
-      "stars": 301285,
-      "delta7d": 7925,
+      "stars": 302050,
+      "delta7d": 7664,
       "delta30d": 0
     },
     {
       "id": "heygen-com-hyperframes/slideshow",
       "repo": "heygen-com/hyperframes",
-      "stars": 70294,
-      "delta7d": 5432,
+      "stars": 71025,
+      "delta7d": 5507,
       "delta30d": 0
     },
     {
       "id": "tt-a1i-archify/simplify-codebase",
       "repo": "tt-a1i/archify",
-      "stars": 88019,
-      "delta7d": 3781,
-      "delta30d": 0
-    },
-    {
-      "id": "obra-superpowers/requesting-code-review",
-      "repo": "obra/superpowers",
-      "stars": 303933,
-      "delta7d": 3677,
-      "delta30d": 0
-    },
-    {
-      "id": "leonxlnx-taste-skill/taste-skill",
-      "repo": "Leonxlnx/taste-skill",
-      "stars": 101334,
-      "delta7d": 3657,
-      "delta30d": 0
-    },
-    {
-      "id": "paperclipai-paperclip/doc-maintenance",
-      "repo": "paperclipai/paperclip",
-      "stars": 106346,
-      "delta7d": 3419,
+      "stars": 88445,
+      "delta7d": 3850,
       "delta30d": 0
     },
     {
       "id": "pbakaus-impeccable/impeccable",
       "repo": "pbakaus/impeccable",
-      "stars": 85181,
-      "delta7d": 3403,
+      "stars": 85753,
+      "delta7d": 3620,
       "delta30d": 0
     },
     {
-      "id": "k-dense-ai-scientific-agent-skills/benchling-integration",
-      "repo": "K-Dense-AI/scientific-agent-skills",
-      "stars": 54026,
-      "delta7d": 3091,
+      "id": "leonxlnx-taste-skill/taste-skill",
+      "repo": "Leonxlnx/taste-skill",
+      "stars": 101749,
+      "delta7d": 3583,
+      "delta30d": 0
+    },
+    {
+      "id": "obra-superpowers/requesting-code-review",
+      "repo": "obra/superpowers",
+      "stars": 304385,
+      "delta7d": 3504,
+      "delta30d": 0
+    },
+    {
+      "id": "paperclipai-paperclip/doc-maintenance",
+      "repo": "paperclipai/paperclip",
+      "stars": 106703,
+      "delta7d": 3398,
       "delta30d": 0
     },
     {
       "id": "nextlevelbuilder-ui-ux-pro-max-skill/banner-design",
       "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
-      "stars": 139185,
-      "delta7d": 2802,
-      "delta30d": 0
-    },
-    {
-      "id": "addyosmani-agent-skills/interview-me",
-      "repo": "addyosmani/agent-skills",
-      "stars": 109768,
-      "delta7d": 2593,
+      "stars": 139602,
+      "delta7d": 2928,
       "delta30d": 0
     },
     {
       "id": "forrestchang-andrej-karpathy-skills/karpathy-guidelines",
       "repo": "forrestchang/andrej-karpathy-skills",
-      "stars": 222680,
-      "delta7d": 2495,
+      "stars": 223048,
+      "delta7d": 2612,
+      "delta30d": 0
+    },
+    {
+      "id": "k-dense-ai-scientific-agent-skills/benchling-integration",
+      "repo": "K-Dense-AI/scientific-agent-skills",
+      "stars": 54324,
+      "delta7d": 2530,
+      "delta30d": 0
+    },
+    {
+      "id": "addyosmani-agent-skills/interview-me",
+      "repo": "addyosmani/agent-skills",
+      "stars": 110055,
+      "delta7d": 2505,
       "delta30d": 0
     },
     {
       "id": "emilkowalski-skills/animation-vocabulary",
       "repo": "emilkowalski/skills",
-      "stars": 48853,
-      "delta7d": 2285,
+      "stars": 49167,
+      "delta7d": 2378,
       "delta30d": 0
     },
     {
       "id": "nexu-io-open-design/clinical-case-report",
       "repo": "nexu-io/open-design",
-      "stars": 103466,
-      "delta7d": 2036,
+      "stars": 103655,
+      "delta7d": 1913,
+      "delta30d": 0
+    },
+    {
+      "id": "latent-spaces-brag/brag-slim",
+      "repo": "latent-spaces/brag",
+      "stars": 18193,
+      "delta7d": 1808,
       "delta30d": 0
     },
     {
       "id": "anthropics-skills/slack-gif-creator",
       "repo": "anthropics/skills",
-      "stars": 183145,
-      "delta7d": 1676,
-      "delta30d": 0
-    },
-    {
-      "id": "juliusbrussee-caveman/caveman-commit",
-      "repo": "JuliusBrussee/caveman",
-      "stars": 114496,
-      "delta7d": 1612,
+      "stars": 183382,
+      "delta7d": 1727,
       "delta30d": 0
     },
     {
       "id": "career-ops-hq-career-ops/career-ops",
       "repo": "career-ops-hq/career-ops",
-      "stars": 76693,
-      "delta7d": 1566,
+      "stars": 76890,
+      "delta7d": 1608,
       "delta30d": 0
     },
     {
       "id": "santifer-career-ops/career-ops",
       "repo": "santifer/career-ops",
-      "stars": 76693,
-      "delta7d": 1564,
+      "stars": 76890,
+      "delta7d": 1608,
       "delta30d": 0
     }
   ],
@@ -148,61 +148,61 @@
       "id": "jakeschincariol-replica-skill/replica-architect",
       "repo": "Jakeschincariol/replica-skill",
       "createdAt": "2026-10-03T12:07:49Z",
-      "stars": 4837
+      "stars": 5079
     },
     {
       "id": "jakeschincariol-replica-skill/replica-backend",
       "repo": "Jakeschincariol/replica-skill",
       "createdAt": "2026-10-03T12:07:49Z",
-      "stars": 4837
+      "stars": 5079
     },
     {
       "id": "jakeschincariol-replica-skill/replica-brand",
       "repo": "Jakeschincariol/replica-skill",
       "createdAt": "2026-10-03T12:07:49Z",
-      "stars": 4837
+      "stars": 5079
     },
     {
       "id": "jakeschincariol-replica-skill/replica-build",
       "repo": "Jakeschincariol/replica-skill",
       "createdAt": "2026-10-03T12:07:49Z",
-      "stars": 4837
+      "stars": 5079
     },
     {
       "id": "jakeschincariol-replica-skill/replica-deploy",
       "repo": "Jakeschincariol/replica-skill",
       "createdAt": "2026-10-03T12:07:49Z",
-      "stars": 4837
+      "stars": 5079
     },
     {
       "id": "jakeschincariol-replica-skill/replica-design",
       "repo": "Jakeschincariol/replica-skill",
       "createdAt": "2026-10-03T12:07:49Z",
-      "stars": 4837
+      "stars": 5079
     },
     {
       "id": "jakeschincariol-replica-skill/replica-diff",
       "repo": "Jakeschincariol/replica-skill",
       "createdAt": "2026-10-03T12:07:49Z",
-      "stars": 4837
+      "stars": 5079
     },
     {
       "id": "jakeschincariol-replica-skill/replica-entrepreneur",
       "repo": "Jakeschincariol/replica-skill",
       "createdAt": "2026-10-03T12:07:49Z",
-      "stars": 4837
+      "stars": 5079
     },
     {
       "id": "jakeschincariol-replica-skill/replica-launch",
       "repo": "Jakeschincariol/replica-skill",
       "createdAt": "2026-10-03T12:07:49Z",
-      "stars": 4837
+      "stars": 5079
     },
     {
       "id": "jakeschincariol-replica-skill/replica-recon",
       "repo": "Jakeschincariol/replica-skill",
       "createdAt": "2026-10-03T12:07:49Z",
-      "stars": 4837
+      "stars": 5079
     }
   ]
 }
