@@ -1,84 +1,137 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-24T08:55:25.493Z",
+  "generatedAt": "2026-10-25T09:12:13.845Z",
   "totals": {
-    "previous": 2092,
-    "current": 2088,
+    "previous": 2088,
+    "current": 2102,
     "added": [
-      "reactive-resume-reactive-resume/fill-translations",
-      "sno-ai-sno-station-skills/e2e-environment-preflight",
-      "sno-ai-sno-station-skills/e2e-red-triage",
-      "sno-ai-sno-station-skills/skill"
+      "sickn33-agentic-awesome-skills/a4a",
+      "sickn33-antigravity-awesome-skills/a4a",
+      "sno-ai-sno-station-skills/agentic-walkthrough",
+      "sno-ai-sno-station-skills/charter",
+      "sno-ai-sno-station-skills/first-principles-review",
+      "sno-ai-sno-station-skills/less-is-more",
+      "sno-ai-sno-station-skills/owner-intent-audit",
+      "sno-ai-sno-station-skills/python-coder",
+      "sno-ai-sno-station-skills/rust-coder",
+      "sno-ai-sno-station-skills/shellscript-coder",
+      "sno-ai-sno-station-skills/test-writer",
+      "sno-ai-sno-station-skills/ts-coder",
+      "sno-ai-sno-station/extract-atomic-memory",
+      "sno-ai-sno-station/judge-group-closure",
+      "sno-ai-sno-station/judge-rem-memory-updates",
+      "sno-ai-sno-station/judge-retired-position",
+      "sno-ai-sno-station/judge-task-lifecycle",
+      "sno-ai-sno-station/key-state-attribute",
+      "sno-ai-sno-station/resolve-entity-identity",
+      "sno-ai-sno-station/resolve-relative-time",
+      "sno-ai-sno-station/sno-mem-claude",
+      "sno-ai-sno-station/sno-mem-codex",
+      "sno-ai-sno-station/sno-mem-cursor"
     ],
     "removed": [
-      "kubesphere-kubesphere/frontend-forge-fe-operations",
-      "kubesphere-kubesphere/kubesphere-devops-credentials",
-      "kubesphere-kubesphere/kubesphere-devops-jenkins",
-      "kubesphere-kubesphere/kubesphere-devops-pipeline",
-      "kubesphere-kubesphere/kubesphere-devops-tenant",
-      "kubesphere-kubesphere/kubesphere-fluid",
-      "kubesphere-kubesphere/kubesphere-openkruise",
-      "liustack-modlens/modlens"
+      "sickn33-agentic-awesome-skills/accint-commitments",
+      "sickn33-antigravity-awesome-skills/dep",
+      "zy839971925-zyy-agent-deep-research-workflow-skills/audit-verification",
+      "zy839971925-zyy-agent-deep-research-workflow-skills/decision-analysis",
+      "zy839971925-zyy-agent-deep-research-workflow-skills/deep-research",
+      "zy839971925-zyy-agent-deep-research-workflow-skills/execution-control",
+      "zy839971925-zyy-agent-deep-research-workflow-skills/reasoning-core",
+      "zy839971925-zyy-agent-deep-research-workflow-skills/reasoning-workflow",
+      "zy839971925-zyy-agent-deep-research-workflow-skills/workflow-learning"
     ],
     "changed": [
-      "alexander-danilenko-cortex-claude-code-plugins/resolve-feedback",
-      "career-ops-hq-career-ops/career-ops",
+      "czlonkowski-n8n-skills/n8n-binary-and-data",
+      "czlonkowski-n8n-skills/n8n-code-javascript",
+      "czlonkowski-n8n-skills/n8n-code-python",
+      "czlonkowski-n8n-skills/n8n-error-handling",
+      "czlonkowski-n8n-skills/n8n-expression-syntax",
+      "czlonkowski-n8n-skills/n8n-mcp-tools-expert",
+      "czlonkowski-n8n-skills/n8n-node-configuration",
+      "czlonkowski-n8n-skills/n8n-subworkflows",
+      "czlonkowski-n8n-skills/n8n-workflow-patterns",
+      "czlonkowski-n8n-skills/using-n8n-mcp-skills",
+      "imbad0202-academic-research-skills/academic-paper-reviewer",
       "imbad0202-academic-research-skills/academic-pipeline",
-      "latent-spaces-brag/brag-slim",
+      "leonxlnx-taste-skill/taste-skill",
+      "morluto-rea/rea-changelog-update",
       "morluto-rea/reverse-engineer-anything",
-      "neondatabase-agent-skills/neon-ai-gateway",
-      "neondatabase-agent-skills/neon-postgres",
+      "openclaw/himalaya",
       "othmanadi-planning-with-files/planning-with-files",
       "othmanadi-planning-with-files/planning-with-files-ar",
       "othmanadi-planning-with-files/planning-with-files-de",
       "othmanadi-planning-with-files/planning-with-files-es",
       "othmanadi-planning-with-files/planning-with-files-zh",
       "othmanadi-planning-with-files/planning-with-files-zht",
-      "pascalorg-editor/review-architecture",
-      "pbakaus-impeccable/impeccable",
-      "santifer-career-ops/career-ops",
-      "sickn33/angular",
-      "sickn33/frontend-slides",
-      "sickn33/godot-gdscript-patterns",
-      "sickn33/mobile-design",
-      "vercel-labs-agent-browser/core"
+      "paperclipai-paperclip/create-issue-interaction-ui",
+      "sickn33-agentic-awesome-skills/007",
+      "sickn33-agentic-awesome-skills/2slides-ppt-generator",
+      "sickn33-agentic-awesome-skills/360-feedback-system",
+      "sickn33-agentic-awesome-skills/ab-testing",
+      "sickn33-agentic-awesome-skills/access-matrix",
+      "sickn33-agentic-awesome-skills/access-review",
+      "sickn33-antigravity-awesome-skills/007",
+      "sickn33-antigravity-awesome-skills/2slides-ppt-generator",
+      "sickn33-antigravity-awesome-skills/360-feedback-system",
+      "sickn33-antigravity-awesome-skills/ab-testing",
+      "sickn33-antigravity-awesome-skills/access-matrix",
+      "sickn33-antigravity-awesome-skills/access-review",
+      "sickn33-antigravity-awesome-skills/accint-frames",
+      "sickn33-antigravity-awesome-skills/accint-solve",
+      "sickn33-antigravity-awesome-skills/accounting-audit-system-builder",
+      "sickn33-antigravity-awesome-skills/accounting-software-selection",
+      "sickn33-antigravity-awesome-skills/active-directory-attacks",
+      "sickn33-antigravity-awesome-skills/activecampaign-automation",
+      "sickn33-antigravity-awesome-skills/ad-campaign-analyzer",
+      "sickn33-antigravity-awesome-skills/ad-creative",
+      "sickn33-antigravity-awesome-skills/add-app-clip",
+      "sickn33-antigravity-awesome-skills/admin-access-register",
+      "sickn33-antigravity-awesome-skills/advogado-criminal",
+      "sickn33-antigravity-awesome-skills/advogado-especialista",
+      "sickn33-antigravity-awesome-skills/agent-framework-azure-ai-py",
+      "sickn33-antigravity-awesome-skills/agent-memory-discipline",
+      "sickn33-antigravity-awesome-skills/agent-observability",
+      "sickn33-antigravity-awesome-skills/agent-orchestrator",
+      "sickn33-antigravity-awesome-skills/agent-squad",
+      "wanshuiyin-auto-claude-code-research-in-sleep/auto-review-loop",
+      "wanshuiyin-auto-claude-code-research-in-sleep/auto-review-loop-llm"
     ]
   },
   "sources": [
     {
       "source": "agentskills",
       "candidates": 100,
-      "fetchedAt": "2026-10-24T08:55:25.493Z"
+      "fetchedAt": "2026-10-25T09:12:13.845Z"
     },
     {
       "source": "github:agent-skills",
       "candidates": 420,
-      "fetchedAt": "2026-10-24T08:55:25.493Z"
+      "fetchedAt": "2026-10-25T09:12:13.845Z"
     },
     {
       "source": "github:ai-agent-skills",
-      "candidates": 385,
-      "fetchedAt": "2026-10-24T08:55:25.493Z"
+      "candidates": 379,
+      "fetchedAt": "2026-10-25T09:12:13.845Z"
     },
     {
       "source": "github:claude-code-skills",
-      "candidates": 448,
-      "fetchedAt": "2026-10-24T08:55:25.493Z"
+      "candidates": 459,
+      "fetchedAt": "2026-10-25T09:12:13.845Z"
     },
     {
       "source": "github:claude-skills",
       "candidates": 478,
-      "fetchedAt": "2026-10-24T08:55:25.493Z"
+      "fetchedAt": "2026-10-25T09:12:13.845Z"
     },
     {
       "source": "github:opencode-skills",
       "candidates": 345,
-      "fetchedAt": "2026-10-24T08:55:25.493Z"
+      "fetchedAt": "2026-10-25T09:12:13.845Z"
     },
     {
       "source": "seeds",
       "candidates": 821,
-      "fetchedAt": "2026-10-24T08:55:25.493Z",
+      "fetchedAt": "2026-10-25T09:12:13.845Z",
       "warnings": [
         "PleasePrompto/notebooklm-skill: archived"
       ]
@@ -88,9 +141,25 @@
     "source seeds: PleasePrompto/notebooklm-skill: archived"
   ],
   "reviewQueue": [
-    "sno-ai-sno-station-skills/e2e-red-triage",
-    "reactive-resume-reactive-resume/fill-translations",
-    "sno-ai-sno-station-skills/skill",
-    "sno-ai-sno-station-skills/e2e-environment-preflight"
+    "sno-ai-sno-station-skills/first-principles-review",
+    "sickn33-agentic-awesome-skills/a4a",
+    "sickn33-antigravity-awesome-skills/a4a",
+    "sno-ai-sno-station-skills/owner-intent-audit",
+    "sno-ai-sno-station-skills/rust-coder",
+    "sno-ai-sno-station/judge-rem-memory-updates",
+    "sno-ai-sno-station-skills/charter",
+    "sno-ai-sno-station-skills/test-writer",
+    "sno-ai-sno-station-skills/python-coder",
+    "sno-ai-sno-station-skills/ts-coder",
+    "sno-ai-sno-station-skills/agentic-walkthrough",
+    "sno-ai-sno-station-skills/less-is-more",
+    "sno-ai-sno-station-skills/shellscript-coder",
+    "sno-ai-sno-station/extract-atomic-memory",
+    "sno-ai-sno-station/judge-task-lifecycle",
+    "sno-ai-sno-station/judge-group-closure",
+    "sno-ai-sno-station/judge-retired-position",
+    "sno-ai-sno-station/sno-mem-claude",
+    "sno-ai-sno-station/sno-mem-codex",
+    "sno-ai-sno-station/sno-mem-cursor"
   ]
 }
