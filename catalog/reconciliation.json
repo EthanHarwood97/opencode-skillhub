@@ -1,154 +1,68 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-31T10:26:06.562Z",
+  "generatedAt": "2026-11-01T11:20:12.726Z",
   "totals": {
-    "previous": 2107,
-    "current": 2096,
+    "previous": 2096,
+    "current": 2093,
     "added": [
-      "cherryhq-cherry-studio/agent-notes",
-      "cherryhq-cherry-studio/cherry-assistant-guide",
-      "cherryhq-cherry-studio/cherry-electron-dev",
-      "cherryhq-cherry-studio/cherry-regression-test",
-      "cherryhq-cherry-studio/cherry-skill-marketplace",
-      "cherryhq-cherry-studio/cherry-studio-feedback",
-      "cherryhq-cherry-studio/claude-automation-recommender",
-      "cherryhq-cherry-studio/create-skill",
-      "cherryhq-cherry-studio/docs-governance",
-      "cherryhq-cherry-studio/faq-collector",
-      "cherryhq-cherry-studio/find-simplifications",
-      "cherryhq-cherry-studio/gh-create-issue",
-      "cherryhq-cherry-studio/gh-create-pr",
-      "cherryhq-cherry-studio/gh-pr-review",
-      "cherryhq-cherry-studio/gh-stack",
-      "cherryhq-cherry-studio/issue-reporter",
-      "cherryhq-cherry-studio/prepare-release",
-      "cherryhq-cherry-studio/skills-manager",
-      "cherryhq-cherry-studio/translate-docs",
-      "cherryhq-cherry-studio/vercel-react-best-practices",
-      "heygen-com-hyperframes/reverse-any-video",
+      "wesammustafa-claude-code-everything-you-need-to-know/changelog",
+      "wesammustafa-claude-code-everything-you-need-to-know/check-links",
+      "wesammustafa-claude-code-everything-you-need-to-know/review-checklist",
+      "wesammustafa-claude-code-everything-you-need-to-know/team-review"
+    ],
+    "removed": [
       "r007b34r-opencode-obsidian-knowledge-workflow/connection-review",
       "r007b34r-opencode-obsidian-knowledge-workflow/inbox-triage",
       "r007b34r-opencode-obsidian-knowledge-workflow/note-promotion",
       "r007b34r-opencode-obsidian-knowledge-workflow/obsidian-mcp",
       "r007b34r-opencode-obsidian-knowledge-workflow/opencode-context-maintenance",
       "r007b34r-opencode-obsidian-knowledge-workflow/vault-health-feedback",
-      "r007b34r-opencode-obsidian-knowledge-workflow/weekly-synthesis",
-      "taxueseek-plugin-fast-adapt/adapt",
-      "taxueseek-plugin-fast-adapt/build",
-      "taxueseek-plugin-fast-adapt/diagnose"
-    ],
-    "removed": [
-      "elementalsouls-claude-bughunter/apk-redteam-pipeline",
-      "elementalsouls-claude-bughunter/bb-local-toolkit",
-      "elementalsouls-claude-bughunter/bb-methodology",
-      "elementalsouls-claude-bughunter/bug-bounty",
-      "elementalsouls-claude-bughunter/bugcrowd-reporting",
-      "elementalsouls-claude-bughunter/cloud-iam-deep",
-      "elementalsouls-claude-bughunter/enterprise-vpn-attack",
-      "elementalsouls-claude-bughunter/evidence-hygiene",
-      "elementalsouls-claude-bughunter/hunt-api-misconfig",
-      "elementalsouls-claude-bughunter/hunt-aspnet",
-      "elementalsouls-claude-bughunter/hunt-ato",
-      "elementalsouls-claude-bughunter/hunt-auth-bypass",
-      "elementalsouls-claude-bughunter/hunt-brute-force",
-      "elementalsouls-claude-bughunter/hunt-business-logic",
-      "elementalsouls-claude-bughunter/hunt-cache-poison",
-      "elementalsouls-claude-bughunter/hunt-captcha-bypass",
-      "elementalsouls-claude-bughunter/hunt-cicd",
-      "elementalsouls-claude-bughunter/hunt-clickjacking",
-      "elementalsouls-claude-bughunter/hunt-cloud-misconfig",
-      "elementalsouls-claude-bughunter/hunt-cors",
-      "linkonai2026-kr-design-on/animation-vocabulary",
-      "linkonai2026-kr-design-on/apple-design",
-      "linkonai2026-kr-design-on/brandkit",
-      "linkonai2026-kr-design-on/brutalist-skill",
-      "linkonai2026-kr-design-on/design-on",
-      "linkonai2026-kr-design-on/emil-design-eng",
-      "linkonai2026-kr-design-on/find-animation-opportunities",
-      "linkonai2026-kr-design-on/gpt-tasteskill",
-      "linkonai2026-kr-design-on/image-to-code-skill",
-      "linkonai2026-kr-design-on/imagegen-frontend-mobile",
-      "linkonai2026-kr-design-on/imagegen-frontend-web",
-      "linkonai2026-kr-design-on/impeccable",
-      "linkonai2026-kr-design-on/improve-animations",
-      "linkonai2026-kr-design-on/minimalist-skill",
-      "linkonai2026-kr-design-on/output-skill",
-      "linkonai2026-kr-design-on/pick-ui-library",
-      "linkonai2026-kr-design-on/ponytail",
-      "linkonai2026-kr-design-on/ponytail-review",
-      "linkonai2026-kr-design-on/prototype",
-      "linkonai2026-kr-design-on/review-animations",
-      "microsoft-skillopt/openclaw",
-      "microsoft-skillopt/skillopt-sleep"
+      "r007b34r-opencode-obsidian-knowledge-workflow/weekly-synthesis"
     ],
     "changed": [
-      "addyosmani-agent-skills/browser-testing-with-devtools",
-      "addyosmani-agent-skills/constraint-driven-development",
-      "addyosmani-agent-skills/context-engineering",
-      "addyosmani-agent-skills/doubt-driven-development",
-      "addyosmani-agent-skills/git-workflow-and-versioning",
-      "addyosmani-agent-skills/security-and-hardening",
-      "career-ops-hq-career-ops/career-ops",
-      "coreyhaines31-marketingskills/competitor-profiling",
-      "heygen-com-hyperframes/media-use",
-      "heygen-com-hyperframes/remotion-to-hyperframes",
-      "michael-denyer-pstack-claude/architect",
-      "michael-denyer-pstack-claude/arena",
-      "michael-denyer-pstack-claude/how",
-      "michael-denyer-pstack-claude/interrogate",
+      "heygen-com-hyperframes/hyperframes-cli",
+      "heygen-com-hyperframes/reverse-any-video",
+      "mattpocock-skills/chief-of-staff",
       "morluto-rea/rea-tool-design",
       "morluto-rea/reverse-engineer-anything",
-      "neondatabase-agent-skills/neon",
-      "neondatabase-agent-skills/neon-auth",
-      "neondatabase-agent-skills/neon-functions",
-      "neondatabase-agent-skills/neon-postgres",
-      "neondatabase-agent-skills/neon-postgres-egress-optimizer",
-      "othmanadi-planning-with-files/planning-with-files",
-      "othmanadi-planning-with-files/planning-with-files-ar",
-      "othmanadi-planning-with-files/planning-with-files-de",
-      "othmanadi-planning-with-files/planning-with-files-es",
-      "othmanadi-planning-with-files/planning-with-files-zh",
-      "othmanadi-planning-with-files/planning-with-files-zht",
-      "santifer-career-ops/career-ops",
-      "stablyai-orca/orchestration",
-      "vercel-labs-agent-browser/core"
+      "wanshuiyin-auto-claude-code-research-in-sleep/auto-paper-improvement-loop"
     ]
   },
   "sources": [
     {
       "source": "agentskills",
       "candidates": 100,
-      "fetchedAt": "2026-10-31T10:26:06.562Z"
+      "fetchedAt": "2026-11-01T11:20:12.726Z"
     },
     {
       "source": "github:agent-skills",
       "candidates": 450,
-      "fetchedAt": "2026-10-31T10:26:06.562Z"
+      "fetchedAt": "2026-11-01T11:20:12.726Z"
     },
     {
       "source": "github:ai-agent-skills",
       "candidates": 362,
-      "fetchedAt": "2026-10-31T10:26:06.562Z"
+      "fetchedAt": "2026-11-01T11:20:12.726Z"
     },
     {
       "source": "github:claude-code-skills",
-      "candidates": 461,
-      "fetchedAt": "2026-10-31T10:26:06.562Z"
+      "candidates": 466,
+      "fetchedAt": "2026-11-01T11:20:12.726Z"
     },
     {
       "source": "github:claude-skills",
       "candidates": 460,
-      "fetchedAt": "2026-10-31T10:26:06.562Z"
+      "fetchedAt": "2026-11-01T11:20:12.726Z"
     },
     {
       "source": "github:opencode-skills",
-      "candidates": 364,
-      "fetchedAt": "2026-10-31T10:26:06.562Z"
+      "candidates": 357,
+      "fetchedAt": "2026-11-01T11:20:12.726Z"
     },
     {
       "source": "seeds",
-      "candidates": 829,
-      "fetchedAt": "2026-10-31T10:26:06.562Z",
+      "candidates": 830,
+      "fetchedAt": "2026-11-01T11:20:12.726Z",
       "warnings": [
         "PleasePrompto/notebooklm-skill: archived"
       ]
@@ -158,25 +72,9 @@
     "source seeds: PleasePrompto/notebooklm-skill: archived"
   ],
   "reviewQueue": [
-    "cherryhq-cherry-studio/cherry-studio-feedback",
-    "cherryhq-cherry-studio/create-skill",
-    "cherryhq-cherry-studio/gh-create-issue",
-    "cherryhq-cherry-studio/gh-stack",
-    "cherryhq-cherry-studio/translate-docs",
-    "cherryhq-cherry-studio/agent-notes",
-    "cherryhq-cherry-studio/cherry-assistant-guide",
-    "cherryhq-cherry-studio/cherry-electron-dev",
-    "cherryhq-cherry-studio/docs-governance",
-    "cherryhq-cherry-studio/find-simplifications",
-    "cherryhq-cherry-studio/issue-reporter",
-    "cherryhq-cherry-studio/cherry-regression-test",
-    "cherryhq-cherry-studio/gh-pr-review",
-    "cherryhq-cherry-studio/gh-create-pr",
-    "cherryhq-cherry-studio/vercel-react-best-practices",
-    "cherryhq-cherry-studio/cherry-skill-marketplace",
-    "heygen-com-hyperframes/reverse-any-video",
-    "cherryhq-cherry-studio/prepare-release",
-    "cherryhq-cherry-studio/claude-automation-recommender",
-    "r007b34r-opencode-obsidian-knowledge-workflow/connection-review"
+    "wesammustafa-claude-code-everything-you-need-to-know/check-links",
+    "wesammustafa-claude-code-everything-you-need-to-know/changelog",
+    "wesammustafa-claude-code-everything-you-need-to-know/review-checklist",
+    "wesammustafa-claude-code-everything-you-need-to-know/team-review"
   ]
 }
