@@ -1,208 +1,172 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-01T11:20:12.726Z",
+  "generatedAt": "2026-11-02T12:32:52.488Z",
   "topVelocity": [
     {
       "id": "morluto-rea/rea-ci-tests-audit",
       "repo": "morluto/rea",
-      "stars": 416896,
-      "delta7d": 36256,
+      "stars": 420973,
+      "delta7d": 33336,
       "delta30d": 0
     },
     {
       "id": "pbakaus-impeccable/impeccable",
       "repo": "pbakaus/impeccable",
-      "stars": 98772,
-      "delta7d": 11995,
-      "delta30d": 0
-    },
-    {
-      "id": "stablyai-orca/computer-use",
-      "repo": "stablyai/orca",
-      "stars": 112048,
-      "delta7d": 6841,
-      "delta30d": 0
-    },
-    {
-      "id": "mattpocock-skills/scaffold-exercises",
-      "repo": "mattpocock/skills",
-      "stars": 308833,
-      "delta7d": 6089,
-      "delta30d": 0
-    },
-    {
-      "id": "dietrichgebert-ponytail/ponytail-gain",
-      "repo": "DietrichGebert/ponytail",
-      "stars": 181781,
-      "delta7d": 6046,
-      "delta30d": 0
-    },
-    {
-      "id": "obra-superpowers/requesting-code-review",
-      "repo": "obra/superpowers",
-      "stars": 310323,
-      "delta7d": 5568,
+      "stars": 100001,
+      "delta7d": 11651,
       "delta30d": 0
     },
     {
       "id": "thedotmack-claude-mem/babysit",
       "repo": "thedotmack/claude-mem",
-      "stars": 108430,
-      "delta7d": 5505,
+      "stars": 110232,
+      "delta7d": 6991,
+      "delta30d": 0
+    },
+    {
+      "id": "stablyai-orca/computer-use",
+      "repo": "stablyai/orca",
+      "stars": 113159,
+      "delta7d": 6744,
+      "delta30d": 0
+    },
+    {
+      "id": "mattpocock-skills/scaffold-exercises",
+      "repo": "mattpocock/skills",
+      "stars": 309716,
+      "delta7d": 6115,
+      "delta30d": 0
+    },
+    {
+      "id": "dietrichgebert-ponytail/ponytail-gain",
+      "repo": "DietrichGebert/ponytail",
+      "stars": 182527,
+      "delta7d": 6004,
+      "delta30d": 0
+    },
+    {
+      "id": "obra-superpowers/requesting-code-review",
+      "repo": "obra/superpowers",
+      "stars": 310950,
+      "delta7d": 5656,
       "delta30d": 0
     },
     {
       "id": "leonxlnx-taste-skill/taste-skill",
       "repo": "Leonxlnx/taste-skill",
-      "stars": 107373,
-      "delta7d": 5201,
-      "delta30d": 0
-    },
-    {
-      "id": "agricidaniel-claude-seo/seo-competitor-pages",
-      "repo": "AgriciDaniel/claude-seo",
-      "stars": 25252,
-      "delta7d": 5114,
-      "delta30d": 0
-    },
-    {
-      "id": "heygen-com-hyperframes/slideshow",
-      "repo": "heygen-com/hyperframes",
-      "stars": 76780,
-      "delta7d": 5078,
-      "delta30d": 0
-    },
-    {
-      "id": "forrestchang-andrej-karpathy-skills/karpathy-guidelines",
-      "repo": "forrestchang/andrej-karpathy-skills",
-      "stars": 227719,
-      "delta7d": 4228,
+      "stars": 108300,
+      "delta7d": 5594,
       "delta30d": 0
     },
     {
       "id": "donchitos-claude-code-game-studios/architecture-decision",
       "repo": "Donchitos/Claude-Code-Game-Studios",
-      "stars": 31597,
-      "delta7d": 4115,
+      "stars": 33010,
+      "delta7d": 5400,
+      "delta30d": 0
+    },
+    {
+      "id": "heygen-com-hyperframes/slideshow",
+      "repo": "heygen-com/hyperframes",
+      "stars": 77439,
+      "delta7d": 4879,
+      "delta30d": 0
+    },
+    {
+      "id": "forrestchang-andrej-karpathy-skills/karpathy-guidelines",
+      "repo": "forrestchang/andrej-karpathy-skills",
+      "stars": 228303,
+      "delta7d": 4210,
+      "delta30d": 0
+    },
+    {
+      "id": "agricidaniel-claude-seo/seo-competitor-pages",
+      "repo": "AgriciDaniel/claude-seo",
+      "stars": 25817,
+      "delta7d": 4172,
       "delta30d": 0
     },
     {
       "id": "nextlevelbuilder-ui-ux-pro-max-skill/banner-design",
       "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
-      "stars": 143600,
-      "delta7d": 3518,
-      "delta30d": 0
-    },
-    {
-      "id": "tt-a1i-archify/simplify-codebase",
-      "repo": "tt-a1i/archify",
-      "stars": 92253,
-      "delta7d": 3357,
+      "stars": 144068,
+      "delta7d": 3458,
       "delta30d": 0
     },
     {
       "id": "emilkowalski-skills/animation-vocabulary",
       "repo": "emilkowalski/skills",
-      "stars": 52582,
-      "delta7d": 3128,
+      "stars": 52883,
+      "delta7d": 3149,
       "delta30d": 0
     },
     {
-      "id": "paperclipai-paperclip/doc-maintenance",
-      "repo": "paperclipai/paperclip",
-      "stars": 109679,
-      "delta7d": 2598,
+      "id": "tt-a1i-archify/simplify-codebase",
+      "repo": "tt-a1i/archify",
+      "stars": 92596,
+      "delta7d": 3116,
       "delta30d": 0
     },
     {
       "id": "anthropics-skills/slack-gif-creator",
       "repo": "anthropics/skills",
-      "stars": 186087,
-      "delta7d": 2487,
+      "stars": 186593,
+      "delta7d": 2721,
+      "delta30d": 0
+    },
+    {
+      "id": "paperclipai-paperclip/doc-maintenance",
+      "repo": "paperclipai/paperclip",
+      "stars": 110109,
+      "delta7d": 2655,
       "delta30d": 0
     },
     {
       "id": "nvidia-skillspector/skill-inspector",
       "repo": "NVIDIA/SkillSpector",
-      "stars": 23768,
-      "delta7d": 2325,
+      "stars": 23941,
+      "delta7d": 2272,
       "delta30d": 0
     },
     {
       "id": "addyosmani-agent-skills/idea-refine",
       "repo": "addyosmani/agent-skills",
-      "stars": 112392,
-      "delta7d": 2091,
+      "stars": 112677,
+      "delta7d": 2053,
       "delta30d": 0
     },
     {
       "id": "career-ops-hq-career-ops/career-ops",
       "repo": "career-ops-hq/career-ops",
-      "stars": 79140,
-      "delta7d": 2037,
+      "stars": 79437,
+      "delta7d": 2022,
       "delta30d": 0
     }
   ],
   "newThisMonth": [
     {
-      "id": "jakeschincariol-replica-skill/replica-architect",
-      "repo": "Jakeschincariol/replica-skill",
-      "createdAt": "2026-10-03T12:07:49Z",
-      "stars": 6875
+      "id": "precious112-code-slowmo/code-slowmo",
+      "repo": "precious112/code-slowmo",
+      "createdAt": "2026-10-20T03:18:32Z",
+      "stars": 22
     },
     {
-      "id": "jakeschincariol-replica-skill/replica-backend",
-      "repo": "Jakeschincariol/replica-skill",
-      "createdAt": "2026-10-03T12:07:49Z",
-      "stars": 6875
+      "id": "taxueseek-plugin-fast-adapt/adapt",
+      "repo": "taxueseek/plugin-fast-adapt",
+      "createdAt": "2026-10-24T14:33:43Z",
+      "stars": 12
     },
     {
-      "id": "jakeschincariol-replica-skill/replica-brand",
-      "repo": "Jakeschincariol/replica-skill",
-      "createdAt": "2026-10-03T12:07:49Z",
-      "stars": 6875
+      "id": "taxueseek-plugin-fast-adapt/build",
+      "repo": "taxueseek/plugin-fast-adapt",
+      "createdAt": "2026-10-24T14:33:43Z",
+      "stars": 12
     },
     {
-      "id": "jakeschincariol-replica-skill/replica-build",
-      "repo": "Jakeschincariol/replica-skill",
-      "createdAt": "2026-10-03T12:07:49Z",
-      "stars": 6875
-    },
-    {
-      "id": "jakeschincariol-replica-skill/replica-deploy",
-      "repo": "Jakeschincariol/replica-skill",
-      "createdAt": "2026-10-03T12:07:49Z",
-      "stars": 6875
-    },
-    {
-      "id": "jakeschincariol-replica-skill/replica-design",
-      "repo": "Jakeschincariol/replica-skill",
-      "createdAt": "2026-10-03T12:07:49Z",
-      "stars": 6875
-    },
-    {
-      "id": "jakeschincariol-replica-skill/replica-diff",
-      "repo": "Jakeschincariol/replica-skill",
-      "createdAt": "2026-10-03T12:07:49Z",
-      "stars": 6875
-    },
-    {
-      "id": "jakeschincariol-replica-skill/replica-entrepreneur",
-      "repo": "Jakeschincariol/replica-skill",
-      "createdAt": "2026-10-03T12:07:49Z",
-      "stars": 6875
-    },
-    {
-      "id": "jakeschincariol-replica-skill/replica-launch",
-      "repo": "Jakeschincariol/replica-skill",
-      "createdAt": "2026-10-03T12:07:49Z",
-      "stars": 6875
-    },
-    {
-      "id": "jakeschincariol-replica-skill/replica-recon",
-      "repo": "Jakeschincariol/replica-skill",
-      "createdAt": "2026-10-03T12:07:49Z",
-      "stars": 6875
+      "id": "taxueseek-plugin-fast-adapt/diagnose",
+      "repo": "taxueseek/plugin-fast-adapt",
+      "createdAt": "2026-10-24T14:33:43Z",
+      "stars": 12
     }
   ]
 }
