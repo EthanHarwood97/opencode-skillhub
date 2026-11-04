@@ -1,145 +1,145 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-03T11:59:56.770Z",
+  "generatedAt": "2026-11-04T12:14:54.380Z",
   "topVelocity": [
     {
       "id": "morluto-rea/rea-ci-tests-audit",
       "repo": "morluto/rea",
-      "stars": 425081,
-      "delta7d": 30932,
+      "stars": 429119,
+      "delta7d": 29443,
       "delta30d": 0
     },
     {
       "id": "pbakaus-impeccable/impeccable",
       "repo": "pbakaus/impeccable",
-      "stars": 101049,
-      "delta7d": 11310,
+      "stars": 102016,
+      "delta7d": 10797,
       "delta30d": 0
     },
     {
       "id": "thedotmack-claude-mem/babysit",
       "repo": "thedotmack/claude-mem",
-      "stars": 111310,
-      "delta7d": 7768,
-      "delta30d": 0
-    },
-    {
-      "id": "stablyai-orca/computer-use",
-      "repo": "stablyai/orca",
-      "stars": 114073,
-      "delta7d": 6575,
-      "delta30d": 0
-    },
-    {
-      "id": "donchitos-claude-code-game-studios/architecture-decision",
-      "repo": "Donchitos/Claude-Code-Game-Studios",
-      "stars": 34160,
-      "delta7d": 6417,
+      "stars": 112427,
+      "delta7d": 8579,
       "delta30d": 0
     },
     {
       "id": "mattpocock-skills/scaffold-exercises",
       "repo": "mattpocock/skills",
-      "stars": 310808,
-      "delta7d": 6389,
+      "stars": 312211,
+      "delta7d": 6969,
+      "delta30d": 0
+    },
+    {
+      "id": "donchitos-claude-code-game-studios/architecture-decision",
+      "repo": "Donchitos/Claude-Code-Game-Studios",
+      "stars": 35171,
+      "delta7d": 6946,
+      "delta30d": 0
+    },
+    {
+      "id": "stablyai-orca/jira-tickets",
+      "repo": "stablyai/orca",
+      "stars": 114985,
+      "delta7d": 6459,
+      "delta30d": 0
+    },
+    {
+      "id": "leonxlnx-taste-skill/taste-skill",
+      "repo": "Leonxlnx/taste-skill",
+      "stars": 109780,
+      "delta7d": 5815,
+      "delta30d": 0
+    },
+    {
+      "id": "dietrichgebert-ponytail/ponytail-gain",
+      "repo": "DietrichGebert/ponytail",
+      "stars": 184145,
+      "delta7d": 5573,
       "delta30d": 0
     },
     {
       "id": "obra-superpowers/requesting-code-review",
       "repo": "obra/superpowers",
-      "stars": 311548,
-      "delta7d": 5717,
-      "delta30d": 0
-    },
-    {
-      "id": "heygen-com-hyperframes/style-sampling",
-      "repo": "heygen-com/hyperframes",
-      "stars": 78057,
-      "delta7d": 4585,
-      "delta30d": 0
-    },
-    {
-      "id": "agricidaniel-claude-seo/seo-competitor-pages",
-      "repo": "AgriciDaniel/claude-seo",
-      "stars": 26168,
-      "delta7d": 3753,
+      "stars": 312151,
+      "delta7d": 5277,
       "delta30d": 0
     },
     {
       "id": "forrestchang-andrej-karpathy-skills/karpathy-guidelines",
       "repo": "forrestchang/andrej-karpathy-skills",
-      "stars": 228830,
-      "delta7d": 3740,
+      "stars": 229302,
+      "delta7d": 3586,
+      "delta30d": 0
+    },
+    {
+      "id": "agricidaniel-claude-seo/seo-competitor-pages",
+      "repo": "AgriciDaniel/claude-seo",
+      "stars": 26506,
+      "delta7d": 3537,
       "delta30d": 0
     },
     {
       "id": "nextlevelbuilder-ui-ux-pro-max-skill/banner-design",
       "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
-      "stars": 144562,
-      "delta7d": 3351,
+      "stars": 145014,
+      "delta7d": 3201,
       "delta30d": 0
     },
     {
       "id": "paperclipai-paperclip/doc-maintenance",
       "repo": "paperclipai/paperclip",
-      "stars": 110699,
-      "delta7d": 2894,
-      "delta30d": 0
-    },
-    {
-      "id": "anthropics-skills/slack-gif-creator",
-      "repo": "anthropics/skills",
-      "stars": 186966,
-      "delta7d": 2862,
+      "stars": 110974,
+      "delta7d": 2834,
       "delta30d": 0
     },
     {
       "id": "tt-a1i-archify/simplify-codebase",
       "repo": "tt-a1i/archify",
-      "stars": 92980,
-      "delta7d": 2860,
+      "stars": 93313,
+      "delta7d": 2568,
       "delta30d": 0
     },
     {
       "id": "emilkowalski-skills/animation-vocabulary",
       "repo": "emilkowalski/skills",
-      "stars": 53150,
-      "delta7d": 2767,
+      "stars": 53397,
+      "delta7d": 2519,
       "delta30d": 0
     },
     {
       "id": "santifer-career-ops/career-ops",
       "repo": "santifer/career-ops",
-      "stars": 79708,
-      "delta7d": 1967,
+      "stars": 80022,
+      "delta7d": 1950,
       "delta30d": 0
     },
     {
-      "id": "juliusbrussee-caveman/caveman-commit",
-      "repo": "JuliusBrussee/caveman",
-      "stars": 117079,
-      "delta7d": 1672,
+      "id": "career-ops-hq-career-ops/career-ops",
+      "repo": "career-ops-hq/career-ops",
+      "stars": 80020,
+      "delta7d": 1948,
+      "delta30d": 0
+    },
+    {
+      "id": "addyosmani-agent-skills/idea-refine",
+      "repo": "addyosmani/agent-skills",
+      "stars": 113164,
+      "delta7d": 1876,
       "delta30d": 0
     },
     {
       "id": "egonex-ai-understand-anything/understand-chat",
       "repo": "Egonex-AI/Understand-Anything",
-      "stars": 90121,
-      "delta7d": 1630,
+      "stars": 90446,
+      "delta7d": 1775,
       "delta30d": 0
     },
     {
-      "id": "coreyhaines31-marketingskills/ab-testing",
-      "repo": "coreyhaines31/marketingskills",
-      "stars": 58207,
-      "delta7d": 1426,
-      "delta30d": 0
-    },
-    {
-      "id": "jakeschincariol-replica-skill/replica-design",
-      "repo": "Jakeschincariol/replica-skill",
-      "stars": 7247,
-      "delta7d": 1343,
+      "id": "juliusbrussee-caveman/caveman-commit",
+      "repo": "JuliusBrussee/caveman",
+      "stars": 117381,
+      "delta7d": 1727,
       "delta30d": 0
     }
   ],
@@ -148,7 +148,7 @@
       "id": "precious112-code-slowmo/code-slowmo",
       "repo": "precious112/code-slowmo",
       "createdAt": "2026-10-20T03:18:32Z",
-      "stars": 22
+      "stars": 23
     },
     {
       "id": "taxueseek-plugin-fast-adapt/adapt",
