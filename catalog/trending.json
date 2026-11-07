@@ -1,146 +1,146 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-06T12:11:13.316Z",
+  "generatedAt": "2026-11-07T11:08:21.200Z",
   "topVelocity": [
     {
       "id": "morluto-rea/rea-ci-tests-audit",
       "repo": "morluto/rea",
-      "stars": 436280,
-      "delta7d": 26256,
-      "delta30d": 424960
+      "stars": 439314,
+      "delta7d": 25664,
+      "delta30d": 427994
     },
     {
       "id": "mattpocock-skills/scaffold-exercises",
       "repo": "mattpocock/skills",
-      "stars": 316122,
-      "delta7d": 9154,
-      "delta30d": 37358
-    },
-    {
-      "id": "thedotmack-claude-mem/babysit",
-      "repo": "thedotmack/claude-mem",
-      "stars": 113776,
-      "delta7d": 8517,
-      "delta30d": 16385
+      "stars": 317130,
+      "delta7d": 9338,
+      "delta30d": 38366
     },
     {
       "id": "pbakaus-impeccable/impeccable",
       "repo": "pbakaus/impeccable",
-      "stars": 104374,
-      "delta7d": 8079,
-      "delta30d": 26335
+      "stars": 105090,
+      "delta7d": 7502,
+      "delta30d": 27051
+    },
+    {
+      "id": "thedotmack-claude-mem/babysit",
+      "repo": "thedotmack/claude-mem",
+      "stars": 114212,
+      "delta7d": 7309,
+      "delta30d": 16821
     },
     {
       "id": "stablyai-orca/jira-tickets",
       "repo": "stablyai/orca",
-      "stars": 117273,
-      "delta7d": 6647,
-      "delta30d": 30480
+      "stars": 118149,
+      "delta7d": 6766,
+      "delta30d": 31356
     },
     {
       "id": "google-elephant-goldfish-model/egm-draft",
       "repo": "google/elephant-goldfish-model",
-      "stars": 12747,
-      "delta7d": 6365,
+      "stars": 13302,
+      "delta7d": 6576,
       "delta30d": 0
     },
     {
       "id": "donchitos-claude-code-game-studios/architecture-decision",
       "repo": "Donchitos/Claude-Code-Game-Studios",
-      "stars": 35882,
-      "delta7d": 5984,
-      "delta30d": 10039
+      "stars": 36291,
+      "delta7d": 5670,
+      "delta30d": 10448
     },
     {
       "id": "dietrichgebert-ponytail/ponytail-gain",
       "repo": "DietrichGebert/ponytail",
-      "stars": 185556,
-      "delta7d": 4956,
-      "delta30d": 28379
+      "stars": 186084,
+      "delta7d": 4880,
+      "delta30d": 28907
     },
     {
       "id": "obra-superpowers/requesting-code-review",
       "repo": "obra/superpowers",
-      "stars": 313317,
-      "delta7d": 4262,
-      "delta30d": 17133
+      "stars": 313826,
+      "delta7d": 4156,
+      "delta30d": 17642
+    },
+    {
+      "id": "heygen-com-hyperframes/style-sampling",
+      "repo": "heygen-com/hyperframes",
+      "stars": 80290,
+      "delta7d": 4045,
+      "delta30d": 22076
     },
     {
       "id": "forrestchang-andrej-karpathy-skills/karpathy-guidelines",
       "repo": "forrestchang/andrej-karpathy-skills",
-      "stars": 230085,
-      "delta7d": 3454,
-      "delta30d": 12724
+      "stars": 230436,
+      "delta7d": 3324,
+      "delta30d": 13075
     },
     {
       "id": "nextlevelbuilder-ui-ux-pro-max-skill/banner-design",
       "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
-      "stars": 145967,
-      "delta7d": 3176,
-      "delta30d": 12242
-    },
-    {
-      "id": "agricidaniel-claude-seo/seo-competitor-pages",
-      "repo": "AgriciDaniel/claude-seo",
-      "stars": 26991,
-      "delta7d": 2783,
-      "delta30d": 8533
+      "stars": 146338,
+      "delta7d": 3144,
+      "delta30d": 12613
     },
     {
       "id": "paperclipai-paperclip/doc-maintenance",
       "repo": "paperclipai/paperclip",
-      "stars": 111606,
-      "delta7d": 2783,
+      "stars": 111864,
+      "delta7d": 2752,
       "delta30d": 0
+    },
+    {
+      "id": "agricidaniel-claude-seo/seo-competitor-pages",
+      "repo": "AgriciDaniel/claude-seo",
+      "stars": 27142,
+      "delta7d": 2409,
+      "delta30d": 8684
     },
     {
       "id": "tt-a1i-archify/simplify-codebase",
       "repo": "tt-a1i/archify",
-      "stars": 94072,
-      "delta7d": 2388,
-      "delta30d": 15127
+      "stars": 94319,
+      "delta7d": 2353,
+      "delta30d": 15374
     },
     {
       "id": "emilkowalski-skills/animation-vocabulary",
       "repo": "emilkowalski/skills",
-      "stars": 54001,
-      "delta7d": 2371,
-      "delta30d": 9988
+      "stars": 54242,
+      "delta7d": 2039,
+      "delta30d": 10229
     },
     {
       "id": "egonex-ai-understand-anything/understand-chat",
       "repo": "Egonex-AI/Understand-Anything",
-      "stars": 91042,
-      "delta7d": 2057,
-      "delta30d": 5561
+      "stars": 91172,
+      "delta7d": 1934,
+      "delta30d": 5691
     },
     {
       "id": "career-ops-hq-career-ops/career-ops",
       "repo": "career-ops-hq/career-ops",
-      "stars": 80595,
-      "delta7d": 1808,
-      "delta30d": 6922
+      "stars": 80817,
+      "delta7d": 1850,
+      "delta30d": 7144
     },
     {
       "id": "santifer-career-ops/career-ops",
       "repo": "santifer/career-ops",
-      "stars": 80595,
-      "delta7d": 1808,
-      "delta30d": 6922
+      "stars": 80817,
+      "delta7d": 1850,
+      "delta30d": 7144
     },
     {
       "id": "addyosmani-agent-skills/idea-refine",
       "repo": "addyosmani/agent-skills",
-      "stars": 113622,
-      "delta7d": 1770,
-      "delta30d": 11309
-    },
-    {
-      "id": "juliusbrussee-caveman/caveman-commit",
-      "repo": "JuliusBrussee/caveman",
-      "stars": 117909,
-      "delta7d": 1695,
-      "delta30d": 7585
+      "stars": 113805,
+      "delta7d": 1726,
+      "delta30d": 11492
     }
   ],
   "newThisMonth": [
@@ -148,7 +148,7 @@
       "id": "precious112-code-slowmo/code-slowmo",
       "repo": "precious112/code-slowmo",
       "createdAt": "2026-10-20T03:18:32Z",
-      "stars": 23
+      "stars": 24
     },
     {
       "id": "taxueseek-plugin-fast-adapt/adapt",
