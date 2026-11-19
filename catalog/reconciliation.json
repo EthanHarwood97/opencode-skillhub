@@ -1,112 +1,97 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-18T13:09:27.895Z",
+  "generatedAt": "2026-11-19T13:22:46.231Z",
   "totals": {
-    "previous": 2118,
+    "previous": 2123,
     "current": 2123,
     "added": [
-      "google-elephant-goldfish-model/egm-lite",
-      "harsh-aghara-underhood/underhood",
-      "snailsploit-claude-red/offensive-ai-security",
-      "snailsploit-claude-red/offensive-exploit-dev-course",
-      "snailsploit-claude-red/offensive-exploit-development",
-      "snailsploit-claude-red/offensive-mitigations",
-      "snailsploit-claude-red/offensive-oauth"
+      "addyosmani-agent-skills/accessibility-engineering"
     ],
     "removed": [
-      "mex-memory-mex/mex-inbox",
-      "mex-memory-mex/mex-relay"
+      "addyosmani-agent-skills/security-and-hardening"
     ],
     "changed": [
-      "browser-use/browser-use",
-      "career-ops-hq-career-ops/career-ops",
-      "cherryhq-cherry-studio/agent-notes",
-      "cherryhq-cherry-studio/gh-create-pr",
-      "cherryhq-cherry-studio/gh-stack",
-      "coreyhaines31-marketingskills/ad-creative",
-      "coreyhaines31-marketingskills/copywriting",
-      "czlonkowski-n8n-skills/n8n-expression-syntax",
-      "czlonkowski-n8n-skills/n8n-mcp-tools-expert",
-      "czlonkowski-n8n-skills/n8n-workflow-patterns",
-      "czlonkowski-n8n-skills/using-n8n-mcp-skills",
-      "egonex-ai-understand-anything/understand",
-      "google-agents-cli/agents-cli-langchain",
-      "google-agents-cli/google-agents-cli-adk-code",
-      "google-agents-cli/google-agents-cli-deploy",
-      "google-agents-cli/google-agents-cli-eval",
-      "google-agents-cli/google-agents-cli-observability",
-      "google-agents-cli/google-agents-cli-publish",
-      "google-agents-cli/google-agents-cli-scaffold",
-      "google-agents-cli/google-agents-cli-workflow",
-      "heygen-com-hyperframes/canopy-part-title",
-      "heygen-com-hyperframes/code-slice-hero",
-      "heygen-com-hyperframes/cuboid-carousel",
-      "heygen-com-hyperframes/frost-sequence-camera-orbit",
-      "heygen-com-hyperframes/glass-shard-title",
-      "heygen-com-hyperframes/orbit-card",
-      "heygen-com-hyperframes/wireframe-portal-title",
+      "101-skills-superpowers/ai-automation-workflows",
+      "101-skills-superpowers/ai-content-pipeline",
+      "101-skills-superpowers/ai-podcast",
+      "101-skills-superpowers/ai-podcast-creation",
+      "101-skills-superpowers/ai-product-photography",
+      "101-skills-superpowers/app-store-screenshots",
+      "101-skills-superpowers/book-cover-design",
+      "101-skills-superpowers/character-design-sheet",
+      "101-skills-superpowers/competitor-teardown",
+      "101-skills-superpowers/content-repurposing",
+      "101-skills-superpowers/customer-persona",
+      "101-skills-superpowers/data-visualization",
+      "101-skills-superpowers/email-design",
+      "101-skills-superpowers/landing-page-design",
+      "101-skills-superpowers/logo-design-guide",
+      "101-skills-superpowers/og-image-design",
+      "101-skills-superpowers/pitch-deck-visuals",
+      "101-skills-superpowers/product-photography",
+      "101-skills-superpowers/youtube-thumbnail-design",
+      "addyosmani-agent-skills/ci-cd-and-automation",
+      "addyosmani-agent-skills/code-review-and-quality",
+      "davila7/telegram-bot-builder",
+      "epicenterhq/drizzle-orm",
+      "epicenterhq/tauri",
       "imbad0202-academic-research-skills/academic-paper",
-      "imbad0202-academic-research-skills/academic-paper-reviewer",
-      "larksuite-cli/lark-apps",
+      "imbad0202-academic-research-skills/academic-pipeline",
+      "michael-denyer-pstack-claude/architect",
+      "michael-denyer-pstack-claude/arena",
+      "michael-denyer-pstack-claude/benchmark-checklist",
+      "michael-denyer-pstack-claude/blast-radius",
+      "michael-denyer-pstack-claude/how",
+      "microsoft-azure-skills/azure-ai",
       "morluto-rea/reverse-engineer-anything",
       "nanocoai-nanoclaw/add-codex",
-      "neondatabase-agent-skills/neon",
-      "neondatabase-agent-skills/neon-ai-gateway",
-      "remotion-dev-skills/remotion-best-practices",
-      "remotion-dev-skills/remotion-captions",
-      "remotion-dev-skills/remotion-create",
-      "remotion-dev-skills/remotion-docs",
-      "remotion-dev-skills/remotion-interactivity",
-      "remotion-dev-skills/remotion-license",
-      "remotion-dev-skills/remotion-maps",
-      "remotion-dev-skills/remotion-markup",
-      "remotion-dev-skills/remotion-multimedia",
-      "remotion-dev-skills/remotion-render",
-      "remotion-dev-skills/remotion-saas",
-      "remotion-dev-skills/remotion-studio",
-      "remotion-dev-skills/remotion-upgrade",
-      "santifer-career-ops/career-ops",
-      "stablyai-orca/orchestration",
+      "neondatabase-agent-skills/neon-realtime",
+      "nextlevelbuilder-ui-ux-pro-max-skill/ui-ux-pro-max",
+      "nextlevelbuilder/ui-ux-pro-max",
+      "pbakaus-impeccable/impeccable",
+      "stablyai-orca/orca-chat-visuals",
+      "stablyai-orca/orca-cli",
+      "taxueseek-plugin-fast-adapt/adapt",
+      "taxueseek-plugin-fast-adapt/review",
       "thedotmack-claude-mem/community-sweep",
-      "topoteretes-cognee/cognee-performance",
-      "vercel-labs-agent-browser/core"
+      "topoteretes-cognee/cognee-integrations"
     ]
   },
   "sources": [
     {
       "source": "agentskills",
       "candidates": 100,
-      "fetchedAt": "2026-11-18T13:09:27.895Z"
+      "fetchedAt": "2026-11-19T13:22:46.231Z"
     },
     {
       "source": "github:agent-skills",
       "candidates": 515,
-      "fetchedAt": "2026-11-18T13:09:27.895Z"
+      "fetchedAt": "2026-11-19T13:22:46.231Z"
     },
     {
       "source": "github:ai-agent-skills",
       "candidates": 353,
-      "fetchedAt": "2026-11-18T13:09:27.895Z"
+      "fetchedAt": "2026-11-19T13:22:46.231Z"
     },
     {
       "source": "github:claude-code-skills",
       "candidates": 426,
-      "fetchedAt": "2026-11-18T13:09:27.895Z"
+      "fetchedAt": "2026-11-19T13:22:46.231Z"
     },
     {
       "source": "github:claude-skills",
       "candidates": 445,
-      "fetchedAt": "2026-11-18T13:09:27.895Z"
+      "fetchedAt": "2026-11-19T13:22:46.231Z"
     },
     {
       "source": "github:opencode-skills",
       "candidates": 380,
-      "fetchedAt": "2026-11-18T13:09:27.895Z"
+      "fetchedAt": "2026-11-19T13:22:46.231Z"
     },
     {
       "source": "seeds",
       "candidates": 836,
-      "fetchedAt": "2026-11-18T13:09:27.895Z",
+      "fetchedAt": "2026-11-19T13:22:46.231Z",
       "warnings": [
         "PleasePrompto/notebooklm-skill: archived"
       ]
@@ -116,11 +101,6 @@
     "source seeds: PleasePrompto/notebooklm-skill: archived"
   ],
   "reviewQueue": [
-    "snailsploit-claude-red/offensive-mitigations",
-    "snailsploit-claude-red/offensive-oauth",
-    "google-elephant-goldfish-model/egm-lite",
-    "harsh-aghara-underhood/underhood",
-    "snailsploit-claude-red/offensive-exploit-development",
-    "snailsploit-claude-red/offensive-exploit-dev-course"
+    "addyosmani-agent-skills/accessibility-engineering"
   ]
 }

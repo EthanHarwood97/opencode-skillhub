@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-18T13:09:27.895Z",
+  "generatedAt": "2026-11-19T13:22:46.231Z",
   "clusters": [
     {
       "id": "c-0839f013",
@@ -139,7 +139,7 @@
       "top": "donchitos-claude-code-game-studios/asset-audit",
       "alternatives": [
         "googleworkspace-cli/gws-admin-reports",
-        "ryze-ai-adgent-open-seo-mcp-skills/content-brief"
+        "agricidaniel-claude-seo/seo-content-brief"
       ]
     },
     {
@@ -399,7 +399,7 @@
       "top": "mukul975-anthropic-cybersecurity-skills/analyzing-azure-activity-logs-for-threats",
       "alternatives": [
         "hashicorp-agent-skills/azure-image-builder",
-        "shanraisshan-claude-code-best-practice/presentation-styling"
+        "microsoft-azure-skills/aks-gpu-inference"
       ]
     },
     {
