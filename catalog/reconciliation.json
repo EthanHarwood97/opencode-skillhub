@@ -1,123 +1,67 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-20T13:03:21.575Z",
+  "generatedAt": "2026-11-21T12:45:13.065Z",
   "totals": {
-    "previous": 2123,
+    "previous": 2125,
     "current": 2125,
-    "added": [
-      "jimliu-baoyu-skills/baoyu-podcast-summary",
-      "mattpocock-skills/software-factory"
-    ],
+    "added": [],
     "removed": [],
     "changed": [
-      "career-ops-hq-career-ops/career-ops",
-      "coreyhaines31-marketingskills/ad-creative",
-      "coreyhaines31-marketingskills/ads",
-      "coreyhaines31-marketingskills/ai-seo",
-      "coreyhaines31-marketingskills/analytics",
-      "coreyhaines31-marketingskills/attribution",
-      "coreyhaines31-marketingskills/churn-prevention",
-      "coreyhaines31-marketingskills/co-marketing",
-      "coreyhaines31-marketingskills/cold-email",
-      "coreyhaines31-marketingskills/competitor-profiling",
-      "coreyhaines31-marketingskills/directory-submissions",
-      "davila7/2d-games",
-      "davila7/game-development",
-      "expo-skills/eas-app-stores",
-      "expo-skills/eas-hosting",
-      "expo-skills/eas-observe",
-      "expo-skills/eas-update",
-      "expo-skills/eas-update-insights",
-      "expo-skills/eas-workflows",
-      "expo-skills/expo-app-clip",
-      "expo-skills/expo-data-fetching",
-      "expo-skills/expo-design-system",
-      "expo-skills/expo-dev-client",
-      "expo-skills/expo-native-ui",
-      "expo-skills/expo-overview",
-      "microsoft-azure-skills/azure-ai",
-      "mohitmishra786-low-level-dev-skills/adc-dac-baremetal",
-      "mohitmishra786-low-level-dev-skills/af-xdp",
-      "mohitmishra786-low-level-dev-skills/baremetal-startup",
-      "mohitmishra786-low-level-dev-skills/bootloaders-embedded",
-      "mohitmishra786-low-level-dev-skills/custom-allocators",
-      "mohitmishra786-low-level-dev-skills/datasheet-and-refmanual-reading",
-      "mohitmishra786-low-level-dev-skills/dma-baremetal",
-      "mohitmishra786-low-level-dev-skills/dpdk",
-      "mohitmishra786-low-level-dev-skills/gpio-baremetal",
-      "mohitmishra786-low-level-dev-skills/interrupts-and-exceptions-baremetal",
-      "mohitmishra786-low-level-dev-skills/io-uring",
-      "mohitmishra786-low-level-dev-skills/low-power-embedded",
-      "mohitmishra786-low-level-dev-skills/mmio-and-bit-manipulation",
-      "mohitmishra786-low-level-dev-skills/numa-programming",
-      "mohitmishra786-low-level-dev-skills/peripherals-from-datasheet",
-      "mohitmishra786-low-level-dev-skills/spi-i2c-baremetal",
-      "mohitmishra786-low-level-dev-skills/stm32-baremetal",
-      "mohitmishra786-low-level-dev-skills/timers-pwm-baremetal",
-      "mohitmishra786-low-level-dev-skills/uart-serial-baremetal",
+      "google-elephant-goldfish-model/egm-bootstrap",
+      "heygen-com-hyperframes/hyperframes-cli",
+      "jeffallan-claude-skills/cloud-architect",
+      "jeffallan-claude-skills/code-reviewer",
+      "jeffallan-claude-skills/django-expert",
+      "jeffallan-claude-skills/fastapi-expert",
+      "microsoft-azure-skills/azure-diagnostics",
       "morluto-rea/reverse-engineer-anything",
-      "nvidia-skillspector/skill-inspector",
-      "santifer-career-ops/career-ops",
-      "taxueseek-plugin-fast-adapt/adapt",
+      "othmanadi-planning-with-files/planning-with-files",
+      "othmanadi-planning-with-files/planning-with-files-ar",
+      "othmanadi-planning-with-files/planning-with-files-de",
+      "othmanadi-planning-with-files/planning-with-files-es",
+      "othmanadi-planning-with-files/planning-with-files-zh",
+      "othmanadi-planning-with-files/planning-with-files-zht",
+      "rebelytics-one-skill-to-rule-them-all/task-observer",
+      "thedotmack-claude-mem/agent-cost-report",
       "vercel-labs-agent-browser/core",
-      "zenstory-ai-drama-skills/short-drama",
-      "zenstory-ai-drama-skills/short-drama-assets",
-      "zenstory-ai-drama-skills/short-drama-breakdown",
-      "zenstory-ai-drama-skills/short-drama-develop",
-      "zenstory-ai-drama-skills/short-drama-edit",
-      "zenstory-ai-drama-skills/short-drama-novel-analyze",
-      "zenstory-ai-drama-skills/short-drama-produce",
-      "zenstory-ai-drama-skills/short-drama-review",
-      "zenstory-ai-drama-skills/short-drama-storyboard",
-      "zenstory-ai-drama-skills/short-drama-video-prompts",
-      "zenstory-ai-drama-skills/short-drama-write",
-      "zenstory-ai-oh-story-claudecode/story-cover",
-      "zenstory-ai-oh-story-claudecode/story-deslop",
-      "zenstory-ai-oh-story-claudecode/story-import",
-      "zenstory-ai-oh-story-claudecode/story-long-analyze",
-      "zenstory-ai-oh-story-claudecode/story-long-scan",
-      "zenstory-ai-oh-story-claudecode/story-long-write",
-      "zenstory-ai-oh-story-claudecode/story-publish",
-      "zenstory-ai-oh-story-claudecode/story-review",
-      "zenstory-ai-oh-story-claudecode/story-short-analyze",
-      "zenstory-ai-oh-story-claudecode/story-short-write"
+      "vercel-labs-agent-skills/web-design-guidelines"
     ]
   },
   "sources": [
     {
       "source": "agentskills",
       "candidates": 100,
-      "fetchedAt": "2026-11-20T13:03:21.575Z"
+      "fetchedAt": "2026-11-21T12:45:13.065Z"
     },
     {
       "source": "github:agent-skills",
       "candidates": 515,
-      "fetchedAt": "2026-11-20T13:03:21.575Z"
+      "fetchedAt": "2026-11-21T12:45:13.065Z"
     },
     {
       "source": "github:ai-agent-skills",
       "candidates": 353,
-      "fetchedAt": "2026-11-20T13:03:21.575Z"
+      "fetchedAt": "2026-11-21T12:45:13.065Z"
     },
     {
       "source": "github:claude-code-skills",
       "candidates": 426,
-      "fetchedAt": "2026-11-20T13:03:21.575Z"
+      "fetchedAt": "2026-11-21T12:45:13.065Z"
     },
     {
       "source": "github:claude-skills",
       "candidates": 445,
-      "fetchedAt": "2026-11-20T13:03:21.575Z"
+      "fetchedAt": "2026-11-21T12:45:13.065Z"
     },
     {
       "source": "github:opencode-skills",
       "candidates": 380,
-      "fetchedAt": "2026-11-20T13:03:21.575Z"
+      "fetchedAt": "2026-11-21T12:45:13.065Z"
     },
     {
       "source": "seeds",
       "candidates": 837,
-      "fetchedAt": "2026-11-20T13:03:21.575Z",
+      "fetchedAt": "2026-11-21T12:45:13.065Z",
       "warnings": [
         "PleasePrompto/notebooklm-skill: archived"
       ]
@@ -126,8 +70,5 @@
   "gaps": [
     "source seeds: PleasePrompto/notebooklm-skill: archived"
   ],
-  "reviewQueue": [
-    "mattpocock-skills/software-factory",
-    "jimliu-baoyu-skills/baoyu-podcast-summary"
-  ]
+  "reviewQueue": []
 }
