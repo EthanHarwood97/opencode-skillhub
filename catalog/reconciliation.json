@@ -1,67 +1,81 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-21T12:45:13.065Z",
+  "generatedAt": "2026-11-22T12:39:44.291Z",
   "totals": {
     "previous": 2125,
     "current": 2125,
     "added": [],
     "removed": [],
     "changed": [
-      "google-elephant-goldfish-model/egm-bootstrap",
-      "heygen-com-hyperframes/hyperframes-cli",
-      "jeffallan-claude-skills/cloud-architect",
-      "jeffallan-claude-skills/code-reviewer",
-      "jeffallan-claude-skills/django-expert",
-      "jeffallan-claude-skills/fastapi-expert",
-      "microsoft-azure-skills/azure-diagnostics",
-      "morluto-rea/reverse-engineer-anything",
-      "othmanadi-planning-with-files/planning-with-files",
-      "othmanadi-planning-with-files/planning-with-files-ar",
-      "othmanadi-planning-with-files/planning-with-files-de",
-      "othmanadi-planning-with-files/planning-with-files-es",
-      "othmanadi-planning-with-files/planning-with-files-zh",
-      "othmanadi-planning-with-files/planning-with-files-zht",
-      "rebelytics-one-skill-to-rule-them-all/task-observer",
-      "thedotmack-claude-mem/agent-cost-report",
-      "vercel-labs-agent-browser/core",
-      "vercel-labs-agent-skills/web-design-guidelines"
+      "alchaincyf-huashu-motion/huashu-motion",
+      "alibaba-open-code-review/open-code-review",
+      "alibaba-open-code-review/open-code-review-delegate",
+      "google-elephant-goldfish-model/egm-brainstorm",
+      "google-elephant-goldfish-model/egm-draft",
+      "gosom-google-maps-scraper/google-maps-scraper",
+      "heygen-com-hyperframes/hyperframes-registry",
+      "imbad0202-academic-research-skills/academic-paper",
+      "nextlevelbuilder-ui-ux-pro-max-skill/ui-ux-pro-max",
+      "nextlevelbuilder/ui-ux-pro-max",
+      "smidigstorm/solid-principles",
+      "zenstory-ai-drama-skills/short-drama",
+      "zenstory-ai-drama-skills/short-drama-assets",
+      "zenstory-ai-drama-skills/short-drama-breakdown",
+      "zenstory-ai-drama-skills/short-drama-develop",
+      "zenstory-ai-drama-skills/short-drama-edit",
+      "zenstory-ai-drama-skills/short-drama-image-prompts",
+      "zenstory-ai-drama-skills/short-drama-knowhow",
+      "zenstory-ai-drama-skills/short-drama-novel-analyze",
+      "zenstory-ai-drama-skills/short-drama-produce",
+      "zenstory-ai-drama-skills/short-drama-review",
+      "zenstory-ai-drama-skills/short-drama-storyboard",
+      "zenstory-ai-drama-skills/short-drama-video-prompts",
+      "zenstory-ai-drama-skills/short-drama-write",
+      "zenstory-ai-oh-story-claudecode/story",
+      "zenstory-ai-oh-story-claudecode/story-deslop",
+      "zenstory-ai-oh-story-claudecode/story-import",
+      "zenstory-ai-oh-story-claudecode/story-long-analyze",
+      "zenstory-ai-oh-story-claudecode/story-long-write",
+      "zenstory-ai-oh-story-claudecode/story-publish",
+      "zenstory-ai-oh-story-claudecode/story-review",
+      "zenstory-ai-oh-story-claudecode/story-short-write"
     ]
   },
   "sources": [
     {
       "source": "agentskills",
       "candidates": 100,
-      "fetchedAt": "2026-11-21T12:45:13.065Z"
+      "fetchedAt": "2026-11-22T12:39:44.291Z"
     },
     {
       "source": "github:agent-skills",
       "candidates": 515,
-      "fetchedAt": "2026-11-21T12:45:13.065Z"
+      "fetchedAt": "2026-11-22T12:39:44.291Z"
     },
     {
       "source": "github:ai-agent-skills",
       "candidates": 353,
-      "fetchedAt": "2026-11-21T12:45:13.065Z"
+      "fetchedAt": "2026-11-22T12:39:44.291Z"
     },
     {
       "source": "github:claude-code-skills",
       "candidates": 426,
-      "fetchedAt": "2026-11-21T12:45:13.065Z"
+      "fetchedAt": "2026-11-22T12:39:44.291Z"
     },
     {
       "source": "github:claude-skills",
       "candidates": 445,
-      "fetchedAt": "2026-11-21T12:45:13.065Z"
+      "fetchedAt": "2026-11-22T12:39:44.291Z"
     },
     {
       "source": "github:opencode-skills",
       "candidates": 380,
-      "fetchedAt": "2026-11-21T12:45:13.065Z"
+      "fetchedAt": "2026-11-22T12:39:44.291Z"
     },
     {
       "source": "seeds",
       "candidates": 837,
-      "fetchedAt": "2026-11-21T12:45:13.065Z",
+      "fetchedAt": "2026-11-22T12:39:44.291Z",
       "warnings": [
         "PleasePrompto/notebooklm-skill: archived"
       ]
