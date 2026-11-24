@@ -1,87 +1,75 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-23T14:48:47.231Z",
+  "generatedAt": "2026-11-24T14:56:27.934Z",
   "totals": {
-    "previous": 2125,
-    "current": 2102,
+    "previous": 2102,
+    "current": 2099,
     "added": [
-      "tt-a1i-archify/archify-pr",
-      "zenstory-ai-oh-story-claudecode/story-setup"
+      "elementalsouls-claude-bughunter/exploit-completion",
+      "zenstory-ai-novel-to-game/game-build",
+      "zenstory-ai-novel-to-game/game-design",
+      "zenstory-ai-novel-to-game/game-qa",
+      "zenstory-ai-novel-to-game/novel-game-analyze",
+      "zenstory-ai-novel-to-game/novel-to-game"
     ],
     "removed": [
-      "galyarderlabs-galyarder-framework/ab-test-setup",
-      "galyarderlabs-galyarder-framework/accelerator-application",
-      "galyarderlabs-galyarder-framework/accounting",
-      "galyarderlabs-galyarder-framework/adversarial-reviewer",
-      "galyarderlabs-galyarder-framework/analytics-architect",
-      "galyarderlabs-galyarder-framework/analytics-tracking",
-      "galyarderlabs-galyarder-framework/architect",
-      "galyarderlabs-galyarder-framework/audit-website",
-      "galyarderlabs-galyarder-framework/board-deck-builder",
-      "galyarderlabs-galyarder-framework/board-update",
-      "galyarderlabs-galyarder-framework/brainstorming",
-      "galyarderlabs-galyarder-framework/browserstack",
-      "galyarderlabs-galyarder-framework/build-error-resolver",
-      "galyarderlabs-galyarder-framework/build-fix",
-      "galyarderlabs-galyarder-framework/campaign-analytics",
-      "galyarderlabs-galyarder-framework/chief-of-staff",
-      "galyarderlabs-galyarder-framework/clean",
-      "galyarderlabs-galyarder-framework/cloud-security",
-      "galyarderlabs-galyarder-framework/code-review-expert",
-      "galyarderlabs-galyarder-framework/code-reviewer",
-      "pascalorg-editor/architect",
-      "pascalorg-editor/furniture-fit",
-      "pascalorg-editor/open-pr",
-      "pascalorg-editor/pascal-3d",
-      "pascalorg-editor/review-architecture"
+      "elementalsouls-claude-bughunter/hunt-cors",
+      "kharmanskyi-open-steps/os-ask-simple",
+      "kharmanskyi-open-steps/os-big-picture",
+      "kharmanskyi-open-steps/os-check-work",
+      "kharmanskyi-open-steps/os-done-or-not",
+      "kharmanskyi-open-steps/os-say-simple",
+      "kharmanskyi-open-steps/os-step-by-step",
+      "kharmanskyi-open-steps/os-what-could-go-wrong",
+      "kharmanskyi-open-steps/os-whats-next"
     ],
     "changed": [
-      "alchaincyf-huashu-motion/huashu-motion",
+      "addyosmani-agent-skills/accessibility-engineering",
+      "addyosmani-agent-skills/ci-cd-and-automation",
+      "addyosmani-agent-skills/code-review-and-quality",
+      "addyosmani-agent-skills/doubt-driven-development",
+      "addyosmani-agent-skills/frontend-ui-engineering",
+      "addyosmani-agent-skills/incremental-implementation",
+      "addyosmani-agent-skills/observability-and-instrumentation",
+      "addyosmani-agent-skills/performance-optimization",
+      "addyosmani-agent-skills/planning-and-task-breakdown",
+      "alibaba-open-code-review/open-code-review",
       "career-ops-hq-career-ops/career-ops",
-      "heygen-com-hyperframes/figma",
-      "heygen-com-hyperframes/hyperframes",
-      "heygen-com-hyperframes/hyperframes-cli",
-      "heygen-com-hyperframes/hyperframes-registry",
-      "heygen-com-hyperframes/media-use",
-      "heygen-com-hyperframes/remotion-to-hyperframes",
-      "heygen-com-hyperframes/reverse-any-video",
-      "heygen-com-hyperframes/slideshow",
-      "heygen-com-hyperframes/style-sampling",
-      "juliusbrussee-caveman/cavecrew",
-      "juliusbrussee-caveman/caveman-compress",
-      "juliusbrussee-caveman/caveman-explore",
-      "michael-denyer-pstack-claude/fix-ci",
-      "morluto-rea/rea-analysis-optimization",
-      "morluto-rea/rea-tool-design",
-      "othmanadi-planning-with-files/planning-with-files",
-      "othmanadi-planning-with-files/planning-with-files-ar",
-      "othmanadi-planning-with-files/planning-with-files-de",
-      "othmanadi-planning-with-files/planning-with-files-es",
-      "othmanadi-planning-with-files/planning-with-files-zh",
-      "othmanadi-planning-with-files/planning-with-files-zht",
-      "remotion-dev-skills/remotion-best-practices",
-      "remotion-dev-skills/remotion-captions",
-      "remotion-dev-skills/remotion-create",
-      "remotion-dev-skills/remotion-docs",
-      "remotion-dev-skills/remotion-interactivity",
-      "remotion-dev-skills/remotion-license",
-      "remotion-dev-skills/remotion-maps",
-      "remotion-dev-skills/remotion-markup",
-      "remotion-dev-skills/remotion-multimedia",
-      "remotion-dev-skills/remotion-render",
-      "remotion-dev-skills/remotion-saas",
-      "remotion-dev-skills/remotion-studio",
-      "remotion-dev-skills/remotion-upgrade",
+      "coreyhaines31-marketingskills/aso",
+      "coreyhaines31-marketingskills/customer-research",
+      "expo-skills/eas-app-stores",
+      "expo-skills/eas-hosting",
+      "expo-skills/eas-observe",
+      "expo-skills/eas-simulator",
+      "expo-skills/eas-update",
+      "expo-skills/eas-update-insights",
+      "expo-skills/eas-workflows",
+      "expo-skills/expo-animation",
+      "expo-skills/expo-app-clip",
+      "expo-skills/expo-brownfield",
+      "expo-skills/expo-data-fetching",
+      "expo-skills/expo-design-system",
+      "expo-skills/expo-dev-client",
+      "expo-skills/expo-dom",
+      "expo-skills/expo-examples",
+      "expo-skills/expo-migrate-module",
+      "expo-skills/expo-module",
+      "expo-skills/expo-native-ui",
+      "expo-skills/expo-overview",
+      "google-elephant-goldfish-model/egm-bootstrap",
+      "google-elephant-goldfish-model/egm-lite",
+      "google-elephant-goldfish-model/egm-review",
+      "google-labs-code-stitch-skills/taste-design",
+      "mattpocock-skills/chief-of-staff",
+      "morluto-rea/reverse-engineer-anything",
       "santifer-career-ops/career-ops",
-      "tt-a1i-archify/archify-review",
-      "zenstory-ai-oh-story-claudecode/story",
-      "zenstory-ai-oh-story-claudecode/story-deslop",
-      "zenstory-ai-oh-story-claudecode/story-import",
+      "vercel-labs-agent-browser/core",
+      "wanshuiyin-auto-claude-code-research-in-sleep/analyze-results",
+      "wanshuiyin-auto-claude-code-research-in-sleep/auto-review-loop",
+      "wanshuiyin-auto-claude-code-research-in-sleep/auto-review-loop-llm",
+      "wanshuiyin-auto-claude-code-research-in-sleep/auto-review-loop-minimax",
       "zenstory-ai-oh-story-claudecode/story-long-analyze",
-      "zenstory-ai-oh-story-claudecode/story-long-write",
-      "zenstory-ai-oh-story-claudecode/story-review",
       "zenstory-ai-oh-story-claudecode/story-short-analyze",
-      "zenstory-ai-oh-story-claudecode/story-short-scan",
       "zenstory-ai-oh-story-claudecode/story-short-write"
     ]
   },
@@ -89,37 +77,37 @@
     {
       "source": "agentskills",
       "candidates": 100,
-      "fetchedAt": "2026-11-23T14:48:47.231Z"
+      "fetchedAt": "2026-11-24T14:56:27.934Z"
     },
     {
       "source": "github:agent-skills",
       "candidates": 531,
-      "fetchedAt": "2026-11-23T14:48:47.231Z"
+      "fetchedAt": "2026-11-24T14:56:27.934Z"
     },
     {
       "source": "github:ai-agent-skills",
       "candidates": 353,
-      "fetchedAt": "2026-11-23T14:48:47.231Z"
+      "fetchedAt": "2026-11-24T14:56:27.934Z"
     },
     {
       "source": "github:claude-code-skills",
-      "candidates": 427,
-      "fetchedAt": "2026-11-23T14:48:47.231Z"
+      "candidates": 424,
+      "fetchedAt": "2026-11-24T14:56:27.934Z"
     },
     {
       "source": "github:claude-skills",
       "candidates": 447,
-      "fetchedAt": "2026-11-23T14:48:47.231Z"
+      "fetchedAt": "2026-11-24T14:56:27.934Z"
     },
     {
       "source": "github:opencode-skills",
       "candidates": 360,
-      "fetchedAt": "2026-11-23T14:48:47.231Z"
+      "fetchedAt": "2026-11-24T14:56:27.934Z"
     },
     {
       "source": "seeds",
       "candidates": 837,
-      "fetchedAt": "2026-11-23T14:48:47.231Z",
+      "fetchedAt": "2026-11-24T14:56:27.934Z",
       "warnings": [
         "PleasePrompto/notebooklm-skill: archived"
       ]
@@ -129,7 +117,11 @@
     "source seeds: PleasePrompto/notebooklm-skill: archived"
   ],
   "reviewQueue": [
-    "tt-a1i-archify/archify-pr",
-    "zenstory-ai-oh-story-claudecode/story-setup"
+    "elementalsouls-claude-bughunter/exploit-completion",
+    "zenstory-ai-novel-to-game/novel-to-game",
+    "zenstory-ai-novel-to-game/game-design",
+    "zenstory-ai-novel-to-game/game-build",
+    "zenstory-ai-novel-to-game/novel-game-analyze",
+    "zenstory-ai-novel-to-game/game-qa"
   ]
 }
