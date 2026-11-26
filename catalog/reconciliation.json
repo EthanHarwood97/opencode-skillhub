@@ -1,16 +1,12 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-25T14:30:43.659Z",
+  "generatedAt": "2026-11-26T13:58:28.045Z",
   "totals": {
-    "previous": 2099,
-    "current": 2019,
+    "previous": 2019,
+    "current": 2100,
     "added": [
-      "github-awesome-copilot/anti-ui-slop",
-      "remotion-dev-skills/remotion-elements"
-    ],
-    "removed": [
+      "expo-skills/expo-mascot",
       "forrestchang-andrej-karpathy-skills/karpathy-guidelines",
-      "github-awesome-copilot/ai-team-orchestration",
       "juliusbrussee-caveman/cavecrew",
       "juliusbrussee-caveman/caveman",
       "juliusbrussee-caveman/caveman-commit",
@@ -27,6 +23,8 @@
       "juliusbrussee-caveman/caveman-stats",
       "juliusbrussee-caveman/megacave",
       "juliusbrussee-caveman/ultracave",
+      "moonlight-lupin-agent-skills/briefs",
+      "moonlight-lupin-agent-skills/photo-edit",
       "sickn33-antigravity-awesome-skills/ab-test-setup",
       "sickn33-antigravity-awesome-skills/accesslint-audit",
       "sickn33-antigravity-awesome-skills/accesslint-diff",
@@ -92,118 +90,121 @@
       "slavingia-skills/processize",
       "slavingia-skills/validate-idea"
     ],
-    "changed": [
-      "expo-skills/eas-app-stores",
-      "expo-skills/eas-simulator",
-      "expo-skills/eas-update",
-      "expo-skills/eas-update-insights",
-      "expo-skills/eas-workflows",
-      "expo-skills/expo-app-clip",
-      "expo-skills/expo-brownfield",
-      "expo-skills/expo-dev-client",
-      "expo-skills/expo-examples",
-      "expo-skills/expo-native-ui",
+    "removed": [
       "expo-skills/expo-overview",
-      "google-agents-cli/agents-cli-langchain",
-      "google-agents-cli/google-agents-cli-adk-code",
-      "google-agents-cli/google-agents-cli-deploy",
-      "google-agents-cli/google-agents-cli-eval",
-      "google-agents-cli/google-agents-cli-observability",
-      "google-agents-cli/google-agents-cli-publish",
-      "google-agents-cli/google-agents-cli-scaffold",
-      "google-agents-cli/google-agents-cli-workflow",
-      "google-elephant-goldfish-model/egm-bootstrap",
-      "google-elephant-goldfish-model/egm-review",
-      "google-labs-code-stitch-skills/extract-design-md",
-      "laravel-boost/deploying-to-cloud",
-      "michael-denyer-pstack-claude/figure-it-out",
+      "moonlight-lupin-agent-skills/curator",
+      "moonlight-lupin-agent-skills/wiki"
+    ],
+    "changed": [
+      "agricidaniel-claude-seo/seo-agentic",
+      "agricidaniel-claude-seo/seo-ahrefs",
+      "agricidaniel-claude-seo/seo-audit",
+      "agricidaniel-claude-seo/seo-backlinks",
+      "agricidaniel-claude-seo/seo-bing",
+      "agricidaniel-claude-seo/seo-cluster",
+      "agricidaniel-claude-seo/seo-competitor-pages",
+      "agricidaniel-claude-seo/seo-content",
+      "agricidaniel-claude-seo/seo-dataforseo",
+      "agricidaniel-claude-seo/seo-firecrawl",
+      "agricidaniel-claude-seo/seo-image-gen",
+      "agricidaniel-claude-seo/seo-matomo",
+      "agricidaniel-claude-seo/seo-posthog",
+      "agricidaniel-claude-seo/seo-profound",
+      "agricidaniel-claude-seo/seo-seranking",
+      "agricidaniel-claude-seo/seo-shopify",
+      "agricidaniel-claude-seo/seo-unlighthouse",
+      "elementalsouls-claude-bughunter/bugcrowd-reporting",
+      "elementalsouls-claude-bughunter/evidence-hygiene",
+      "imbad0202-academic-research-skills/academic-pipeline",
+      "michael-denyer-pstack-claude/arena",
+      "michael-denyer-pstack-claude/interrogate",
       "moonlight-lupin-agent-skills/build",
-      "moonlight-lupin-agent-skills/claude-plugin-converter",
+      "moonlight-lupin-agent-skills/orchestrator",
       "moonlight-lupin-agent-skills/review-commit",
+      "moonlight-lupin-agent-skills/spec",
+      "moonlight-lupin-agent-skills/test-evals",
+      "nextlevelbuilder-ui-ux-pro-max-skill/ui-ux-pro-max",
+      "nextlevelbuilder/ui-ux-pro-max",
+      "obsidianmd-obsidian-skills/defuddle",
+      "obsidianmd-obsidian-skills/obsidian-headless",
       "pbakaus-impeccable/impeccable",
-      "rebelytics-one-skill-to-rule-them-all/task-observer",
-      "remotion-dev-skills/remotion-best-practices",
-      "remotion-dev-skills/remotion-captions",
-      "remotion-dev-skills/remotion-create",
-      "remotion-dev-skills/remotion-docs",
-      "remotion-dev-skills/remotion-interactivity",
-      "remotion-dev-skills/remotion-license",
-      "remotion-dev-skills/remotion-maps",
-      "remotion-dev-skills/remotion-markup",
-      "remotion-dev-skills/remotion-multimedia",
-      "remotion-dev-skills/remotion-render",
-      "remotion-dev-skills/remotion-saas",
-      "remotion-dev-skills/remotion-studio",
-      "remotion-dev-skills/remotion-upgrade",
-      "vercel-labs-agent-browser/core",
-      "zenstory-ai-drama-skills/short-drama",
-      "zenstory-ai-drama-skills/short-drama-develop",
-      "zenstory-ai-drama-skills/short-drama-edit",
-      "zenstory-ai-drama-skills/short-drama-novel-analyze",
-      "zenstory-ai-novel-to-game/game-build",
-      "zenstory-ai-novel-to-game/game-design",
-      "zenstory-ai-novel-to-game/novel-game-analyze",
-      "zenstory-ai-oh-story-claudecode/story-review",
-      "zenstory-ai-oh-story-claudecode/story-short-write"
+      "prisma-skills/prisma-postgres-setup",
+      "stablyai-orca/jira-tickets",
+      "stablyai-orca/linear-tickets",
+      "stablyai-orca/orca-cli",
+      "stablyai-orca/orca-computer-use",
+      "stablyai-orca/orca-emulator",
+      "stablyai-orca/orca-emulator-android",
+      "stablyai-orca/orca-jira",
+      "stablyai-orca/orca-linear",
+      "stablyai-orca/orca-per-workspace-env",
+      "stablyai-orca/orca-plugin-authoring",
+      "stablyai-orca/orchestration"
     ]
   },
   "sources": [
     {
       "source": "agentskills",
       "candidates": 100,
-      "fetchedAt": "2026-11-25T14:30:43.659Z"
+      "fetchedAt": "2026-11-26T13:58:28.045Z"
     },
     {
       "source": "github:agent-skills",
       "candidates": 531,
-      "fetchedAt": "2026-11-25T14:30:43.659Z"
+      "fetchedAt": "2026-11-26T13:58:28.045Z"
     },
     {
       "source": "github:ai-agent-skills",
       "candidates": 353,
-      "fetchedAt": "2026-11-25T14:30:43.659Z"
+      "fetchedAt": "2026-11-26T13:58:28.045Z"
     },
     {
       "source": "github:claude-code-skills",
       "candidates": 424,
-      "fetchedAt": "2026-11-25T14:30:43.659Z"
+      "fetchedAt": "2026-11-26T13:58:28.045Z"
     },
     {
       "source": "github:claude-skills",
       "candidates": 427,
-      "fetchedAt": "2026-11-25T14:30:43.659Z"
+      "fetchedAt": "2026-11-26T13:58:28.045Z"
     },
     {
       "source": "github:opencode-skills",
       "candidates": 360,
-      "fetchedAt": "2026-11-25T14:30:43.659Z"
+      "fetchedAt": "2026-11-26T13:58:28.045Z"
     },
     {
       "source": "seeds",
-      "candidates": 707,
-      "fetchedAt": "2026-11-25T14:30:43.659Z",
+      "candidates": 838,
+      "fetchedAt": "2026-11-26T13:58:28.045Z",
       "warnings": [
-        "PleasePrompto/notebooklm-skill: archived",
-        "slavingia/skills: github repo lookup failed: 503",
-        "JuliusBrussee/caveman: github repo lookup failed: 503",
-        "forrestchang/andrej-karpathy-skills: github repo lookup failed: 503",
-        "Jeffallan/claude-skills: github repo lookup failed: 503",
-        "wshobson/agents: github repo lookup failed: 503",
-        "sickn33/antigravity-awesome-skills: github repo lookup failed: 503"
+        "PleasePrompto/notebooklm-skill: archived"
       ]
     }
   ],
   "gaps": [
-    "source seeds: PleasePrompto/notebooklm-skill: archived",
-    "source seeds: slavingia/skills: github repo lookup failed: 503",
-    "source seeds: JuliusBrussee/caveman: github repo lookup failed: 503",
-    "source seeds: forrestchang/andrej-karpathy-skills: github repo lookup failed: 503",
-    "source seeds: Jeffallan/claude-skills: github repo lookup failed: 503",
-    "source seeds: wshobson/agents: github repo lookup failed: 503",
-    "source seeds: sickn33/antigravity-awesome-skills: github repo lookup failed: 503"
+    "source seeds: PleasePrompto/notebooklm-skill: archived"
   ],
   "reviewQueue": [
-    "github-awesome-copilot/anti-ui-slop",
-    "remotion-dev-skills/remotion-elements"
+    "juliusbrussee-caveman/caveman-commit",
+    "sickn33-antigravity-awesome-skills/agent-evaluation",
+    "sickn33-antigravity-awesome-skills/agent-evaluation-reporting",
+    "sickn33-antigravity-awesome-skills/api-contract-testing",
+    "juliusbrussee-caveman/caveman-evidence-review",
+    "juliusbrussee-caveman/caveman-manage",
+    "juliusbrussee-caveman/caveman-optimize",
+    "juliusbrussee-caveman/caveman-review",
+    "sickn33-antigravity-awesome-skills/agent-memory-systems",
+    "sickn33-antigravity-awesome-skills/fixing-accessibility",
+    "sickn33-antigravity-awesome-skills/k6-load-testing",
+    "sickn33-antigravity-awesome-skills/mcp-tool-developer",
+    "sickn33-antigravity-awesome-skills/prompt-engineering",
+    "sickn33-antigravity-awesome-skills/ui-a11y",
+    "sickn33-antigravity-awesome-skills/ui-states",
+    "sickn33-antigravity-awesome-skills/advanced-evaluation",
+    "sickn33-antigravity-awesome-skills/agent-harness-fault-injection",
+    "juliusbrussee-caveman/cavecrew",
+    "juliusbrussee-caveman/caveman",
+    "sickn33-antigravity-awesome-skills/accesslint-audit"
   ]
 }
