@@ -1,146 +1,146 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-27T13:57:24.239Z",
+  "generatedAt": "2026-11-28T13:10:06.815Z",
   "topVelocity": [
-    {
-      "id": "elementalsouls-claude-bughunter/exploit-completion",
-      "repo": "elementalsouls/Claude-BugHunter",
-      "stars": 25467,
-      "delta7d": 12046,
-      "delta30d": 20141
-    },
     {
       "id": "stablyai-orca/jira-tickets",
       "repo": "stablyai/orca",
-      "stars": 141880,
-      "delta7d": 11350,
-      "delta30d": 33354
+      "stars": 143239,
+      "delta7d": 11713,
+      "delta30d": 33623
+    },
+    {
+      "id": "elementalsouls-claude-bughunter/exploit-completion",
+      "repo": "elementalsouls/Claude-BugHunter",
+      "stars": 26720,
+      "delta7d": 11541,
+      "delta30d": 21380
     },
     {
       "id": "morluto-rea/rea-ci-tests-audit",
       "repo": "morluto/rea",
-      "stars": 480616,
-      "delta7d": 9746,
-      "delta30d": 80940
-    },
-    {
-      "id": "mattpocock-skills/scaffold-exercises",
-      "repo": "mattpocock/skills",
-      "stars": 334035,
-      "delta7d": 5496,
-      "delta30d": 28793
+      "stars": 481722,
+      "delta7d": 9563,
+      "delta30d": 76594
     },
     {
       "id": "obra-superpowers/requesting-code-review",
       "repo": "obra/superpowers",
-      "stars": 327989,
-      "delta7d": 5471,
-      "delta30d": 21115
+      "stars": 328715,
+      "delta7d": 5378,
+      "delta30d": 20854
+    },
+    {
+      "id": "mattpocock-skills/scaffold-exercises",
+      "repo": "mattpocock/skills",
+      "stars": 334538,
+      "delta7d": 5153,
+      "delta30d": 28403
     },
     {
       "id": "dietrichgebert-ponytail/ponytail-gain",
       "repo": "DietrichGebert/ponytail",
-      "stars": 199735,
-      "delta7d": 4465,
-      "delta30d": 21163
-    },
-    {
-      "id": "pbakaus-impeccable/impeccable",
-      "repo": "pbakaus/impeccable",
-      "stars": 117838,
-      "delta7d": 4053,
-      "delta30d": 26619
+      "stars": 200474,
+      "delta7d": 4467,
+      "delta30d": 20841
     },
     {
       "id": "heygen-com-hyperframes/style-sampling",
       "repo": "heygen-com/hyperframes",
-      "stars": 91260,
-      "delta7d": 3990,
-      "delta30d": 16954
+      "stars": 91810,
+      "delta7d": 4146,
+      "delta30d": 16696
+    },
+    {
+      "id": "pbakaus-impeccable/impeccable",
+      "repo": "pbakaus/impeccable",
+      "stars": 118312,
+      "delta7d": 4031,
+      "delta30d": 24267
     },
     {
       "id": "anthropics-skills/slack-gif-creator",
       "repo": "anthropics/skills",
-      "stars": 201309,
-      "delta7d": 3402,
-      "delta30d": 16933
+      "stars": 201733,
+      "delta7d": 3467,
+      "delta30d": 17101
     },
     {
       "id": "nextlevelbuilder-ui-ux-pro-max-skill/banner-design",
       "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
-      "stars": 154913,
-      "delta7d": 2904,
-      "delta30d": 13100
+      "stars": 155393,
+      "delta7d": 3055,
+      "delta30d": 13095
     },
     {
       "id": "tt-a1i-archify/simplify-codebase",
       "repo": "tt-a1i/archify",
-      "stars": 100807,
-      "delta7d": 2588,
-      "delta30d": 10062
+      "stars": 101148,
+      "delta7d": 2676,
+      "delta30d": 9908
     },
     {
       "id": "google-labs-code-stitch-skills/design-md",
       "repo": "google-labs-code/stitch-skills",
-      "stars": 13467,
-      "delta7d": 2581,
-      "delta30d": 4842
-    },
-    {
-      "id": "alibaba-open-code-review/open-code-review-delegate",
-      "repo": "alibaba/open-code-review",
-      "stars": 56811,
-      "delta7d": 2281,
-      "delta30d": 8059
-    },
-    {
-      "id": "paperclipai-paperclip/doc-maintenance",
-      "repo": "paperclipai/paperclip",
-      "stars": 117513,
-      "delta7d": 2151,
-      "delta30d": 9373
+      "stars": 13753,
+      "delta7d": 2548,
+      "delta30d": 5119
     },
     {
       "id": "emilkowalski-skills/animation-vocabulary",
       "repo": "emilkowalski/skills",
-      "stars": 60336,
-      "delta7d": 2017,
-      "delta30d": 9458
+      "stars": 60737,
+      "delta7d": 2183,
+      "delta30d": 9479
     },
     {
-      "id": "agricidaniel-claude-seo/seo-competitor-pages",
-      "repo": "AgriciDaniel/claude-seo",
-      "stars": 32773,
-      "delta7d": 1719,
-      "delta30d": 9804
+      "id": "paperclipai-paperclip/doc-maintenance",
+      "repo": "paperclipai/paperclip",
+      "stars": 117722,
+      "delta7d": 2135,
+      "delta30d": 9280
+    },
+    {
+      "id": "alibaba-open-code-review/open-code-review-delegate",
+      "repo": "alibaba/open-code-review",
+      "stars": 57001,
+      "delta7d": 2051,
+      "delta30d": 8084
     },
     {
       "id": "google-elephant-goldfish-model/egm-draft",
       "repo": "google/elephant-goldfish-model",
-      "stars": 23292,
-      "delta7d": 1715,
-      "delta30d": 0
+      "stars": 23534,
+      "delta7d": 1733,
+      "delta30d": 18253
     },
     {
-      "id": "thedotmack-claude-mem/babysit",
-      "repo": "thedotmack/claude-mem",
-      "stars": 120118,
-      "delta7d": 1563,
-      "delta30d": 16270
-    },
-    {
-      "id": "juliusbrussee-caveman/caveman-commit",
-      "repo": "JuliusBrussee/caveman",
-      "stars": 123232,
-      "delta7d": 1535,
-      "delta30d": 7578
+      "id": "agricidaniel-claude-seo/seo-competitor-pages",
+      "repo": "AgriciDaniel/claude-seo",
+      "stars": 32966,
+      "delta7d": 1675,
+      "delta30d": 9295
     },
     {
       "id": "forrestchang-andrej-karpathy-skills/karpathy-guidelines",
       "repo": "forrestchang/andrej-karpathy-skills",
-      "stars": 236053,
-      "delta7d": 1411,
-      "delta30d": 10337
+      "stars": 236495,
+      "delta7d": 1658,
+      "delta30d": 10309
+    },
+    {
+      "id": "thedotmack-claude-mem/babysit",
+      "repo": "thedotmack/claude-mem",
+      "stars": 120316,
+      "delta7d": 1562,
+      "delta30d": 16159
+    },
+    {
+      "id": "juliusbrussee-caveman/caveman-commit",
+      "repo": "JuliusBrussee/caveman",
+      "stars": 123435,
+      "delta7d": 1555,
+      "delta30d": 7513
     }
   ],
   "newThisMonth": [

@@ -1,68 +1,111 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-27T13:57:24.239Z",
+  "generatedAt": "2026-11-28T13:10:06.815Z",
   "totals": {
     "previous": 2100,
-    "current": 2100,
-    "added": [],
-    "removed": [],
-    "changed": [
-      "elementalsouls-claude-bughunter/bb-local-toolkit",
-      "elementalsouls-claude-bughunter/bug-bounty",
-      "elementalsouls-claude-bughunter/exploit-completion",
-      "expo-skills/eas-observe",
-      "imbad0202-academic-research-skills/academic-pipeline",
-      "moonlight-lupin-agent-skills/build",
-      "moonlight-lupin-agent-skills/grill",
-      "moonlight-lupin-agent-skills/orchestrator",
-      "moonlight-lupin-agent-skills/review-commit",
+    "current": 2082,
+    "added": [
+      "moonlight-lupin-agent-skills/debug",
+      "moonlight-lupin-agent-skills/repo-context"
+    ],
+    "removed": [
       "moonlight-lupin-agent-skills/spec",
       "moonlight-lupin-agent-skills/test-evals",
+      "reactive-resume-reactive-resume/academic-cv",
+      "reactive-resume-reactive-resume/accomplishment-inventory",
+      "reactive-resume-reactive-resume/application-answers",
+      "reactive-resume-reactive-resume/career-change-resume",
+      "reactive-resume-reactive-resume/cover-letter-writer",
+      "reactive-resume-reactive-resume/customer-success-resume",
+      "reactive-resume-reactive-resume/data-resume",
+      "reactive-resume-reactive-resume/designer-resume",
+      "reactive-resume-reactive-resume/educator-resume",
+      "reactive-resume-reactive-resume/entry-level-resume",
+      "reactive-resume-reactive-resume/executive-resume",
+      "reactive-resume-reactive-resume/finance-resume",
+      "reactive-resume-reactive-resume/healthcare-resume",
+      "reactive-resume-reactive-resume/interview-prep",
+      "reactive-resume-reactive-resume/job-application-manager",
+      "reactive-resume-reactive-resume/linkedin-profile-writer",
+      "reactive-resume-reactive-resume/marketing-resume",
+      "reactive-resume-reactive-resume/mock-interview"
+    ],
+    "changed": [
+      "epicenterhq/tauri",
+      "expo-skills/eas-simulator",
+      "google-labs-code-stitch-skills/upload-to-stitch",
+      "gosom-google-maps-scraper/google-maps-scraper",
+      "imbad0202-academic-research-skills/academic-pipeline",
+      "mattpocock-skills/to-tickets",
+      "moonlight-lupin-agent-skills/build",
+      "moonlight-lupin-agent-skills/orchestrator",
+      "moonlight-lupin-agent-skills/review-commit",
+      "moonlight-lupin-agent-skills/review-lessons",
       "morluto-rea/reverse-engineer-anything",
-      "nextlevelbuilder-ui-ux-pro-max-skill/ui-ux-pro-max",
-      "nextlevelbuilder/ui-ux-pro-max",
-      "rebelytics-one-skill-to-rule-them-all/task-observer",
-      "topoteretes-cognee/cognee-performance",
-      "topoteretes-cognee/cognee-permissions",
-      "topoteretes-cognee/docstring-author",
-      "topoteretes-cognee/docstring-critic"
+      "sickn33-agentic-awesome-skills/llm-evaluation",
+      "sickn33-antigravity-awesome-skills/llm-evaluation",
+      "stablyai-orca/jira-tickets",
+      "stablyai-orca/linear-tickets",
+      "stablyai-orca/orca-cli",
+      "stablyai-orca/orca-computer-use",
+      "stablyai-orca/orca-emulator",
+      "stablyai-orca/orca-emulator-android",
+      "stablyai-orca/orca-jira",
+      "stablyai-orca/orca-linear",
+      "stablyai-orca/orca-per-workspace-env",
+      "stablyai-orca/orca-plugin-authoring",
+      "stablyai-orca/orchestration",
+      "zenstory-ai-oh-story-claudecode/browser-cdp",
+      "zenstory-ai-oh-story-claudecode/story",
+      "zenstory-ai-oh-story-claudecode/story-cover",
+      "zenstory-ai-oh-story-claudecode/story-deslop",
+      "zenstory-ai-oh-story-claudecode/story-import",
+      "zenstory-ai-oh-story-claudecode/story-long-analyze",
+      "zenstory-ai-oh-story-claudecode/story-long-scan",
+      "zenstory-ai-oh-story-claudecode/story-long-write",
+      "zenstory-ai-oh-story-claudecode/story-publish",
+      "zenstory-ai-oh-story-claudecode/story-review",
+      "zenstory-ai-oh-story-claudecode/story-setup",
+      "zenstory-ai-oh-story-claudecode/story-short-analyze",
+      "zenstory-ai-oh-story-claudecode/story-short-scan",
+      "zenstory-ai-oh-story-claudecode/story-short-write"
     ]
   },
   "sources": [
     {
       "source": "agentskills",
       "candidates": 100,
-      "fetchedAt": "2026-11-27T13:57:24.239Z"
+      "fetchedAt": "2026-11-28T13:10:06.815Z"
     },
     {
       "source": "github:agent-skills",
-      "candidates": 531,
-      "fetchedAt": "2026-11-27T13:57:24.239Z"
+      "candidates": 513,
+      "fetchedAt": "2026-11-28T13:10:06.815Z"
     },
     {
       "source": "github:ai-agent-skills",
       "candidates": 353,
-      "fetchedAt": "2026-11-27T13:57:24.239Z"
+      "fetchedAt": "2026-11-28T13:10:06.815Z"
     },
     {
       "source": "github:claude-code-skills",
       "candidates": 424,
-      "fetchedAt": "2026-11-27T13:57:24.239Z"
+      "fetchedAt": "2026-11-28T13:10:06.815Z"
     },
     {
       "source": "github:claude-skills",
       "candidates": 427,
-      "fetchedAt": "2026-11-27T13:57:24.239Z"
+      "fetchedAt": "2026-11-28T13:10:06.815Z"
     },
     {
       "source": "github:opencode-skills",
       "candidates": 360,
-      "fetchedAt": "2026-11-27T13:57:24.239Z"
+      "fetchedAt": "2026-11-28T13:10:06.815Z"
     },
     {
       "source": "seeds",
       "candidates": 838,
-      "fetchedAt": "2026-11-27T13:57:24.239Z",
+      "fetchedAt": "2026-11-28T13:10:06.815Z",
       "warnings": [
         "PleasePrompto/notebooklm-skill: archived"
       ]
@@ -71,5 +114,8 @@
   "gaps": [
     "source seeds: PleasePrompto/notebooklm-skill: archived"
   ],
-  "reviewQueue": []
+  "reviewQueue": [
+    "moonlight-lupin-agent-skills/debug",
+    "moonlight-lupin-agent-skills/repo-context"
+  ]
 }
